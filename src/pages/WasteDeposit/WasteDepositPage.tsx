@@ -4,6 +4,8 @@ import { useWasteBank } from '../../context/WasteBankContext';
 import { WASTE_CATEGORIES } from '../../data/wasteData';
 import { DROP_POINTS } from '../../data/locationsData';
 import { WasteStreamType } from '../../types';
+import { Icon } from '../../components/ui/Icon';
+import { PageTransition } from '../../components/ui/PageTransition';
 
 export const WasteDepositPage: React.FC = () => {
   const navigate = useNavigate();
@@ -51,45 +53,45 @@ export const WasteDepositPage: React.FC = () => {
       dropPoint,
       date,
       photoUrl,
-      notes: notes || 'Setoran via formulir penuh mandiri'
+      notes: notes || 'Setoran via formulir mandiri'
     });
 
     setSubmitted(true);
   };
 
   return (
-    <div className="w-full bg-surface py-space-xl">
+    <PageTransition className="w-full bg-surface py-space-xl">
       <div className="max-w-[1000px] mx-auto px-margin-sm lg:px-margin space-y-space-lg">
         
         {/* Breadcrumb & Header */}
         <div className="border-b border-outline-variant/30 pb-space-md">
           <div className="flex items-center gap-2 mb-1">
-            <span className="w-2.5 h-2.5 rounded-full bg-secondary" />
-            <span className="font-label-caps text-secondary font-bold uppercase tracking-wider">
+            <span className="w-2.5 h-2.5 rounded-full bg-secondary animate-pulse" />
+            <span className="font-label-caps text-secondary font-bold uppercase tracking-wider text-xs">
               Formulir Penyerahan Mandiri
             </span>
           </div>
           <h1 className="font-headline-xl text-headline-xl-mobile md:text-headline-xl font-bold text-primary tracking-tight">
             Pencatatan Setoran Sampah Terpilah
           </h1>
-          <p className="font-body-md text-on-surface-variant max-w-xl mt-1">
+          <p className="font-body-md text-on-surface-variant max-w-xl mt-1 text-xs sm:text-sm leading-relaxed">
             Catat estimasi bobot sampah Anda untuk mendapatkan nomor registrasi setoran, dokumentasi foto, dan perolehan EcoPoints instan.
           </p>
           <div className="mt-3 inline-flex items-center gap-2 px-3 py-1 rounded-md bg-secondary-fixed/30 border border-secondary/20 text-[11px] text-secondary font-semibold">
-            <span className="material-symbols-outlined text-sm">info</span>
-            <span>Simulasi data tersimpan pada LocalStorage peramban untuk keperluan penilaian lomba.</span>
+            <Icon name="info" size={14} />
+            <span>Simulasi data tersimpan pada LocalStorage peramban untuk keperluan evaluasi kompetisi.</span>
           </div>
         </div>
 
         {submitted ? (
           <div className="p-space-xl rounded-2xl bg-surface-container-lowest border border-secondary shadow-xl text-center space-y-4 animate-fadeIn">
-            <div className="w-16 h-16 mx-auto rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center text-3xl">
-              ✓
+            <div className="w-16 h-16 mx-auto rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center text-3xl font-bold">
+              <Icon name="check" size={32} />
             </div>
             <h2 className="font-headline-md font-bold text-primary">
               Setoran Berhasil Didaftarkan!
             </h2>
-            <p className="font-body-md text-on-surface-variant max-w-md mx-auto text-sm">
+            <p className="font-body-md text-on-surface-variant max-w-md mx-auto text-xs sm:text-sm">
               Material <strong>{selectedCategory} ({weightKg} kg)</strong> telah dicatat ke buku tabungan digital Anda dengan perolehan <strong>+{estimatedPoints} EcoPoints</strong> (≈ Rp {estimatedIdr.toLocaleString('id-ID')}).
             </p>
 
@@ -116,7 +118,7 @@ export const WasteDepositPage: React.FC = () => {
                 className="h-11 px-6 rounded-lg bg-primary text-on-primary font-bold text-xs hover:bg-primary-container cursor-pointer flex items-center gap-1.5"
               >
                 <span>Buka Buku Tabungan</span>
-                <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                <Icon name="arrow_forward" size={14} />
               </button>
             </div>
           </div>
@@ -125,7 +127,7 @@ export const WasteDepositPage: React.FC = () => {
             
             {/* Step 1: Select Category */}
             <div>
-              <label className="block font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider mb-2 font-bold">
+              <label className="block font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider mb-2 font-bold text-xs">
                 1. Pilih Kategori Material
               </label>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -142,9 +144,7 @@ export const WasteDepositPage: React.FC = () => {
                           : 'bg-surface-container text-on-surface hover:bg-surface-container-high'
                       }`}
                     >
-                      <span className={`material-symbols-outlined text-2xl ${isSelected ? 'text-tertiary-fixed' : 'text-outline'}`}>
-                        {cat.icon}
-                      </span>
+                      <Icon name={cat.icon} size={22} className={isSelected ? 'text-tertiary-fixed' : 'text-outline'} />
                       <div>
                         <span className="block font-bold">{cat.name}</span>
                         <span className={`text-[10px] ${isSelected ? 'text-primary-fixed-dim' : 'text-outline'}`}>
@@ -159,7 +159,7 @@ export const WasteDepositPage: React.FC = () => {
 
             {/* Step 2: Weight Stepper */}
             <div>
-              <label className="block font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider mb-2 font-bold">
+              <label className="block font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider mb-2 font-bold text-xs">
                 2. Estimasi Bobot Timbangan (kg)
               </label>
               <div className="flex items-center gap-4 bg-surface-container rounded-xl p-3 max-w-sm">
@@ -213,7 +213,7 @@ export const WasteDepositPage: React.FC = () => {
                   className="w-full h-11 px-3.5 rounded-lg bg-surface-container text-xs text-on-surface outline-none focus:ring-2 focus:ring-secondary border border-outline-variant/20"
                 >
                   {DROP_POINTS.map((dp) => (
-                    <option key={dp.id} value={dp.name}>{dp.name}</option>
+                    <option key={dp.id} value={dp.name}>{dp.name} ({dp.city})</option>
                   ))}
                 </select>
               </div>
@@ -239,8 +239,8 @@ export const WasteDepositPage: React.FC = () => {
                   </div>
                 ) : (
                   <div className="w-24 h-24 rounded-lg bg-surface-container flex flex-col items-center justify-center text-outline shrink-0">
-                    <span className="material-symbols-outlined text-3xl">photo_camera</span>
-                    <span className="text-[10px]">Unggah Foto</span>
+                    <Icon name="camera" size={28} className="text-outline" />
+                    <span className="text-[10px] mt-1">Unggah Foto</span>
                   </div>
                 )}
                 <div className="flex-1 text-center sm:text-left space-y-2">
@@ -324,7 +324,7 @@ export const WasteDepositPage: React.FC = () => {
                 type="submit"
                 className="h-11 px-7 rounded-lg bg-tertiary-fixed text-on-tertiary-fixed font-title-md text-sm font-bold hover:bg-tertiary-fixed-dim transition-all shadow-md cursor-pointer flex items-center gap-2"
               >
-                <span className="material-symbols-outlined text-[18px]">check_circle</span>
+                <Icon name="check_circle" size={18} />
                 <span>Konfirmasi & Simpan Setoran</span>
               </button>
             </div>
@@ -333,6 +333,6 @@ export const WasteDepositPage: React.FC = () => {
         )}
 
       </div>
-    </div>
+    </PageTransition>
   );
 };

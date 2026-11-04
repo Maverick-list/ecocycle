@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useWasteBank } from '../../context/WasteBankContext';
+import { Icon } from '../ui/Icon';
 
 export const DepositDetailModal: React.FC = () => {
   const { selectedDetailTrx, closeDetailTrx } = useWasteBank();
@@ -35,14 +36,14 @@ export const DepositDetailModal: React.FC = () => {
         <div className="bg-primary p-space-md flex items-center justify-between text-on-primary">
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-lg bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center font-bold">
-              <span className="material-symbols-outlined text-[20px]">verified</span>
+              <Icon name="verified" size={18} />
             </div>
             <div>
               <h3 id="detail-modal-title" className="font-headline-sm text-sm font-bold text-surface-bright">
                 Manifest Setoran #{selectedDetailTrx.id}
               </h3>
               <span className="text-[11px] text-primary-fixed-dim">
-                Audit Kepatuhan SNI & ISO 14001:2015
+                Standar Verifikasi Timbangan Hub & Pelacakan Material
               </span>
             </div>
           </div>
@@ -52,7 +53,7 @@ export const DepositDetailModal: React.FC = () => {
             className="w-8 h-8 rounded-full flex items-center justify-center text-surface-variant hover:bg-primary-container transition-colors cursor-pointer"
             aria-label="Tutup rincian manifest"
           >
-            <span className="material-symbols-outlined text-lg">close</span>
+            <Icon name="close" size={18} />
           </button>
         </div>
 
@@ -84,7 +85,7 @@ export const DepositDetailModal: React.FC = () => {
               </div>
             ) : (
               <div className="p-3.5 rounded-xl bg-surface-container-low border border-dashed border-outline-variant/40 flex items-center gap-3">
-                <span className="material-symbols-outlined text-outline text-2xl">photo_camera</span>
+                <Icon name="camera" size={24} className="text-outline" />
                 <span className="text-[11px] text-on-surface-variant">
                   Diverifikasi langsung oleh petugas drop-point tanpa lampiran foto digital.
                 </span>

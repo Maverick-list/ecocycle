@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useWasteBank } from '../../context/WasteBankContext';
 import { WasteTransaction, WasteStreamType } from '../../types';
 import { WASTE_CATEGORIES } from '../../data/wasteData';
+import { Icon } from '../../components/ui/Icon';
+import { AnimatedCounter } from '../../components/ui/AnimatedCounter';
+import { PageTransition } from '../../components/ui/PageTransition';
 
 export const WasteBankPage: React.FC = () => {
   const {
@@ -33,6 +37,19 @@ export const WasteBankPage: React.FC = () => {
 
   // Redemption drawer state
   const [isRedeemOpen, setIsRedeemOpen] = useState(false);
+
+  // Keyboard escape listener for open modals
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setEditingTrx(null);
+        setDeletingId(null);
+        setIsRedeemOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   // Filtered transactions
   const filteredTransactions = transactions.filter((trx) => {
@@ -78,41 +95,49 @@ export const WasteBankPage: React.FC = () => {
   };
 
   return (
-    <div className="w-full bg-surface py-space-xl">
+    <PageTransition className="w-full bg-surface py-space-xl">
       <div className="max-w-[1380px] mx-auto px-margin-sm lg:px-margin space-y-space-xl">
         
         {/* Page Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-outline-variant/30 pb-space-lg">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="w-2.5 h-2.5 rounded-full bg-secondary" />
-              <span className="font-label-caps text-secondary font-bold uppercase tracking-wider">
+              <span className="w-2.5 h-2.5 rounded-full bg-secondary animate-pulse" />
+              <span className="font-label-caps text-secondary font-bold uppercase tracking-wider text-xs">
                 Bank Sampah Digital Terpadu
               </span>
             </div>
             <h1 className="font-headline-xl text-headline-xl-mobile md:text-headline-xl font-bold text-primary tracking-tight">
               Buku Tabungan & Konversi Nilai Sirkular
             </h1>
-            <p className="font-body-md text-on-surface-variant max-w-2xl mt-1">
+            <p className="font-body-md text-on-surface-variant max-w-2xl mt-1 text-xs sm:text-sm">
               Pantau akumulasi material terpilah, saldo rupiah terverifikasi, dan perolehan EcoPoints yang dapat ditukarkan dengan beragam imbalan ekologis.
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2.5">
+            <Link
+              to="/analitik"
+              className="px-3.5 h-11 rounded-lg bg-surface-container hover:bg-surface-container-high text-primary font-title-md text-xs font-semibold border border-outline-variant/40 transition-colors flex items-center gap-1.5"
+            >
+              <Icon name="bar_chart" size={14} className="text-secondary" />
+              <span>Lihat Analitik Tren</span>
+            </Link>
+
             <button
               type="button"
               onClick={seedSampleData}
-              className="px-4 h-11 rounded-lg bg-surface-container hover:bg-surface-container-high text-primary font-title-md text-xs font-semibold border border-outline-variant/40 transition-colors cursor-pointer"
+              className="px-3.5 h-11 rounded-lg bg-surface-container hover:bg-surface-container-high text-primary font-title-md text-xs font-semibold border border-outline-variant/40 transition-colors cursor-pointer"
               title="Muat data contoh untuk pengujian juri"
             >
-              Muat Data Simulasi
+              Muat Data Contoh
             </button>
             <button
               type="button"
               onClick={openDepositModal}
               className="h-11 px-5 rounded-lg bg-tertiary-fixed text-on-tertiary-fixed font-title-md text-sm font-bold hover:bg-tertiary-fixed-dim transition-all shadow-md flex items-center gap-2 cursor-pointer"
             >
-              <span className="material-symbols-outlined text-[20px]">add_circle</span>
+              <Icon name="add_circle" size={18} />
               <span>Setor Sampah Baru</span>
             </button>
           </div>
@@ -125,11 +150,11 @@ export const WasteBankPage: React.FC = () => {
           <div className="lg:col-span-5 rounded-2xl bg-primary text-on-primary p-space-lg shadow-xl relative overflow-hidden flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-4">
-                <span className="font-label-caps text-primary-fixed-dim uppercase tracking-wider font-bold">
+                <span className="font-label-caps text-primary-fixed-dim uppercase tracking-wider font-bold text-xs">
                   Total Saldo Tabungan Sirkular
                 </span>
                 <span className="px-2 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed text-[10px] font-bold uppercase">
-                  Terverifikasi
+                  Aktif
                 </span>
               </div>
               <div className="flex items-baseline gap-2">
@@ -138,8 +163,9 @@ export const WasteBankPage: React.FC = () => {
                 </span>
               </div>
               <div className="flex items-center gap-2 mt-2">
-                <span className="px-2.5 py-1 rounded-md bg-primary-container text-tertiary-fixed font-bold text-xs">
-                  {totalPoints.toLocaleString('id-ID')} EcoPoints
+                <span className="px-2.5 py-1 rounded-md bg-primary-container text-tertiary-fixed font-bold text-xs flex items-center gap-1">
+                  <Icon name="coins" size={13} />
+                  <span><AnimatedCounter value={totalPoints} /> EcoPoints</span>
                 </span>
                 <span className="text-xs text-primary-fixed-dim">
                   ≈ 1 Poin = Rp 100
@@ -148,15 +174,16 @@ export const WasteBankPage: React.FC = () => {
             </div>
 
             <div className="pt-6 mt-6 border-t border-primary-container flex items-center justify-between">
-              <span className="text-xs text-surface-variant">
-                ID Rekening: <strong className="text-white">ECO-ID-2026-994</strong>
+              <span className="text-xs text-surface-variant font-mono">
+                Rekening: <strong>ECO-ID-2026-994</strong>
               </span>
               <button
                 type="button"
                 onClick={() => setIsRedeemOpen(true)}
-                className="h-9 px-4 rounded-lg bg-secondary text-on-secondary text-xs font-bold hover:bg-on-secondary-container transition-colors cursor-pointer"
+                className="h-9 px-4 rounded-lg bg-secondary text-on-secondary text-xs font-bold hover:bg-secondary/90 transition-colors cursor-pointer flex items-center gap-1.5"
               >
-                Tukar Poin Reward
+                <Icon name="savings" size={14} />
+                <span>Tukar Imbalan</span>
               </button>
             </div>
           </div>
@@ -166,13 +193,11 @@ export const WasteBankPage: React.FC = () => {
             
             {/* Metric 1 */}
             <div className="p-space-lg rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-sm flex flex-col justify-between">
-              <span className="font-label-caps text-outline uppercase block mb-1">
+              <span className="font-label-caps text-outline uppercase block mb-1 text-[11px] font-bold">
                 Total Material
               </span>
               <div className="my-2">
-                <span className="font-metric-display text-3xl font-extrabold text-primary">
-                  {totalWeightKg.toLocaleString('id-ID')}
-                </span>
+                <AnimatedCounter value={totalWeightKg} decimals={1} className="font-metric-display text-3xl font-extrabold text-primary" />
                 <span className="text-sm font-semibold text-secondary ml-1">kg</span>
               </div>
               <span className="text-xs text-on-surface-variant">
@@ -182,13 +207,11 @@ export const WasteBankPage: React.FC = () => {
 
             {/* Metric 2 */}
             <div className="p-space-lg rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-sm flex flex-col justify-between">
-              <span className="font-label-caps text-outline uppercase block mb-1">
+              <span className="font-label-caps text-outline uppercase block mb-1 text-[11px] font-bold">
                 Reduksi Karbon
               </span>
               <div className="my-2">
-                <span className="font-metric-display text-3xl font-extrabold text-primary">
-                  {totalCo2AvoidedKg.toLocaleString('id-ID')}
-                </span>
+                <AnimatedCounter value={totalCo2AvoidedKg} decimals={1} className="font-metric-display text-3xl font-extrabold text-primary" />
                 <span className="text-sm font-semibold text-secondary ml-1">kg CO₂e</span>
               </div>
               <span className="text-xs text-on-surface-variant">
@@ -196,19 +219,19 @@ export const WasteBankPage: React.FC = () => {
               </span>
             </div>
 
-            {/* Metric 3 */}
+            {/* Metric 3: Honest Operational Standard */}
             <div className="p-space-lg rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-sm flex flex-col justify-between">
-              <span className="font-label-caps text-outline uppercase block mb-1">
-                Kepatuhan SNI
+              <span className="font-label-caps text-outline uppercase block mb-1 text-[11px] font-bold">
+                Efisiensi Sortasi
               </span>
               <div className="my-2">
                 <span className="font-metric-display text-3xl font-extrabold text-primary">
                   99.4%
                 </span>
-                <span className="text-sm font-semibold text-secondary ml-1">Akurasi</span>
+                <span className="text-sm font-semibold text-secondary ml-1">Presisi</span>
               </div>
               <span className="text-xs text-on-surface-variant">
-                Sesuai standar KLHK & ISO 14001
+                Acuan teknis SNI 19-3983-1995
               </span>
             </div>
 
@@ -216,14 +239,20 @@ export const WasteBankPage: React.FC = () => {
         </div>
 
         {/* Material Stream Composition Progress Bar */}
-        <div className="p-space-lg rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-sm">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-3 gap-2">
-            <h3 className="font-title-md font-bold text-primary">
-              Distribusi Komposisi Material Daur Ulang
-            </h3>
-            <span className="text-xs text-outline">
-              Berdasarkan akumulasi bobot setoran aktif
-            </span>
+        <div className="p-space-lg rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-sm space-y-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <h3 className="font-title-md font-bold text-primary text-sm">
+                Distribusi Komposisi Material Daur Ulang
+              </h3>
+              <p className="text-xs text-outline">
+                Proporsi massa sampah berdasarkan akumulasi setoran aktif di buku tabungan
+              </p>
+            </div>
+            <Link to="/analitik" className="text-secondary font-bold text-xs hover:underline flex items-center gap-1">
+              <span>Rincian Analitik Lengkap</span>
+              <Icon name="arrow_forward" size={13} />
+            </Link>
           </div>
 
           {/* Segmented Progress Bar */}
@@ -236,7 +265,7 @@ export const WasteBankPage: React.FC = () => {
           </div>
 
           {/* Legend */}
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 pt-3 text-xs">
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 pt-1 text-xs">
             <div className="flex items-center gap-1.5">
               <span className="w-3 h-3 rounded-full bg-secondary" />
               <span>Plastik PET (40%)</span>
@@ -255,7 +284,7 @@ export const WasteBankPage: React.FC = () => {
             </div>
             <div className="flex items-center gap-1.5">
               <span className="w-3 h-3 rounded-full bg-outline" />
-              <span>Kaca/E-Waste (5%)</span>
+              <span>Kaca/B3 (5%)</span>
             </div>
           </div>
         </div>
@@ -298,9 +327,7 @@ export const WasteBankPage: React.FC = () => {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="h-10 pl-9 pr-3 rounded-lg bg-surface-container text-xs text-on-surface outline-none focus:ring-1 focus:ring-secondary w-44 sm:w-56"
                 />
-                <span className="material-symbols-outlined text-[18px] text-outline absolute left-2.5 top-2.5">
-                  search
-                </span>
+                <Icon name="search" size={16} className="text-outline absolute left-2.5 top-3" />
               </div>
 
               {transactions.length > 0 && (
@@ -319,7 +346,7 @@ export const WasteBankPage: React.FC = () => {
           {/* Table Content */}
           {filteredTransactions.length === 0 ? (
             <div className="p-12 text-center space-y-3">
-              <span className="material-symbols-outlined text-5xl text-outline">receipt_long</span>
+              <Icon name="receipt" size={44} className="text-outline mx-auto" />
               <h4 className="font-title-md font-bold text-primary">Belum Ada Transaksi Ditemukan</h4>
               <p className="font-body-sm text-xs text-on-surface-variant max-w-sm mx-auto">
                 Mulai catat setoran sampah pertama Anda atau muat data simulasi kompetisi.
@@ -367,9 +394,7 @@ export const WasteBankPage: React.FC = () => {
                         >
                           <span>{trx.id}</span>
                           {trx.photoUrl && (
-                            <span className="material-symbols-outlined text-[14px] text-secondary" title="Memiliki bukti foto">
-                              image
-                            </span>
+                            <Icon name="image" size={13} className="text-secondary" />
                           )}
                         </button>
                       </td>
@@ -405,7 +430,7 @@ export const WasteBankPage: React.FC = () => {
                             className="p-1 rounded hover:bg-surface-container text-secondary hover:text-primary transition-colors cursor-pointer"
                             title="Buka Lembar Manifest & Bukti Setor"
                           >
-                            <span className="material-symbols-outlined text-[16px]">receipt_long</span>
+                            <Icon name="receipt" size={16} />
                           </button>
                           {/* Edit button */}
                           <button
@@ -414,7 +439,7 @@ export const WasteBankPage: React.FC = () => {
                             className="p-1 rounded hover:bg-surface-container text-outline hover:text-primary transition-colors cursor-pointer"
                             title="Edit data transaksi"
                           >
-                            <span className="material-symbols-outlined text-[16px]">edit</span>
+                            <Icon name="edit" size={16} />
                           </button>
                           {/* Delete button */}
                           <button
@@ -423,7 +448,7 @@ export const WasteBankPage: React.FC = () => {
                             className="p-1 rounded hover:bg-error-container text-outline hover:text-error transition-colors cursor-pointer"
                             title="Hapus transaksi"
                           >
-                            <span className="material-symbols-outlined text-[16px]">delete</span>
+                            <Icon name="delete" size={16} />
                           </button>
                         </div>
                       </td>
@@ -439,7 +464,12 @@ export const WasteBankPage: React.FC = () => {
 
       {/* EDIT MODAL */}
       {editingTrx && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-primary/70 backdrop-blur-sm animate-fadeIn">
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-primary/70 backdrop-blur-sm animate-fadeIn"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setEditingTrx(null);
+          }}
+        >
           <div className="bg-surface-container-lowest rounded-2xl max-w-md w-full p-space-lg shadow-2xl border border-outline-variant/30 space-y-4">
             <div className="flex items-center justify-between pb-2 border-b border-outline-variant/20">
               <h3 className="font-headline-sm font-bold text-primary">
@@ -449,7 +479,7 @@ export const WasteBankPage: React.FC = () => {
                 onClick={() => setEditingTrx(null)}
                 className="text-outline hover:text-primary cursor-pointer"
               >
-                <span className="material-symbols-outlined">close</span>
+                <Icon name="close" size={18} />
               </button>
             </div>
 
@@ -501,9 +531,14 @@ export const WasteBankPage: React.FC = () => {
 
       {/* DELETE CONFIRMATION MODAL */}
       {deletingId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-primary/70 backdrop-blur-sm animate-fadeIn">
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-primary/70 backdrop-blur-sm animate-fadeIn"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setDeletingId(null);
+          }}
+        >
           <div className="bg-surface-container-lowest rounded-2xl max-w-sm w-full p-space-lg shadow-2xl border border-outline-variant/30 space-y-4 text-center">
-            <span className="material-symbols-outlined text-4xl text-error">warning</span>
+            <Icon name="alert" size={36} className="text-error mx-auto" />
             <h3 className="font-headline-sm font-bold text-primary">Hapus Catatan Setoran?</h3>
             <p className="font-body-sm text-xs text-on-surface-variant">
               Tindakan ini akan menghapus riwayat {deletingId} dan menyesuaikan saldo poin buku tabungan Anda secara otomatis.
@@ -530,15 +565,20 @@ export const WasteBankPage: React.FC = () => {
 
       {/* SIMULATED REDEMPTION DRAWER / MODAL */}
       {isRedeemOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-primary/70 backdrop-blur-sm animate-fadeIn">
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-primary/70 backdrop-blur-sm animate-fadeIn"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setIsRedeemOpen(false);
+          }}
+        >
           <div className="bg-surface-container-lowest rounded-2xl max-w-lg w-full p-space-lg shadow-2xl border border-outline-variant/30 space-y-4">
             <div className="flex items-center justify-between pb-2 border-b border-outline-variant/20">
               <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-secondary">redeem</span>
+                <Icon name="savings" size={18} className="text-secondary" />
                 <h3 className="font-headline-sm font-bold text-primary">Katalog Penukaran Imbalan</h3>
               </div>
               <button onClick={() => setIsRedeemOpen(false)} className="text-outline hover:text-primary cursor-pointer">
-                <span className="material-symbols-outlined">close</span>
+                <Icon name="close" size={18} />
               </button>
             </div>
 
@@ -575,7 +615,7 @@ export const WasteBankPage: React.FC = () => {
                     showToast('Sertifikat adopsi bibit pohon berhasil disimulasikan!', 'success');
                     setIsRedeemOpen(false);
                   }}
-                  className="px-3 h-8 rounded bg-secondary text-on-secondary text-xs font-bold hover:bg-on-secondary-container disabled:opacity-40 cursor-pointer"
+                  className="px-3 h-8 rounded bg-secondary text-on-secondary text-xs font-bold hover:bg-secondary/90 disabled:opacity-40 cursor-pointer"
                 >
                   200 Poin
                 </button>
@@ -600,11 +640,11 @@ export const WasteBankPage: React.FC = () => {
             </div>
 
             <div className="pt-2 text-center text-[11px] text-outline">
-              * Mode simulasi demonstrasi kompetisi Web Design Techno Versary Vol. II 2026.
+              * Mode simulasi peraga kompetisi Web Design Techno Versary Vol. II 2026.
             </div>
           </div>
         </div>
       )}
-    </div>
+    </PageTransition>
   );
 };

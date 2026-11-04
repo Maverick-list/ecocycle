@@ -105,3 +105,39 @@ export interface DropPointStation {
   acceptedTypes: string[];
   contact: string;
 }
+
+
+export interface UserPreferences {
+  monthlyGoalKg: number;
+  notificationsEnabled: boolean;
+  emailDigestWeekly: boolean;
+  publicLeaderboard: boolean;
+  preferredDropPoint: string;
+}
+
+export interface UserActivityItem {
+  id: string;
+  type: 'deposit' | 'challenge' | 'badge' | 'pledge' | 'reward';
+  title: string;
+  description: string;
+  timestamp: string;
+  pointsDelta?: number;
+  weightDeltaKg?: number;
+  icon: string;
+}
+
+export interface UserProfile {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  role: string;
+  affiliation: string;
+  avatar: string;
+  bio: string;
+  location: string;
+  joinedDate: string;
+  ecoLevel: string;
+  currentStreakDays: number;
+  preferences: UserPreferences;
+}

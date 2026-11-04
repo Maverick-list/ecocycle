@@ -3,6 +3,7 @@ import { useWasteBank } from '../../context/WasteBankContext';
 import { WASTE_CATEGORIES } from '../../data/wasteData';
 import { DROP_POINTS } from '../../data/locationsData';
 import { WasteStreamType } from '../../types';
+import { Icon } from '../ui/Icon';
 
 export const WasteDepositModal: React.FC = () => {
   const { isDepositModalOpen, closeDepositModal, addTransaction } = useWasteBank();
@@ -84,7 +85,7 @@ export const WasteDepositModal: React.FC = () => {
         <div className="bg-primary p-space-md sm:p-space-lg flex items-center justify-between text-on-primary">
           <div className="flex items-center gap-space-sm">
             <div className="w-10 h-10 rounded-lg bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center">
-              <span className="material-symbols-outlined text-xl">post_add</span>
+              <Icon name="post_add" size={20} />
             </div>
             <div>
               <h3 id="deposit-modal-title" className="font-headline-sm text-headline-sm font-bold text-surface-bright">
@@ -101,7 +102,7 @@ export const WasteDepositModal: React.FC = () => {
             className="w-9 h-9 rounded-full flex items-center justify-center text-surface-variant hover:bg-primary-container transition-colors cursor-pointer"
             aria-label="Tutup modal"
           >
-            <span className="material-symbols-outlined text-[22px]">close</span>
+            <Icon name="close" size={20} />
           </button>
         </div>
 
@@ -126,9 +127,7 @@ export const WasteDepositModal: React.FC = () => {
                         : 'bg-surface-container text-on-surface hover:bg-surface-container-high'
                     }`}
                   >
-                    <span className={`material-symbols-outlined text-base ${isSelected ? 'text-tertiary-fixed' : 'text-outline'}`}>
-                      {cat.icon}
-                    </span>
+                    <Icon name={cat.icon} size={16} className={isSelected ? 'text-tertiary-fixed' : 'text-outline'} />
                     <span className="truncate">{cat.name}</span>
                   </button>
                 );
@@ -208,7 +207,7 @@ export const WasteDepositModal: React.FC = () => {
               </div>
             ) : (
               <label className="border-2 border-dashed border-outline-variant/40 rounded-xl p-3 flex items-center justify-center gap-2 cursor-pointer hover:bg-surface-container/50 transition-colors text-xs text-outline">
-                <span className="material-symbols-outlined text-lg">add_a_photo</span>
+                <Icon name="camera" size={18} />
                 <span>Unggah Foto Bukti Material (Klik Di Sini)</span>
                 <input
                   type="file"
@@ -276,7 +275,7 @@ export const WasteDepositModal: React.FC = () => {
               type="submit"
               className="px-6 h-11 rounded-lg bg-tertiary-fixed text-on-tertiary-fixed font-title-md text-sm font-bold hover:bg-tertiary-fixed-dim transition-all shadow-md cursor-pointer flex items-center gap-2"
             >
-              <span className="material-symbols-outlined text-[18px]">check_circle</span>
+              <Icon name="check_circle" size={18} />
               <span>Simpan & Konfirmasi Setoran</span>
             </button>
           </div>

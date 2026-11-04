@@ -15,6 +15,8 @@ import { EcoAcademyPage } from './pages/EcoAcademy/EcoAcademyPage';
 import { EcoChallengesPage } from './pages/EcoChallenges/EcoChallengesPage';
 import { ContactPage } from './pages/Contact/ContactPage';
 import { WasteDepositPage } from './pages/WasteDeposit/WasteDepositPage';
+import { ProfilePage } from './pages/Profile/ProfilePage';
+import { AnalyticsPage } from './pages/Analytics/AnalyticsPage';
 
 // Scroll to top helper on route navigation
 const ScrollToTop: React.FC = () => {
@@ -53,8 +55,13 @@ export const App: React.FC = () => {
               <Route path="/tantangan" element={<EcoChallengesPage />} />
               <Route path="/kontak" element={<ContactPage />} />
               <Route path="/setor-sampah" element={<WasteDepositPage />} />
+              <Route path="/profil" element={<ProfilePage />} />
+              <Route path="/analitik" element={<AnalyticsPage />} />
 
-              {/* Stitch Route Aliases & Redirects */}
+              {/* Aliases & Redirects */}
+              <Route path="/dashboard" element={<Navigate to="/profil" replace />} />
+              <Route path="/profile" element={<Navigate to="/profil" replace />} />
+              <Route path="/analytics" element={<Navigate to="/analitik" replace />} />
               <Route path="/akademi-dan-tantangan" element={<Navigate to="/akademi" replace />} />
               <Route path="/tentang-dan-kontak" element={<Navigate to="/kontak" replace />} />
 
