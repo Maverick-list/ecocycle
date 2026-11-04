@@ -44,7 +44,7 @@ export const EcoImpactPage: React.FC = () => {
   const totalWaterSavedLiters = Math.round(annualPlasticKg * 24 + annualCompostKg * 8);
 
   return (
-    <PageTransition className="w-full bg-surface text-on-surface py-16 sm:py-24">
+    <PageTransition className="w-full min-h-screen bg-surface dark:bg-[#03140d] text-on-surface dark:text-white py-12 sm:py-16 transition-colors duration-300">
       <SEOHead
         title="Neraca Dampak Ekologis & Audit Karbon Sains"
         canonical="/dampak-ekologis"

@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion, useReducedMotion, Variants } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 
 interface PageTransitionProps {
   children: React.ReactNode;
@@ -9,34 +9,14 @@ interface PageTransitionProps {
 export const PageTransition: React.FC<PageTransitionProps> = ({ children, className = '' }) => {
   const shouldReduceMotion = useReducedMotion();
 
-  const variants: Variants = {
-    initial: {
-      opacity: 0,
-      y: shouldReduceMotion ? 0 : 12,
-    },
-    animate: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: shouldReduceMotion ? 0.05 : 0.35,
-        ease: 'easeOut',
-      },
-    },
-    exit: {
-      opacity: 0,
-      y: shouldReduceMotion ? 0 : -8,
-      transition: {
-        duration: shouldReduceMotion ? 0.05 : 0.2,
-      },
-    },
-  };
-
   return (
     <motion.div
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      variants={variants}
+      initial={shouldReduceMotion ? false : { opacity: 0.4, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{
+        duration: shouldReduceMotion ? 0.05 : 0.22,
+        ease: 'easeOut',
+      }}
       className={className}
     >
       {children}

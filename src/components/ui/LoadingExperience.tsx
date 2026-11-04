@@ -69,8 +69,6 @@ export const LoadingExperience: React.FC<LoadingExperienceProps> = ({
     if (onComplete) onComplete();
   };
 
-  if (!isVisible) return null;
-
   return (
     <AnimatePresence>
       {isVisible && (

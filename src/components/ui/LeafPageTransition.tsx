@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 
-// Organic stylized SVG leaf component with gradient fill
+// Stylized organic SVG leaf with gradient fill
 const StylizedLeaf: React.FC<{
   size?: number;
   rotation?: number;
@@ -15,49 +15,47 @@ const StylizedLeaf: React.FC<{
     viewBox="0 0 64 64"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    className={`filter drop-shadow-[0_4px_16px_rgba(16,185,129,0.35)] ${className}`}
+    className={`filter drop-shadow-[0_4px_16px_rgba(16,185,129,0.4)] ${className}`}
     style={{
       transform: `rotate(${rotation}deg) ${flip ? 'scaleX(-1)' : ''}`,
     }}
   >
     <defs>
-      <linearGradient id="leafGrad" x1="8" y1="8" x2="56" y2="56" gradientUnits="userSpaceOnUse">
+      <linearGradient id="leafGradTrans" x1="8" y1="8" x2="56" y2="56" gradientUnits="userSpaceOnUse">
         <stop offset="0%" stopColor="#C8F0A5" />
         <stop offset="40%" stopColor="#34D399" />
         <stop offset="85%" stopColor="#059669" />
         <stop offset="100%" stopColor="#064E3B" />
       </linearGradient>
-      <linearGradient id="veinGrad" x1="32" y1="8" x2="32" y2="56" gradientUnits="userSpaceOnUse">
-        <stop offset="0%" stopColor="rgba(255,255,255,0.7)" />
-        <stop offset="100%" stopColor="rgba(200,240,165,0.3)" />
+      <linearGradient id="veinGradTrans" x1="32" y1="8" x2="32" y2="56" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stopColor="rgba(255,255,255,0.8)" />
+        <stop offset="100%" stopColor="rgba(200,240,165,0.4)" />
       </linearGradient>
     </defs>
-    {/* Main organic leaf shape */}
     <path
       d="M32 6C18 6 8 18 8 32C8 42 16 50 26 54C26 46 25 38 29 32C33 26 40 24 48 24C46 14 40 6 32 6Z"
-      fill="url(#leafGrad)"
+      fill="url(#leafGradTrans)"
     />
     <path
       d="M32 58C46 58 56 46 56 32C56 22 48 14 38 10C38 18 39 26 35 32C31 38 24 40 16 40C18 50 24 58 32 58Z"
-      fill="url(#leafGrad)"
-      opacity="0.9"
+      fill="url(#leafGradTrans)"
+      opacity="0.92"
     />
-    {/* Delicate leaf stem & central vein */}
     <path
       d="M12 52Q32 32 44 14"
-      stroke="url(#veinGrad)"
+      stroke="url(#veinGradTrans)"
       strokeWidth="2"
       strokeLinecap="round"
     />
     <path
       d="M26 38Q34 35 38 30"
-      stroke="url(#veinGrad)"
+      stroke="url(#veinGradTrans)"
       strokeWidth="1.2"
       strokeLinecap="round"
     />
     <path
       d="M20 44Q26 41 30 36"
-      stroke="url(#veinGrad)"
+      stroke="url(#veinGradTrans)"
       strokeWidth="1.2"
       strokeLinecap="round"
     />
@@ -68,143 +66,130 @@ export const LeafPageTransition: React.FC = () => {
   const location = useLocation();
   const shouldReduceMotion = useReducedMotion();
   const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
-  const [prevPath, setPrevPath] = useState<string>(location.pathname);
+  const [transitionId, setTransitionId] = useState<number>(0);
+  const prevPathRef = useRef<string>(location.pathname);
+  const isFirstMount = useRef<boolean>(true);
 
   useEffect(() => {
-    // If the path hasn't changed, do nothing
-    if (location.pathname === prevPath) return;
+    // Avoid triggering on initial mount
+    if (isFirstMount.current) {
+      isFirstMount.current = false;
+      return;
+    }
 
-    setPrevPath(location.pathname);
+    // Do nothing if navigating to the exact same path
+    if (location.pathname === prevPathRef.current) return;
+    prevPathRef.current = location.pathname;
 
     if (shouldReduceMotion) return;
 
-    // Trigger the organic leaf transition
+    // Trigger graceful organic leaf transition
+    setTransitionId((prev) => prev + 1);
     setIsTransitioning(true);
+
+    // Auto-dismiss cleanly after 500ms
     const timer = setTimeout(() => {
       setIsTransitioning(false);
-    }, 600); // 600ms total smooth transition
+    }, 500);
 
     return () => clearTimeout(timer);
-  }, [location.pathname, prevPath, shouldReduceMotion]);
+  }, [location.pathname, shouldReduceMotion]);
 
-  if (shouldReduceMotion || !isTransitioning) return null;
-
+  // NEVER return null before AnimatePresence to allow clean exit animations
   return (
-    <AnimatePresence>
-      {isTransitioning && (
+    <AnimatePresence mode="wait">
+      {isTransitioning && !shouldReduceMotion && (
         <motion.div
-          key={`leaf-curtain-${location.pathname}`}
+          key={`leaf-breeze-${transitionId}`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.25 }}
-          className="fixed inset-0 z-[9990] pointer-events-none select-none flex items-center justify-center overflow-hidden"
+          transition={{ duration: 0.2 }}
+          className="fixed inset-0 z-[9990] pointer-events-none select-none overflow-hidden flex items-center justify-center bg-transparent"
         >
-          {/* Layer 1: Lush botanical ambient blur wash */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="absolute inset-0 bg-[#02150e]/60 backdrop-blur-md"
-          />
+          {/* Subtle soft luminous top emerald shimmer (Transparent, never blackouts the screen!) */}
+          <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-transparent via-[#86efac]/80 to-transparent shadow-[0_0_15px_rgba(134,239,172,0.8)]" />
 
-          {/* Layer 2: Organic Curved Green Wave Sweeping Across */}
-          <motion.div
-            initial={{ y: '100%', opacity: 0.85 }}
-            animate={{ y: '-100%', opacity: [0.8, 1, 0.8] }}
-            transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-            className="absolute inset-0 w-full h-[200vh] bg-gradient-to-b from-transparent via-[#063321]/90 to-transparent pointer-events-none"
-          />
-
-          {/* Layer 3: Floating Cascading Botanical Leaves */}
-          <div className="relative z-10 w-full max-w-4xl h-full flex items-center justify-around pointer-events-none px-6">
+          {/* Floating Organic Leaves Breeze (Purely decorative overlay, zero page obscuration) */}
+          <div className="relative w-full h-full max-w-6xl mx-auto pointer-events-none">
             
-            {/* Leaf 1: Left Floater */}
+            {/* Leaf 1: Swirling from bottom-left to upper-middle */}
             <motion.div
-              initial={{ y: 80, x: -40, rotate: -35, opacity: 0, scale: 0.6 }}
+              initial={{ x: '-10vw', y: '60vh', rotate: -40, opacity: 0, scale: 0.6 }}
               animate={{
-                y: -100,
-                x: 20,
-                rotate: 25,
-                opacity: [0, 1, 1, 0],
-                scale: 1,
-              }}
-              transition={{ duration: 0.55, ease: 'easeOut' }}
-              className="absolute left-[15%] top-[45%]"
-            >
-              <StylizedLeaf size={84} rotation={15} />
-            </motion.div>
-
-            {/* Leaf 2: Center Primary Hero Leaf */}
-            <motion.div
-              initial={{ y: 60, scale: 0.5, rotate: -15, opacity: 0 }}
-              animate={{
-                y: -80,
-                scale: [0.5, 1.25, 1],
-                rotate: 45,
-                opacity: [0, 1, 1, 0],
-              }}
-              transition={{ duration: 0.58, ease: [0.16, 1, 0.3, 1] }}
-              className="flex flex-col items-center gap-3"
-            >
-              <div className="p-4 rounded-3xl bg-[#062c1d]/85 border border-[#C8F0A5]/30 shadow-2xl backdrop-blur-xl">
-                <StylizedLeaf size={96} rotation={-10} />
-              </div>
-              <motion.span
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: [0, 1, 0], y: -5 }}
-                transition={{ duration: 0.5, delay: 0.05 }}
-                className="text-[11px] font-sans font-extrabold uppercase tracking-[0.25em] text-[#C8F0A5] drop-shadow-md"
-              >
-                ECOCYCLE
-              </motion.span>
-            </motion.div>
-
-            {/* Leaf 3: Right Floater */}
-            <motion.div
-              initial={{ y: 100, x: 40, rotate: 45, opacity: 0, scale: 0.7 }}
-              animate={{
-                y: -70,
-                x: -30,
-                rotate: -20,
-                opacity: [0, 1, 1, 0],
-                scale: 1.05,
-              }}
-              transition={{ duration: 0.56, ease: 'easeOut', delay: 0.02 }}
-              className="absolute right-[18%] top-[50%]"
-            >
-              <StylizedLeaf size={76} rotation={-30} flip={true} />
-            </motion.div>
-
-            {/* Leaf 4: Mini accent leaf top right */}
-            <motion.div
-              initial={{ y: 50, x: 20, rotate: 10, opacity: 0 }}
-              animate={{
-                y: -120,
-                x: -20,
-                rotate: 90,
+                x: ['-5vw', '15vw', '30vw'],
+                y: ['50vh', '15vh', '-20vh'],
+                rotate: [-40, 15, 60],
                 opacity: [0, 0.9, 0],
+                scale: [0.6, 1, 0.8],
               }}
-              transition={{ duration: 0.5, ease: 'easeOut', delay: 0.05 }}
-              className="absolute right-[32%] top-[30%]"
+              transition={{ duration: 0.48, ease: [0.25, 1, 0.5, 1] }}
+              className="absolute left-0 bottom-0"
             >
-              <StylizedLeaf size={48} rotation={60} />
+              <StylizedLeaf size={72} rotation={-15} />
             </motion.div>
 
-            {/* Leaf 5: Mini accent leaf bottom left */}
+            {/* Leaf 2: Center Floating Elegance Badge */}
             <motion.div
-              initial={{ y: 70, x: -10, rotate: -45, opacity: 0 }}
+              initial={{ y: 35, scale: 0.85, opacity: 0 }}
               animate={{
-                y: -90,
-                x: 30,
-                rotate: 15,
-                opacity: [0, 0.85, 0],
+                y: [35, 0, -25],
+                scale: [0.85, 1.05, 0.95],
+                opacity: [0, 1, 0],
               }}
-              transition={{ duration: 0.52, ease: 'easeOut', delay: 0.04 }}
-              className="absolute left-[30%] top-[60%]"
+              transition={{ duration: 0.46, ease: [0.16, 1, 0.3, 1] }}
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-[#031c12]/80 border border-[#86efac]/40 shadow-2xl backdrop-blur-md"
             >
-              <StylizedLeaf size={52} rotation={-15} />
+              <StylizedLeaf size={28} rotation={20} />
+              <span className="font-display font-extrabold text-xs tracking-[0.25em] uppercase text-[#86efac]">
+                ECOCYCLE
+              </span>
+            </motion.div>
+
+            {/* Leaf 3: Swirling from mid-right toward top-left */}
+            <motion.div
+              initial={{ x: '90vw', y: '70vh', rotate: 50, opacity: 0, scale: 0.5 }}
+              animate={{
+                x: ['85vw', '60vw', '45vw'],
+                y: ['60vh', '20vh', '-15vh'],
+                rotate: [50, -10, -45],
+                opacity: [0, 0.85, 0],
+                scale: [0.5, 0.95, 0.75],
+              }}
+              transition={{ duration: 0.48, ease: [0.22, 1, 0.36, 1], delay: 0.02 }}
+              className="absolute left-0 bottom-0"
+            >
+              <StylizedLeaf size={64} rotation={40} flip={true} />
+            </motion.div>
+
+            {/* Leaf 4: Mini accent leaf flutter */}
+            <motion.div
+              initial={{ x: '35vw', y: '80vh', rotate: 10, opacity: 0 }}
+              animate={{
+                x: ['35vw', '45vw', '55vw'],
+                y: ['70vh', '30vh', '-10vh'],
+                rotate: [10, 80, 160],
+                opacity: [0, 0.75, 0],
+              }}
+              transition={{ duration: 0.45, ease: 'easeOut', delay: 0.04 }}
+              className="absolute left-0 bottom-0"
+            >
+              <StylizedLeaf size={44} rotation={45} />
+            </motion.div>
+
+            {/* Leaf 5: Fast right sweep leaf */}
+            <motion.div
+              initial={{ x: '70vw', y: '50vh', rotate: -30, opacity: 0 }}
+              animate={{
+                x: ['70vw', '80vw', '95vw'],
+                y: ['45vh', '15vh', '-25vh'],
+                rotate: [-30, 30, 90],
+                opacity: [0, 0.8, 0],
+              }}
+              transition={{ duration: 0.47, ease: 'easeOut', delay: 0.03 }}
+              className="absolute left-0 bottom-0"
+            >
+              <StylizedLeaf size={52} rotation={-25} flip={true} />
             </motion.div>
 
           </div>

@@ -39,7 +39,7 @@ export const EcoChallengesPage: React.FC = () => {
   const completedCount = challenges.filter(c => c.completed).length;
 
   return (
-    <PageTransition className="w-full bg-surface text-on-surface py-16 sm:py-24">
+    <PageTransition className="w-full min-h-screen bg-surface dark:bg-[#03140d] text-on-surface dark:text-white py-12 sm:py-16 transition-colors duration-300">
       <SEOHead
         title="Tantangan Komunitas & Papan Peringkat Sirkular"
         canonical="/tantangan"
