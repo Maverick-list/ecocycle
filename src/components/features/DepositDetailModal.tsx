@@ -1,13 +1,30 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useWasteBank } from '../../context/WasteBankContext';
 
 export const DepositDetailModal: React.FC = () => {
   const { selectedDetailTrx, closeDetailTrx } = useWasteBank();
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        closeDetailTrx();
+      }
+    };
+    if (selectedDetailTrx) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedDetailTrx, closeDetailTrx]);
+
   if (!selectedDetailTrx) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-primary/70 backdrop-blur-md animate-fadeIn">
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-primary/70 backdrop-blur-md animate-fadeIn"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) closeDetailTrx();
+      }}
+    >
       <div 
         className="bg-surface-container-lowest rounded-2xl max-w-lg w-full border border-outline-variant/30 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
         role="dialog"
@@ -33,6 +50,7 @@ export const DepositDetailModal: React.FC = () => {
             type="button"
             onClick={closeDetailTrx}
             className="w-8 h-8 rounded-full flex items-center justify-center text-surface-variant hover:bg-primary-container transition-colors cursor-pointer"
+            aria-label="Tutup rincian manifest"
           >
             <span className="material-symbols-outlined text-lg">close</span>
           </button>

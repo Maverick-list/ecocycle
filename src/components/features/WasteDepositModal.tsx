@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useWasteBank } from '../../context/WasteBankContext';
 import { WASTE_CATEGORIES } from '../../data/wasteData';
 import { DROP_POINTS } from '../../data/locationsData';
@@ -12,6 +12,18 @@ export const WasteDepositModal: React.FC = () => {
   const [dropPoint, setDropPoint] = useState<string>(DROP_POINTS[0].name);
   const [notes, setNotes] = useState<string>('');
   const [photoUrl, setPhotoUrl] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        closeDepositModal();
+      }
+    };
+    if (isDepositModalOpen) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isDepositModalOpen, closeDepositModal]);
 
   if (!isDepositModalOpen) return null;
 
@@ -56,7 +68,12 @@ export const WasteDepositModal: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-primary/70 backdrop-blur-md animate-fadeIn">
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-primary/70 backdrop-blur-md animate-fadeIn"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) closeDepositModal();
+      }}
+    >
       <div 
         className="bg-surface-container-lowest rounded-2xl max-w-2xl w-full border border-outline-variant/30 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
         role="dialog"

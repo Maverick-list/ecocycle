@@ -3,16 +3,28 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
   html, body {
     margin: 0;
     padding: 0;
     background-color: #fafaf3;
     color: #1a1c18;
     font-family: 'Manrope', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  }
+
+  /* Accessible focus states for keyboard navigation */
+  :focus-visible {
+    outline: 2px solid #006c48;
+    outline-offset: 2px;
   }
 }
 
@@ -41,4 +53,35 @@
 /* Custom smooth transitions */
 .transition-smooth {
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Skip-to-content accessibility link */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 16px;
+  background: #002517;
+  color: #cbf075;
+  padding: 8px 16px;
+  font-weight: 700;
+  font-size: 13px;
+  border-radius: 0 0 8px 8px;
+  z-index: 9999;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* Respect user's reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

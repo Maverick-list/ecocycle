@@ -33,11 +33,16 @@ export const App: React.FC = () => {
       <BrowserRouter>
         <ScrollToTop />
         <div className="min-h-screen flex flex-col bg-surface text-on-surface antialiased">
+          {/* Skip link for keyboard accessibility */}
+          <a href="#main-content" className="skip-link">
+            Lewati ke Konten Utama
+          </a>
+
           {/* Global Sticky Navigation */}
           <Navbar />
 
           {/* Main App Container */}
-          <main className="flex-1 w-full pt-20">
+          <main id="main-content" className="flex-1 w-full pt-20">
             <Routes>
               {/* All Eight Primary Competition Routes */}
               <Route path="/" element={<HomePage />} />
