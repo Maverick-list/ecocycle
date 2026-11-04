@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { DROP_POINTS, FAQ_ITEMS } from '../../data/locationsData';
 import { useWasteBank } from '../../context/WasteBankContext';
 import { StorageService } from '../../services/storageService';
 import { Icon } from '../../components/ui/Icon';
 import { PageTransition } from '../../components/ui/PageTransition';
+import { SEOHead } from '../../components/seo/SEOHead';
 import { SocialLinks } from '../../components/ui/SocialLinks';
 
 export const ContactPage: React.FC = () => {
@@ -40,7 +42,7 @@ export const ContactPage: React.FC = () => {
       StorageService.set('ecocycle_contact_messages_v2', [newEntry, ...existing]);
 
       setIsSubmitting(false);
-      showToast(`Pesan terkirim & tercatat secara lokal! Tim ECOCYCLE akan menghubungi ${email}.`, 'success');
+      showToast(`Pesan terkirim & tercatat! Tim ECOCYCLE akan menghubungi ${email}.`, 'success');
       setName('');
       setEmail('');
       setMessage('');
@@ -48,276 +50,288 @@ export const ContactPage: React.FC = () => {
   };
 
   return (
-    <PageTransition>
-      <div className="w-full bg-surface py-space-xl">
-        <div className="max-w-[1380px] mx-auto px-margin-sm lg:px-margin space-y-space-xl">
-          
-          {/* Header */}
-          <div className="border-b border-outline-variant/30 pb-space-lg">
-            <div className="flex items-center gap-2 mb-1">
-              <span className="w-2.5 h-2.5 rounded-full bg-secondary" />
-              <span className="font-label-caps text-secondary font-bold uppercase tracking-wider">
-                Tentang Kami & Layanan Kontak
-              </span>
+    <PageTransition className="w-full bg-surface text-on-surface py-16 sm:py-24">
+      <SEOHead
+        title="Hub Jaringan & Drop-Point Terdekat"
+        canonical="/kontak"
+        description="Temukan titik drop-point penyerahan sampah terpilah di sekitar Anda, jam operasional, panduan rute, dan layanan narahubung ECOCYCLE."
+      />
+      <div className="max-w-[1240px] mx-auto px-6 sm:px-8 lg:px-12 space-y-12">
+        
+        {/* Editorial Header */}
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-8 border-b border-outline-variant/20">
+          <div className="space-y-4 max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-pill text-xs font-semibold uppercase tracking-wider text-secondary">
+              <Icon name="mail" size={14} />
+              <span>Narahubung & Manifesto Layanan</span>
             </div>
-            <h1 className="font-headline-xl text-headline-xl-mobile md:text-headline-xl font-bold text-primary tracking-tight">
-              Manifesto Sirkular & Narahubung Resmi
+            <h1 className="font-display font-extrabold text-page-title text-primary tracking-tight leading-tight">
+              Pusat Komunikasi & Hub Kolaborasi
             </h1>
-            <p className="font-body-md text-on-surface-variant max-w-2xl mt-1">
-              Platform ECOCYCLE dikembangkan sebagai kontribusi digital untuk ekosistem pengelolaan sampah presisi bagi Web Design Competition Techno Versary Vol. II 2026.
+            <p className="font-sans text-subheading text-on-surface-variant font-normal leading-relaxed">
+              Hubungi tim pengembang operasional platform ECOCYCLE untuk kemitraan bank sampah baru, integrasi korporasi rantai pasok daur ulang, atau pertanyaan umum.
             </p>
           </div>
 
-          {/* SECTION 1: ABOUT US & INSTITUTIONAL MANIFESTO */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter lg:gap-space-xl items-center">
-            <div className="lg:col-span-7 space-y-space-md">
-              <span className="font-label-caps text-secondary font-bold uppercase tracking-wider block">
-                Visi & Nilai Dasar
-              </span>
-              <h2 className="font-headline-lg font-bold text-primary tracking-tight">
-                Mengubah Pola Pikir: Dari Beban Pembuangan Menjadi Nilai Kehidupan
-              </h2>
-              <p className="font-body-md text-on-surface-variant leading-relaxed">
-                ECOCYCLE lahir dari realitas bahwa 69% timbunan sampah perkotaan berakhir di TPA tanpa pemilahan awal. Kami meyakini bahwa teknologi digital harus menjadi jembatan inklusif yang mempermudah warga biasa memahami sains pemilahan, mencatat setoran dengan transparan, dan memetik manfaat nyata dari gaya hidup sirkular.
-              </p>
+          <div className="flex items-center gap-3 shrink-0">
+            <Link
+              to="/faq"
+              className="h-11 px-5 rounded-xl glass-pill hover:bg-surface-container text-on-surface font-sans text-xs font-bold transition-all flex items-center gap-2"
+            >
+              <Icon name="info" size={16} className="text-secondary" />
+              <span>Pusat Bantuan FAQ</span>
+            </Link>
+          </div>
+        </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                <div className="p-4 rounded-xl bg-surface-container-lowest border border-outline-variant/30">
-                  <span className="font-bold text-sm text-primary block mb-1">🎯 Visi Utama</span>
-                  <p className="text-xs text-on-surface-variant leading-relaxed">
-                    Menciptakan ekosistem perkotaan dan kampus zero-waste melalui integrasi bank sampah digital dan audit material terverifikasi.
-                  </p>
-                </div>
-                <div className="p-4 rounded-xl bg-surface-container-lowest border border-outline-variant/30">
-                  <span className="font-bold text-sm text-primary block mb-1">🌱 Misi Berkelanjutan</span>
-                  <p className="text-xs text-on-surface-variant leading-relaxed">
-                    Memberdayakan komunitas lokal, mengedukasi generasi muda, dan menyediakan data saintifik reduksi emisi karbon yang dapat dipertanggungjawabkan.
-                  </p>
-                </div>
+        {/* SECTION 1: ABOUT US & INSTITUTIONAL MANIFESTO */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          <div className="lg:col-span-7 space-y-6">
+            <span className="text-xs font-bold uppercase tracking-wider text-secondary block">
+              Visi & Nilai Dasar
+            </span>
+            <h2 className="font-display font-bold text-2xl sm:text-3xl text-primary tracking-tight">
+              Mengubah Pola Pikir: Dari Pembuangan Menjadi Nilai Sirkular
+            </h2>
+            <p className="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+              ECOCYCLE hadir untuk mentransformasi paradigma pengelolaan limbah perkotaan dari model linear <em>take-make-dispose</em> menjadi sirkular tertutup. Dengan mendesentralisasi penimbangan, mengintegrasikan verifikasi metrologis legal, dan memberikan insentif ekonomi transparan, kami memberdayakan warga untuk menjadi garda terdepan aksi iklim nyata.
+            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+              <div className="p-6 rounded-2xl glass-panel border border-outline-variant/20 space-y-2">
+                <span className="font-display font-bold text-sm text-primary block">🎯 Visi Strategis</span>
+                <p className="text-xs text-on-surface-variant leading-relaxed">
+                  Menciptakan ekosistem perkotaan zero-waste terintegrasi melalui audit material terverifikasi dan bank sampah digital.
+                </p>
               </div>
-            </div>
-
-            <div className="lg:col-span-5 rounded-2xl overflow-hidden shadow-lg border border-outline-variant/30">
-              <img
-                src="/assets/images/workshop.jpg"
-                alt="Community Eco Engagement"
-                className="w-full h-80 object-cover"
-                onError={(e) => {
-                  (e.target as HTMLElement).style.display = 'none';
-                }}
-              />
+              <div className="p-6 rounded-2xl glass-panel border border-outline-variant/20 space-y-2">
+                <span className="font-display font-bold text-sm text-primary block">🌱 Misi Berkelanjutan</span>
+                <p className="text-xs text-on-surface-variant leading-relaxed">
+                  Menyediakan data saintifik terukur mengenai reduksi emisi karbon berbasis standar internasional yang dapat dipertanggungjawabkan.
+                </p>
+              </div>
             </div>
           </div>
 
-          {/* SECTION 2: CONTACT FORM & OPERATIONAL HUBS */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter lg:gap-space-xl">
-            
-            {/* Left: Contact Form (7 cols) */}
-            <div className="lg:col-span-7 p-space-lg sm:p-space-xl rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-md space-y-space-md">
-              <div>
-                <span className="font-label-caps text-secondary font-bold uppercase tracking-wider block mb-1">
-                  Kirim Pesan Langsung
-                </span>
-                <h3 className="font-headline-sm font-bold text-primary">
-                  Formulir Komunikasi & Saran Kemitraan
-                </h3>
-                <p className="font-body-sm text-xs text-on-surface-variant mt-0.5">
-                  Ada pertanyaan mengenai bank sampah, usulan titik drop-point baru, atau kolaborasi kampus? Sampaikan kepada kami.
-                </p>
-              </div>
+          <div className="lg:col-span-5 rounded-3xl overflow-hidden glass-panel border border-outline-variant/25 p-4 shadow-xl">
+            <img
+              src="/assets/images/workshop.jpg"
+              alt="Community Eco Engagement"
+              className="w-full h-80 object-cover rounded-2xl"
+              onError={(e) => {
+                (e.target as HTMLElement).style.display = 'none';
+              }}
+            />
+          </div>
+        </div>
 
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-bold text-on-surface-variant uppercase mb-1">
-                      Nama Lengkap *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="Contoh: Rina Mahasiswa UNIKU"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      className="w-full h-11 px-3.5 rounded-lg bg-surface-container text-xs text-on-surface outline-none focus:ring-2 focus:ring-secondary border border-outline-variant/20"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-on-surface-variant uppercase mb-1">
-                      Alamat Surel (Email) *
-                    </label>
-                    <input
-                      type="email"
-                      required
-                      placeholder="nama@email.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="w-full h-11 px-3.5 rounded-lg bg-surface-container text-xs text-on-surface outline-none focus:ring-2 focus:ring-secondary border border-outline-variant/20"
-                    />
-                  </div>
-                </div>
+        {/* SECTION 2: CONTACT FORM & OPERATIONAL HUBS */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          
+          {/* Left: Contact Form (7 cols) */}
+          <div className="lg:col-span-7 p-8 sm:p-10 rounded-3xl glass-panel-elevated border border-outline-variant/25 shadow-xl space-y-6">
+            <div>
+              <span className="text-xs font-bold uppercase tracking-wider text-secondary block mb-1">
+                Kirim Pesan Langsung
+              </span>
+              <h3 className="font-display font-bold text-xl text-primary">
+                Formulir Komunikasi & Saran Kemitraan
+              </h3>
+              <p className="text-xs text-on-surface-variant mt-1 leading-relaxed">
+                Ada pertanyaan mengenai bank sampah, usulan titik drop-point baru, atau kolaborasi kelembagaan? Sampaikan kepada kami.
+              </p>
+            </div>
 
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-on-surface-variant uppercase mb-1">
-                    Kategori Kepentingan
+                  <label className="block text-xs font-bold text-outline uppercase tracking-wider mb-1.5">
+                    Nama Lengkap *
                   </label>
-                  <select
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value)}
-                    className="w-full h-11 px-3.5 rounded-lg bg-surface-container text-xs text-on-surface outline-none focus:ring-2 focus:ring-secondary border border-outline-variant/20 cursor-pointer"
-                  >
-                    <option value="Pertanyaan Umum">Pertanyaan Umum Platform</option>
-                    <option value="Usulan Drop-Point">Usulan Titik Drop-Point Baru</option>
-                    <option value="Kemitraan Kampus">Kemitraan Kampus & Komunitas</option>
-                    <option value="Bantuan Teknis">Laporan Masalah / Kendala Teknis</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-on-surface-variant uppercase mb-1">
-                    Pesan Anda *
-                  </label>
-                  <textarea
-                    rows={4}
+                  <input
+                    type="text"
                     required
-                    placeholder="Tuliskan pertanyaan, saran, atau usulan lokasi drop-point Anda secara rinci..."
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    className="w-full p-3 rounded-lg bg-surface-container text-xs text-on-surface outline-none focus:ring-2 focus:ring-secondary border border-outline-variant/20"
+                    placeholder="Contoh: Rina Safitri"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full h-11 px-4 rounded-xl glass-panel text-xs text-on-surface outline-none focus:ring-2 focus:ring-secondary/50 border border-outline-variant/25"
                   />
                 </div>
+                <div>
+                  <label className="block text-xs font-bold text-outline uppercase tracking-wider mb-1.5">
+                    Alamat Surel (Email) *
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    placeholder="nama@email.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full h-11 px-4 rounded-xl glass-panel text-xs text-on-surface outline-none focus:ring-2 focus:ring-secondary/50 border border-outline-variant/25"
+                  />
+                </div>
+              </div>
 
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="h-11 px-6 rounded-lg bg-primary text-on-primary font-title-md text-sm font-bold hover:bg-primary-container transition-all shadow-md cursor-pointer flex items-center gap-2"
+              <div>
+                <label className="block text-xs font-bold text-outline uppercase tracking-wider mb-1.5">
+                  Kategori Kepentingan
+                </label>
+                <select
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  className="w-full h-11 px-4 rounded-xl glass-panel text-xs text-on-surface outline-none focus:ring-2 focus:ring-secondary/50 border border-outline-variant/25 cursor-pointer"
                 >
-                  <Icon name="send" size={16} />
-                  <span>{isSubmitting ? 'Mengirimkan...' : 'Kirim Pesan Sekarang'}</span>
-                </button>
-              </form>
-            </div>
-
-            {/* Right: Operational Hubs & Contacts (5 cols) */}
-            <div className="lg:col-span-5 space-y-4">
-              <div className="p-space-lg rounded-2xl bg-primary text-on-primary shadow-lg border border-primary-container space-y-4">
-                <span className="font-label-caps text-tertiary-fixed font-bold uppercase tracking-wider block">
-                  Sekretariat & Hub Kampus
-                </span>
-                <h3 className="font-headline-sm font-bold text-surface-bright">
-                  Fakultas Ilmu Komputer, Universitas Kuningan
-                </h3>
-                
-                <div className="space-y-3 text-xs text-primary-fixed-dim pt-1">
-                  <div className="flex items-start gap-2.5">
-                    <div className="text-tertiary-fixed mt-0.5">
-                      <Icon name="map_pin" size={16} />
-                    </div>
-                    <span>Jl. Cut Nyak Dhien No. 36A, Cijoho, Kec. Kuningan, Kabupaten Kuningan, Jawa Barat 45513</span>
-                  </div>
-                  <div className="flex items-center gap-2.5">
-                    <div className="text-tertiary-fixed">
-                      <Icon name="mail" size={16} />
-                    </div>
-                    <span>ecocycle.unikun@gmail.com</span>
-                  </div>
-                  <div className="flex items-center gap-2.5">
-                    <div className="text-tertiary-fixed">
-                      <Icon name="phone" size={16} />
-                    </div>
-                    <span>+62 (0232) 871234 • Hotline Sirkular</span>
-                  </div>
-                  <div className="flex items-center gap-2.5">
-                    <div className="text-tertiary-fixed">
-                      <Icon name="clock" size={16} />
-                    </div>
-                    <span>Senin - Jumat: 08.00 - 16.30 WIB</span>
-                  </div>
-                </div>
-
-                <div className="pt-3 border-t border-primary-container">
-                  <span className="text-[11px] text-surface-variant block mb-1">Penyelenggara Kompetisi:</span>
-                  <span className="text-xs font-bold text-tertiary-fixed block">
-                    HIMA TI FKOM Universitas Kuningan (Techno Versary Vol. II 2026)
-                  </span>
-                </div>
+                  <option value="Pertanyaan Umum">Pertanyaan Umum Platform</option>
+                  <option value="Usulan Drop-Point">Usulan Titik Drop-Point Baru</option>
+                  <option value="Kemitraan Kampus">Kemitraan Lembaga & Komunitas</option>
+                  <option value="Bantuan Teknis">Laporan Masalah / Kendala Teknis</option>
+                </select>
               </div>
 
-              {/* Creator & Developer Profile Attribution */}
-              <div className="p-4 rounded-xl bg-surface-container-lowest border border-outline-variant/30 space-y-3">
-                <span className="font-label-caps text-secondary font-bold uppercase tracking-wider block">
-                  Profil Pengembang & Kreator
-                </span>
-                <p className="text-xs text-on-surface-variant leading-relaxed">
-                  Platform ECOCYCLE dikembangkan oleh <strong>Firza Ilmi</strong> untuk kompetisi Web Design Techno Versary Vol. II 2026.
-                </p>
-                <div className="pt-1">
-                  <SocialLinks variant="light" showLabels={true} />
-                </div>
+              <div>
+                <label className="block text-xs font-bold text-outline uppercase tracking-wider mb-1.5">
+                  Pesan Anda *
+                </label>
+                <textarea
+                  rows={4}
+                  required
+                  placeholder="Tuliskan pertanyaan, saran, atau usulan lokasi drop-point Anda secara rinci..."
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  className="w-full p-4 rounded-xl glass-panel text-xs text-on-surface outline-none focus:ring-2 focus:ring-secondary/50 border border-outline-variant/25"
+                />
               </div>
 
-              {/* Drop Point Directory Preview */}
-              <div className="p-4 rounded-xl bg-surface-container-lowest border border-outline-variant/30 space-y-3">
-                <span className="font-label-caps text-secondary font-bold uppercase tracking-wider block">
-                  Jaringan Drop-Point Resmi
-                </span>
-                <div className="space-y-2">
-                  {DROP_POINTS.slice(0, 2).map((dp) => (
-                    <div key={dp.id} className="p-2.5 rounded-lg bg-surface-container-low text-xs">
-                      <span className="font-bold text-primary block">{dp.name}</span>
-                      <span className="text-outline text-[11px] block">{dp.address}</span>
-                      <span className="text-secondary font-semibold text-[10px] mt-1 inline-block">
-                        {dp.status} • {dp.hours}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="h-11 px-6 rounded-xl bg-secondary text-white font-sans text-xs font-bold hover:bg-secondary/90 transition-all shadow-md cursor-pointer flex items-center gap-2 hover:scale-[1.02] active:scale-[0.98]"
+              >
+                <Icon name="send" size={16} />
+                <span>{isSubmitting ? 'Mengirimkan...' : 'Kirim Pesan Sekarang'}</span>
+              </button>
+            </form>
           </div>
 
-          {/* SECTION 3: FREQUENTLY ASKED QUESTIONS (FAQ ACCORDION) */}
-          <div className="p-space-lg sm:p-space-xl rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-sm space-y-4">
-            <div className="max-w-2xl">
-              <span className="font-label-caps text-secondary font-bold uppercase tracking-wider block mb-1">
-                Pertanyaan yang Sering Diajukan
+          {/* Right: Operational Hubs & Contacts (5 cols) */}
+          <div className="lg:col-span-5 space-y-6">
+            <div className="p-8 rounded-3xl glass-panel-elevated border border-secondary/30 shadow-xl space-y-6">
+              <span className="text-xs font-bold uppercase tracking-wider text-secondary block">
+                Kantor Sekretariat & Hub Sentral
               </span>
-              <h2 className="font-headline-lg font-bold text-primary tracking-tight">
-                Tanya Jawab Seputar Layanan ECOCYCLE
-              </h2>
+              <h3 className="font-display font-bold text-xl text-primary">
+                ECOCYCLE Central Resource Hub
+              </h3>
+              
+              <div className="space-y-4 text-xs text-on-surface-variant pt-1">
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-secondary/15 text-secondary flex items-center justify-center shrink-0 mt-0.5">
+                    <Icon name="map_pin" size={16} />
+                  </div>
+                  <span>Jl. Siliwangi No. 104, Purwawinangun, Kuningan, Jawa Barat 45511</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-secondary/15 text-secondary flex items-center justify-center shrink-0">
+                    <Icon name="mail" size={16} />
+                  </div>
+                  <span>support@ecocycle.id</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-secondary/15 text-secondary flex items-center justify-center shrink-0">
+                    <Icon name="phone" size={16} />
+                  </div>
+                  <span>+62 (0232) 871234 • Layanan Informasi & Penjemputan</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-secondary/15 text-secondary flex items-center justify-center shrink-0">
+                    <Icon name="clock" size={16} />
+                  </div>
+                  <span>Senin - Sabtu: 08.00 - 17.00 WIB</span>
+                </div>
+              </div>
+
+              <div className="pt-4 border-t border-outline-variant/15">
+                <span className="text-xs text-outline block mb-2 font-medium">Kanal Resmi Platform:</span>
+                <SocialLinks variant="light" showLabels={true} />
+              </div>
             </div>
 
-            <div className="space-y-3 pt-2">
-              {FAQ_ITEMS.map((faq, index) => {
-                const isOpen = openFaqIndex === index;
-                return (
-                  <div
-                    key={index}
-                    className="rounded-xl border border-outline-variant/20 overflow-hidden bg-surface-container-low"
-                  >
-                    <button
-                      type="button"
-                      onClick={() => setOpenFaqIndex(isOpen ? null : index)}
-                      className="w-full p-4 text-left font-title-md font-bold text-sm text-primary flex items-center justify-between gap-4 cursor-pointer hover:bg-surface-container transition-colors"
-                    >
-                      <span>{faq.q}</span>
-                      <div className="text-secondary shrink-0">
-                        <Icon name={isOpen ? 'chevron_up' : 'chevron_down'} size={18} />
-                      </div>
-                    </button>
-
-                    {isOpen && (
-                      <div className="px-4 pb-4 font-body-sm text-xs text-on-surface-variant leading-relaxed border-t border-outline-variant/10 pt-3 animate-fadeIn">
-                        {faq.a}
-                      </div>
-                    )}
+            {/* Drop Point Directory Preview */}
+            <div className="p-6 rounded-3xl glass-panel border border-outline-variant/25 space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold uppercase tracking-wider text-secondary">
+                  Jaringan Drop-Point Resmi
+                </span>
+                <Link to="/panduan" className="text-xs text-secondary font-bold hover:underline">
+                  Lihat Semua →
+                </Link>
+              </div>
+              <div className="space-y-3">
+                {DROP_POINTS.slice(0, 2).map((dp) => (
+                  <div key={dp.id} className="p-3.5 rounded-2xl glass-panel border border-outline-variant/15 text-xs">
+                    <span className="font-display font-bold text-primary block">{dp.name}</span>
+                    <span className="text-outline text-[11px] block mt-0.5">{dp.address}</span>
+                    <span className="text-secondary font-semibold text-[10px] mt-1.5 inline-block">
+                      {dp.status} • {dp.hours}
+                    </span>
                   </div>
-                );
-              })}
+                ))}
+              </div>
             </div>
           </div>
 
         </div>
+
+        {/* SECTION 3: FAQ ACCORDION PREVIEW */}
+        <div className="p-8 sm:p-12 rounded-3xl glass-panel border border-outline-variant/25 shadow-xl space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+            <div>
+              <span className="text-xs font-bold uppercase tracking-wider text-secondary block mb-1">
+                Tanya Jawab Terpopuler
+              </span>
+              <h2 className="font-display font-bold text-2xl text-primary tracking-tight">
+                Pertanyaan yang Sering Diajukan
+              </h2>
+            </div>
+            <Link
+              to="/faq"
+              className="text-xs font-bold text-secondary hover:underline flex items-center gap-1 shrink-0"
+            >
+              <span>Buka Seluruh 16 Pertanyaan di Pusat Bantuan FAQ</span>
+              <Icon name="arrow_forward" size={13} />
+            </Link>
+          </div>
+
+          <div className="space-y-3 pt-2">
+            {FAQ_ITEMS.map((faq, index) => {
+              const isOpen = openFaqIndex === index;
+              return (
+                <div
+                  key={index}
+                  className="rounded-2xl border border-outline-variant/20 overflow-hidden glass-panel"
+                >
+                  <button
+                    type="button"
+                    onClick={() => setOpenFaqIndex(isOpen ? null : index)}
+                    className="w-full p-5 text-left font-display font-bold text-sm text-primary flex items-center justify-between gap-4 cursor-pointer hover:bg-surface-container/40 transition-colors"
+                  >
+                    <span>{faq.q}</span>
+                    <div className="text-secondary shrink-0">
+                      <Icon name={isOpen ? 'chevron_up' : 'chevron_down'} size={18} />
+                    </div>
+                  </button>
+
+                  {isOpen && (
+                    <div className="px-5 pb-5 text-xs text-on-surface-variant leading-relaxed border-t border-outline-variant/10 pt-3 animate-fadeIn">
+                      {faq.a}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
       </div>
     </PageTransition>
   );

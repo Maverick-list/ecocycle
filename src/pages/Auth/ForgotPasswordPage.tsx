@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { PageTransition } from '../../components/ui/PageTransition';
 import { Icon } from '../../components/ui/Icon';
 import { EcocycleLogo } from '../../components/brand/EcocycleLogo';
+import { SEOHead } from '../../components/seo/SEOHead';
 
 export const ForgotPasswordPage: React.FC = () => {
   const { resetPassword } = useAuth();
@@ -32,43 +33,46 @@ export const ForgotPasswordPage: React.FC = () => {
   };
 
   return (
-    <PageTransition>
-      <div className="min-h-[85vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-surface">
-        <div className="max-w-md w-full space-y-6">
+    <PageTransition className="w-full bg-surface text-on-surface py-16 sm:py-24">
+      <SEOHead title="Pemulihan Kata Sandi" canonical="/lupa-password" noindex={true} />
+      <div className="min-h-[75vh] flex items-center justify-center px-4 sm:px-6 lg:px-8">
+        <div className="max-w-md w-full space-y-8">
           
-          <div className="text-center space-y-2">
-            <Link to="/" className="inline-block">
+          <div className="text-center space-y-3">
+            <Link to="/" className="inline-block hover:opacity-90 transition-opacity">
               <EcocycleLogo size="lg" showTagline={true} />
             </Link>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-primary tracking-tight pt-2">
+            <h1 className="font-display font-extrabold text-2xl sm:text-3xl text-primary tracking-tight pt-2">
               Pemulihan Kata Sandi
             </h1>
             <p className="text-xs text-on-surface-variant">
-              Masukkan alamat surel yang terdaftar untuk menerima tautan pembaruan kata sandi.
+              Masukkan surel yang terdaftar untuk menerima tautan pembaruan kata sandi.
             </p>
           </div>
 
-          <div className="glass-panel-elevated p-6 sm:p-8 rounded-3xl space-y-5 border border-outline-variant/30 shadow-xl">
+          <div className="glass-panel-elevated p-8 sm:p-10 rounded-3xl space-y-6 border border-outline-variant/25 shadow-2xl">
             {isSubmitted ? (
               <div className="text-center space-y-4 py-3 animate-fadeIn">
-                <div className="w-14 h-14 mx-auto rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center">
+                <div className="w-16 h-16 mx-auto rounded-2xl bg-secondary/15 text-secondary flex items-center justify-center">
                   <Icon name="mail" size={28} />
                 </div>
-                <h3 className="text-base font-bold text-primary">Tautan Terkirim!</h3>
+                <h3 className="font-display font-bold text-lg text-primary">Tautan Terkirim!</h3>
                 <p className="text-xs text-on-surface-variant leading-relaxed">
                   Kami telah mengirimkan instruksi pemulihan ke alamat surel <strong>{email}</strong>. Harap periksa folder kotak masuk atau spam Anda.
                 </p>
-                <Link
-                  to="/masuk"
-                  className="inline-flex items-center justify-center h-10 px-6 rounded-xl bg-primary text-on-primary text-xs font-bold hover:bg-primary-container transition-all"
-                >
-                  Kembali ke Halaman Masuk
-                </Link>
+                <div className="pt-2">
+                  <Link
+                    to="/masuk"
+                    className="inline-flex items-center justify-center h-11 px-6 rounded-xl bg-secondary text-white text-xs font-bold hover:bg-secondary/90 transition-all shadow-md"
+                  >
+                    Kembali ke Halaman Masuk
+                  </Link>
+                </div>
               </div>
             ) : (
               <>
                 {errorMessage && (
-                  <div className="p-3.5 rounded-xl bg-error-container text-on-error-container text-xs flex items-start gap-2 animate-fadeIn">
+                  <div className="p-4 rounded-2xl bg-error/15 text-error text-xs flex items-start gap-2.5 animate-fadeIn border border-error/20">
                     <Icon name="alert" size={16} className="text-error shrink-0 mt-0.5" />
                     <span>{errorMessage}</span>
                   </div>
@@ -76,11 +80,11 @@ export const ForgotPasswordPage: React.FC = () => {
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div>
-                    <label className="block text-xs font-bold text-on-surface-variant uppercase mb-1">
+                    <label className="block text-xs font-bold text-outline uppercase tracking-wider mb-1.5">
                       Alamat Surel Terdaftar
                     </label>
                     <div className="relative">
-                      <div className="absolute left-3 top-3 text-outline">
+                      <div className="absolute left-3.5 top-3.5 text-outline">
                         <Icon name="mail" size={16} />
                       </div>
                       <input
@@ -89,7 +93,7 @@ export const ForgotPasswordPage: React.FC = () => {
                         placeholder="nama@email.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="w-full h-11 pl-10 pr-3.5 rounded-xl bg-surface-container text-xs text-on-surface outline-none focus:ring-2 focus:ring-secondary border border-outline-variant/20"
+                        className="w-full h-11 pl-10 pr-4 rounded-xl glass-panel text-xs text-on-surface outline-none focus:ring-2 focus:ring-secondary/50 border border-outline-variant/25"
                       />
                     </div>
                   </div>
@@ -97,10 +101,10 @@ export const ForgotPasswordPage: React.FC = () => {
                   <button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full h-11 rounded-xl bg-primary text-on-primary font-bold text-xs hover:bg-primary-container transition-all cursor-pointer shadow-md flex items-center justify-center gap-2"
+                    className="w-full h-11 rounded-xl bg-secondary text-white font-bold text-xs hover:bg-secondary/90 transition-all cursor-pointer shadow-md flex items-center justify-center gap-2 mt-4 hover:scale-[1.01] active:scale-[0.99]"
                   >
                     {isLoading ? (
-                      <div className="w-5 h-5 border-2 border-surface border-t-transparent rounded-full animate-spin" />
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                     ) : (
                       <>
                         <span>Kirim Tautan Pemulihan</span>
@@ -113,7 +117,7 @@ export const ForgotPasswordPage: React.FC = () => {
                 <div className="text-center pt-2">
                   <Link
                     to="/masuk"
-                    className="text-xs font-bold text-secondary hover:underline inline-flex items-center gap-1"
+                    className="text-xs font-bold text-secondary hover:underline inline-flex items-center gap-1.5"
                   >
                     <Icon name="arrow_back" size={14} />
                     <span>Kembali ke Halaman Masuk</span>

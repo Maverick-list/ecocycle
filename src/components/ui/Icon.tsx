@@ -55,6 +55,8 @@ import {
   Send,
   Play,
   Pause,
+  Sun,
+  Moon,
   LucideProps
 } from 'lucide-react';
 
@@ -200,7 +202,13 @@ const iconMap: Record<string, React.FC<LucideProps>> = {
   expand_more: ChevronDown,
   cancel: X,
   play: Play,
-  pause: Pause
+  pause: Pause,
+  light_mode: Sun,
+  dark_mode: Moon,
+  sun: Sun,
+  moon: Moon,
+  arrow_drop_down: ChevronDown,
+  arrow_downward: ChevronDown
 };
 
 export const Icon: React.FC<IconProps> = ({ name, size = 18, className = '', ...props }) => {

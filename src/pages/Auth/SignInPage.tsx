@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { PageTransition } from '../../components/ui/PageTransition';
 import { Icon } from '../../components/ui/Icon';
 import { EcocycleLogo } from '../../components/brand/EcocycleLogo';
+import { SEOHead } from '../../components/seo/SEOHead';
 
 export const SignInPage: React.FC = () => {
   const { signInWithEmail, signInWithGoogle, isConfigured } = useAuth();
@@ -49,44 +50,41 @@ export const SignInPage: React.FC = () => {
   };
 
   return (
-    <PageTransition>
-      <div className="min-h-[85vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-surface">
-        <div className="max-w-md w-full space-y-6">
+    <PageTransition className="w-full bg-surface text-on-surface py-16 sm:py-24">
+      <SEOHead title="Masuk ke Akun" canonical="/masuk" noindex={true} />
+      <div className="min-h-[75vh] flex items-center justify-center px-4 sm:px-6 lg:px-8">
+        <div className="max-w-md w-full space-y-8">
           
           {/* Brand Header */}
-          <div className="text-center space-y-2">
-            <Link to="/" className="inline-block">
+          <div className="text-center space-y-3">
+            <Link to="/" className="inline-block hover:opacity-90 transition-opacity">
               <EcocycleLogo size="lg" showTagline={true} />
             </Link>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-primary tracking-tight pt-2">
+            <h1 className="font-display font-extrabold text-2xl sm:text-3xl text-primary tracking-tight pt-2">
               Masuk ke Akun Anda
             </h1>
             <p className="text-xs text-on-surface-variant">
-              Akses buku tabungan digital, portofolio reduksi emisi, dan lencana sirkular Anda.
+              Akses buku tabungan digital, neraca reduksi emisi, dan lencana sirkular Anda.
             </p>
           </div>
 
           {/* Setup Notice if Supabase keys not set */}
           {!isConfigured && (
-            <div className="p-4 rounded-2xl bg-secondary-fixed/30 border border-secondary/30 text-xs text-secondary space-y-2">
+            <div className="p-5 rounded-2xl glass-panel border border-secondary/30 text-xs text-secondary space-y-2">
               <div className="flex items-center gap-2 font-bold">
                 <Icon name="info" size={16} />
-                <span>Panduan Integrasi Supabase Auth</span>
+                <span>Mode Demonstrasi Terbuka</span>
               </div>
               <p className="text-[11px] leading-relaxed text-on-surface-variant">
-                Fitur autentikasi riil menggunakan Supabase Auth telah siap. Untuk mengaktifkan sesi cloud riil, tambahkan variabel berikut pada berkas <code>.env</code> Anda:
+                Layanan autentikasi Google Firebase dan Supabase telah siap dihubungkan. Anda dapat mengeksplorasi seluruh fitur dalam mode demonstrasi atau menghubungkan kredensial di <code>.env</code>.
               </p>
-              <div className="p-2.5 rounded-lg bg-surface font-mono text-[10px] text-primary select-all overflow-x-auto border border-outline-variant/30">
-                VITE_SUPABASE_URL=https://[YOUR_PROJECT].supabase.co<br />
-                VITE_SUPABASE_ANON_KEY=[YOUR_ANON_KEY]
-              </div>
             </div>
           )}
 
           {/* Glass Form Container */}
-          <div className="glass-panel-elevated p-6 sm:p-8 rounded-3xl space-y-5 border border-outline-variant/30 shadow-xl">
+          <div className="glass-panel-elevated p-8 sm:p-10 rounded-3xl space-y-6 border border-outline-variant/25 shadow-2xl">
             {errorMessage && (
-              <div className="p-3.5 rounded-xl bg-error-container text-on-error-container text-xs flex items-start gap-2 animate-fadeIn">
+              <div className="p-4 rounded-2xl bg-error/15 text-error text-xs flex items-start gap-2.5 animate-fadeIn border border-error/20">
                 <Icon name="alert" size={16} className="text-error shrink-0 mt-0.5" />
                 <span>{errorMessage}</span>
               </div>
@@ -94,11 +92,11 @@ export const SignInPage: React.FC = () => {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-on-surface-variant uppercase mb-1">
+                <label className="block text-xs font-bold text-outline uppercase tracking-wider mb-1.5">
                   Alamat Surel (Email)
                 </label>
                 <div className="relative">
-                  <div className="absolute left-3 top-3 text-outline">
+                  <div className="absolute left-3.5 top-3.5 text-outline">
                     <Icon name="mail" size={16} />
                   </div>
                   <input
@@ -107,25 +105,25 @@ export const SignInPage: React.FC = () => {
                     placeholder="nama@email.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full h-11 pl-10 pr-3.5 rounded-xl bg-surface-container text-xs text-on-surface outline-none focus:ring-2 focus:ring-secondary border border-outline-variant/20"
+                    className="w-full h-11 pl-10 pr-4 rounded-xl glass-panel text-xs text-on-surface outline-none focus:ring-2 focus:ring-secondary/50 border border-outline-variant/25"
                   />
                 </div>
               </div>
 
               <div>
-                <div className="flex items-center justify-between mb-1">
-                  <label className="block text-xs font-bold text-on-surface-variant uppercase">
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="block text-xs font-bold text-outline uppercase tracking-wider">
                     Kata Sandi
                   </label>
                   <Link
                     to="/lupa-password"
-                    className="text-[11px] font-bold text-secondary hover:underline"
+                    className="text-xs font-bold text-secondary hover:underline"
                   >
                     Lupa sandi?
                   </Link>
                 </div>
                 <div className="relative">
-                  <div className="absolute left-3 top-3 text-outline">
+                  <div className="absolute left-3.5 top-3.5 text-outline">
                     <Icon name="verified" size={16} />
                   </div>
                   <input
@@ -134,7 +132,7 @@ export const SignInPage: React.FC = () => {
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full h-11 pl-10 pr-3.5 rounded-xl bg-surface-container text-xs text-on-surface outline-none focus:ring-2 focus:ring-secondary border border-outline-variant/20"
+                    className="w-full h-11 pl-10 pr-4 rounded-xl glass-panel text-xs text-on-surface outline-none focus:ring-2 focus:ring-secondary/50 border border-outline-variant/25"
                   />
                 </div>
               </div>
@@ -142,10 +140,10 @@ export const SignInPage: React.FC = () => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full h-11 rounded-xl bg-primary text-on-primary font-bold text-xs hover:bg-primary-container transition-all cursor-pointer shadow-md flex items-center justify-center gap-2 mt-2"
+                className="w-full h-11 rounded-xl bg-secondary text-white font-bold text-xs hover:bg-secondary/90 transition-all cursor-pointer shadow-md flex items-center justify-center gap-2 mt-4 hover:scale-[1.01] active:scale-[0.99]"
               >
                 {isLoading ? (
-                  <div className="w-5 h-5 border-2 border-surface border-t-transparent rounded-full animate-spin" />
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                 ) : (
                   <>
                     <span>Masuk ke Akun</span>
@@ -157,7 +155,7 @@ export const SignInPage: React.FC = () => {
 
             {/* Social Divider */}
             <div className="relative flex items-center justify-center my-4">
-              <div className="border-t border-outline-variant/30 w-full" />
+              <div className="border-t border-outline-variant/20 w-full" />
               <span className="bg-surface px-3 text-[10px] text-outline font-bold uppercase tracking-wider relative">
                 atau
               </span>
@@ -167,7 +165,7 @@ export const SignInPage: React.FC = () => {
             <button
               type="button"
               onClick={handleGoogleSignIn}
-              className="w-full h-11 rounded-xl bg-surface-container hover:bg-surface-container-high border border-outline-variant/30 text-xs font-bold text-primary flex items-center justify-center gap-2.5 cursor-pointer transition-colors"
+              className="w-full h-11 rounded-xl glass-pill hover:bg-surface-container border border-outline-variant/25 text-xs font-bold text-primary flex items-center justify-center gap-2.5 cursor-pointer transition-colors"
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24">
                 <path

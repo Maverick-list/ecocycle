@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider } from './context/AuthContext';
 import { WasteBankProvider } from './context/WasteBankContext';
 import { Navbar } from './components/layout/Navbar';
@@ -7,7 +8,9 @@ import { Footer } from './components/layout/Footer';
 import { WasteDepositModal } from './components/features/WasteDepositModal';
 import { DepositDetailModal } from './components/features/DepositDetailModal';
 import { Toast } from './components/ui/Toast';
+import { EcoChatbot } from './components/chat/EcoChatbot';
 import { LoadingExperience } from './components/ui/LoadingExperience';
+import { LeafPageTransition } from './components/ui/LeafPageTransition';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 
 import { HomePage } from './pages/Home/HomePage';
@@ -21,6 +24,7 @@ import { WasteDepositPage } from './pages/WasteDeposit/WasteDepositPage';
 import { ProfilePage } from './pages/Profile/ProfilePage';
 import { AnalyticsPage } from './pages/Analytics/AnalyticsPage';
 import { TutorialPage } from './pages/Tutorial/TutorialPage';
+import { FAQPage } from './pages/FAQ/FAQPage';
 import { SignInPage } from './pages/Auth/SignInPage';
 import { SignUpPage } from './pages/Auth/SignUpPage';
 import { ForgotPasswordPage } from './pages/Auth/ForgotPasswordPage';
@@ -38,39 +42,56 @@ const ScrollToTop: React.FC = () => {
   return null;
 };
 
+// Main container that dynamically manages navbar offset
+const MainContainer: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { pathname } = useLocation();
+  const isHome = pathname === '/';
+
+  return (
+    <main id="main-content" className={`flex-1 w-full ${isHome ? '' : 'pt-20'}`}>
+      {children}
+    </main>
+  );
+};
+
 export const App: React.FC = () => {
   return (
-    <AuthProvider>
-      <WasteBankProvider>
-        <BrowserRouter>
-          <ScrollToTop />
-          
-          {/* First-Visit Animated Introduction & Loading Experience */}
-          <LoadingExperience />
+    <ThemeProvider>
+      <AuthProvider>
+        <WasteBankProvider>
+          <BrowserRouter>
+            <ScrollToTop />
+            
+            {/* First-Visit Animated Introduction & Loading Experience */}
+            <LoadingExperience />
 
-          <div className="min-h-screen flex flex-col bg-surface text-on-surface antialiased">
-            {/* Skip link for keyboard accessibility */}
-            <a href="#main-content" className="skip-link">
-              Lewati ke Konten Utama
-            </a>
+            {/* Smooth Organic Leaf Navigation Page Transition */}
+            <LeafPageTransition />
 
-            {/* Global Sticky Navigation */}
-            <Navbar />
+            <div className="min-h-screen flex flex-col bg-surface dark:bg-[#03140d] text-on-surface dark:text-white antialiased transition-colors duration-300">
+              {/* Skip link for keyboard accessibility */}
+              <a href="#main-content" className="skip-link">
+                Lewati ke Konten Utama
+              </a>
 
-            {/* Main App Container */}
-            <main id="main-content" className="flex-1 w-full pt-20">
-              <Routes>
-                {/* Public Platform Routes */}
-                <Route path="/" element={<HomePage />} />
-                <Route path="/bank-sampah" element={<WasteBankPage />} />
-                <Route path="/pemilahan-pintar" element={<SmartSortingPage />} />
-                <Route path="/dampak-ekologis" element={<EcoImpactPage />} />
-                <Route path="/analitik" element={<AnalyticsPage />} />
-                <Route path="/akademi" element={<EcoAcademyPage />} />
-                <Route path="/tantangan" element={<EcoChallengesPage />} />
-                <Route path="/kontak" element={<ContactPage />} />
-                <Route path="/setor-sampah" element={<WasteDepositPage />} />
-                <Route path="/panduan" element={<TutorialPage />} />
+              {/* Global Sticky Navigation */}
+              <Navbar />
+
+              {/* Main App Container */}
+              <MainContainer>
+                <Routes>
+                  {/* Public Platform Routes */}
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/bank-sampah" element={<WasteBankPage />} />
+                  <Route path="/pemilahan-pintar" element={<SmartSortingPage />} />
+                  <Route path="/dampak-ekologis" element={<EcoImpactPage />} />
+                  <Route path="/analitik" element={<AnalyticsPage />} />
+                  <Route path="/akademi" element={<EcoAcademyPage />} />
+                  <Route path="/tantangan" element={<EcoChallengesPage />} />
+                  <Route path="/kontak" element={<ContactPage />} />
+                  <Route path="/setor-sampah" element={<WasteDepositPage />} />
+                  <Route path="/panduan" element={<TutorialPage />} />
+                  <Route path="/faq" element={<FAQPage />} />
 
                 {/* Authentication Routes */}
                 <Route path="/masuk" element={<SignInPage />} />
@@ -102,7 +123,7 @@ export const App: React.FC = () => {
                 {/* Wildcard Fallback */}
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
-            </main>
+              </MainContainer>
 
             {/* Global Footer */}
             <Footer />
@@ -110,12 +131,14 @@ export const App: React.FC = () => {
             {/* Global Modals & Notifications */}
             <WasteDepositModal />
             <DepositDetailModal />
+            <EcoChatbot />
             <Toast />
           </div>
         </BrowserRouter>
       </WasteBankProvider>
     </AuthProvider>
-  );
+  </ThemeProvider>
+);
 };
 
 export default App;

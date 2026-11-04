@@ -38,14 +38,16 @@ export const EcocycleLogo: React.FC<EcocycleLogoProps> = ({
   const isLight = variant === 'light';
 
   const textColor = isDark
-    ? 'text-surface-bright'
+    ? 'text-white'
     : isLight
-    ? 'text-primary'
-    : 'text-primary';
+    ? 'text-[#062B1D]'
+    : 'text-primary dark:text-white';
 
   const tagColor = isDark
-    ? 'text-tertiary-fixed'
-    : 'text-secondary';
+    ? 'text-[#A7F3D0]'
+    : isLight
+    ? 'text-[#0B482D]'
+    : 'text-secondary dark:text-emerald-400';
 
   return (
     <div className={`inline-flex items-center gap-2.5 select-none ${className}`}>

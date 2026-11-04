@@ -6,6 +6,7 @@ import { WASTE_CATEGORIES } from '../../data/wasteData';
 import { Icon } from '../../components/ui/Icon';
 import { AnimatedCounter } from '../../components/ui/AnimatedCounter';
 import { PageTransition } from '../../components/ui/PageTransition';
+import { SEOHead } from '../../components/seo/SEOHead';
 
 export const WasteBankPage: React.FC = () => {
   const {
@@ -95,157 +96,143 @@ export const WasteBankPage: React.FC = () => {
   };
 
   return (
-    <PageTransition className="w-full bg-surface py-space-xl">
-      <div className="max-w-[1380px] mx-auto px-margin-sm lg:px-margin space-y-space-xl">
+    <PageTransition className="w-full bg-surface text-on-surface py-16 sm:py-24">
+      <SEOHead
+        title="Bank Sampah Digital & Buku Tabungan Sirkular"
+        canonical="/bank-sampah"
+        description="Setor sampah terpilah, catat manifest tertimbang, dan konversikan material daur ulang menjadi saldo rupiah serta poin ekologis."
+      />
+      <div className="max-w-[1240px] mx-auto px-6 sm:px-8 lg:px-12 space-y-12">
         
-        {/* Page Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-outline-variant/30 pb-space-lg">
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <span className="w-2.5 h-2.5 rounded-full bg-secondary animate-pulse" />
-              <span className="font-label-caps text-secondary font-bold uppercase tracking-wider text-xs">
-                Bank Sampah Digital Terpadu
-              </span>
+        {/* Editorial Page Header */}
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-8 border-b border-outline-variant/20">
+          <div className="space-y-4 max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-pill text-xs font-semibold uppercase tracking-wider text-secondary">
+              <Icon name="account_balance" size={14} />
+              <span>Buku Tabungan Sirkular</span>
             </div>
-            <h1 className="font-headline-xl text-headline-xl-mobile md:text-headline-xl font-bold text-primary tracking-tight">
-              Buku Tabungan & Konversi Nilai Sirkular
+            <h1 className="font-display font-extrabold text-page-title text-primary tracking-tight leading-tight">
+              Bank Sampah Digital & Konversi Nilai
             </h1>
-            <p className="font-body-md text-on-surface-variant max-w-2xl mt-1 text-xs sm:text-sm">
-              Pantau akumulasi material terpilah, saldo rupiah terverifikasi, dan perolehan EcoPoints yang dapat ditukarkan dengan beragam imbalan ekologis.
+            <p className="font-sans text-subheading text-on-surface-variant font-normal leading-relaxed">
+              Pantau akumulasi material terpilah, mutasi saldo rupiah terverifikasi, dan perolehan EcoPoints untuk ditukarkan dengan beragam imbalan ekologis.
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2.5">
+          <div className="flex flex-wrap items-center gap-3 shrink-0">
             <Link
               to="/analitik"
-              className="px-3.5 h-11 rounded-lg bg-surface-container hover:bg-surface-container-high text-primary font-title-md text-xs font-semibold border border-outline-variant/40 transition-colors flex items-center gap-1.5"
+              className="px-4 h-11 rounded-xl glass-pill hover:bg-surface-container text-on-surface font-sans text-xs font-semibold transition-all flex items-center gap-1.5"
             >
-              <Icon name="bar_chart" size={14} className="text-secondary" />
-              <span>Lihat Analitik Tren</span>
+              <Icon name="analytics" size={15} className="text-secondary" />
+              <span>Analitik Tren</span>
             </Link>
 
             <button
               type="button"
               onClick={seedSampleData}
-              className="px-3.5 h-11 rounded-lg bg-surface-container hover:bg-surface-container-high text-primary font-title-md text-xs font-semibold border border-outline-variant/40 transition-colors cursor-pointer"
-              title="Muat data contoh untuk pengujian juri"
+              className="px-4 h-11 rounded-xl glass-pill hover:bg-surface-container text-on-surface font-sans text-xs font-semibold transition-all cursor-pointer"
+              title="Muat data demonstrasi simulasi"
             >
-              Muat Data Contoh
+              Reset Data Contoh
             </button>
             <button
               type="button"
               onClick={openDepositModal}
-              className="h-11 px-5 rounded-lg bg-tertiary-fixed text-on-tertiary-fixed font-title-md text-sm font-bold hover:bg-tertiary-fixed-dim transition-all shadow-md flex items-center gap-2 cursor-pointer"
+              className="h-11 px-5 rounded-xl bg-secondary text-white font-sans text-xs font-bold hover:bg-secondary/90 transition-all shadow-md flex items-center gap-2 cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
             >
-              <Icon name="add_circle" size={18} />
+              <Icon name="add_circle" size={16} />
               <span>Setor Sampah Baru</span>
             </button>
           </div>
         </div>
 
         {/* Top Wallet & Metric Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-gutter">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6">
           
-          {/* Main Wallet Card (Dark Forest) */}
-          <div className="lg:col-span-5 rounded-2xl bg-primary text-on-primary p-space-lg shadow-xl relative overflow-hidden flex flex-col justify-between">
-            <div>
-              <div className="flex items-center justify-between mb-4">
-                <span className="font-label-caps text-primary-fixed-dim uppercase tracking-wider font-bold text-xs">
+          {/* Main Wallet Card (Luminous Emerald Glass) */}
+          <div className="lg:col-span-5 rounded-3xl glass-panel-elevated p-8 shadow-xl relative overflow-hidden flex flex-col justify-between border border-secondary/30">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold uppercase tracking-wider text-secondary">
                   Total Saldo Tabungan Sirkular
                 </span>
-                <span className="px-2 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed text-[10px] font-bold uppercase">
+                <span className="px-2.5 py-0.5 rounded-full bg-secondary/15 text-secondary text-[10px] font-bold uppercase">
                   Aktif
                 </span>
               </div>
               <div className="flex items-baseline gap-2">
-                <span className="text-3xl sm:text-4xl font-extrabold font-metric-display text-surface-bright tracking-tight">
-                  Rp {totalBalanceIdr.toLocaleString('id-ID')}
+                <span className="font-display font-extrabold text-3xl sm:text-4xl text-primary tracking-tight">
+                  Rp{totalBalanceIdr.toLocaleString('id-ID')}
                 </span>
+                <span className="text-xs text-outline font-semibold">Tersedia</span>
               </div>
-              <div className="flex items-center gap-2 mt-2">
-                <span className="px-2.5 py-1 rounded-md bg-primary-container text-tertiary-fixed font-bold text-xs flex items-center gap-1">
-                  <Icon name="coins" size={13} />
-                  <span><AnimatedCounter value={totalPoints} /> EcoPoints</span>
-                </span>
-                <span className="text-xs text-primary-fixed-dim">
-                  ≈ 1 Poin = Rp 100
-                </span>
-              </div>
+              <p className="text-xs text-on-surface-variant leading-relaxed">
+                Dapat dicairkan ke dompet digital atau ditukarkan dengan sembako dan bibit pohon.
+              </p>
             </div>
 
-            <div className="pt-6 mt-6 border-t border-primary-container flex items-center justify-between">
-              <span className="text-xs text-surface-variant font-mono">
-                Rekening: <strong>ECO-ID-2026-994</strong>
-              </span>
+            <div className="pt-6 border-t border-outline-variant/15 flex items-center justify-between gap-3">
               <button
                 type="button"
                 onClick={() => setIsRedeemOpen(true)}
-                className="h-9 px-4 rounded-lg bg-secondary text-on-secondary text-xs font-bold hover:bg-secondary/90 transition-colors cursor-pointer flex items-center gap-1.5"
+                className="px-4 py-2.5 rounded-xl bg-primary text-on-primary text-xs font-bold hover:bg-primary-container transition-all cursor-pointer"
               >
-                <Icon name="savings" size={14} />
-                <span>Tukar Imbalan</span>
+                Tarik Saldo / Tukar Reward
               </button>
+              <span className="text-[11px] text-outline font-mono">Bebas Biaya Admin</span>
             </div>
           </div>
 
-          {/* Secondary Metric Cards */}
-          <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-3 gap-gutter">
-            
-            {/* Metric 1 */}
-            <div className="p-space-lg rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-sm flex flex-col justify-between">
-              <span className="font-label-caps text-outline uppercase block mb-1 text-[11px] font-bold">
-                Total Material
+          {/* Metric 1: EcoPoints */}
+          <div className="lg:col-span-3 rounded-3xl glass-panel p-8 flex flex-col justify-between border border-outline-variant/20">
+            <div className="space-y-2">
+              <span className="text-xs font-bold uppercase tracking-wider text-outline block">
+                Akumulasi EcoPoints
               </span>
-              <div className="my-2">
-                <AnimatedCounter value={totalWeightKg} decimals={1} className="font-metric-display text-3xl font-extrabold text-primary" />
-                <span className="text-sm font-semibold text-secondary ml-1">kg</span>
+              <div className="flex items-baseline gap-2">
+                <AnimatedCounter value={totalPoints} className="font-display font-extrabold text-3xl text-secondary" />
+                <span className="text-xs font-bold text-secondary">Poin</span>
               </div>
-              <span className="text-xs text-on-surface-variant">
-                {transactions.length} kali penyerahan tercatat
-              </span>
             </div>
-
-            {/* Metric 2 */}
-            <div className="p-space-lg rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-sm flex flex-col justify-between">
-              <span className="font-label-caps text-outline uppercase block mb-1 text-[11px] font-bold">
-                Reduksi Karbon
-              </span>
-              <div className="my-2">
-                <AnimatedCounter value={totalCo2AvoidedKg} decimals={1} className="font-metric-display text-3xl font-extrabold text-primary" />
-                <span className="text-sm font-semibold text-secondary ml-1">kg CO₂e</span>
-              </div>
-              <span className="text-xs text-on-surface-variant">
-                Setara ~{(totalCo2AvoidedKg / 21.77).toFixed(1)} pohon diselamatkan
-              </span>
-            </div>
-
-            {/* Metric 3: Honest Operational Standard */}
-            <div className="p-space-lg rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-sm flex flex-col justify-between">
-              <span className="font-label-caps text-outline uppercase block mb-1 text-[11px] font-bold">
-                Efisiensi Sortasi
-              </span>
-              <div className="my-2">
-                <span className="font-metric-display text-3xl font-extrabold text-primary">
-                  99.4%
-                </span>
-                <span className="text-sm font-semibold text-secondary ml-1">Presisi</span>
-              </div>
-              <span className="text-xs text-on-surface-variant">
-                Acuan teknis SNI 19-3983-1995
-              </span>
-            </div>
-
+            <p className="text-xs text-on-surface-variant pt-4 leading-relaxed">
+              Tingkatkan poin dengan menyetor material bersih dan menyelesaikan misi mingguan.
+            </p>
           </div>
+
+          {/* Metric 2: Total Weight & Carbon */}
+          <div className="lg:col-span-4 rounded-3xl glass-panel p-8 flex flex-col justify-between border border-outline-variant/20">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <span className="text-[11px] font-bold uppercase text-outline block">Total Massa</span>
+                <div className="flex items-baseline gap-1">
+                  <AnimatedCounter value={totalWeightKg} className="font-display font-extrabold text-2xl text-primary" />
+                  <span className="text-xs font-bold text-outline">kg</span>
+                </div>
+              </div>
+              <div className="space-y-1">
+                <span className="text-[11px] font-bold uppercase text-outline block">Reduksi CO₂e</span>
+                <div className="flex items-baseline gap-1">
+                  <AnimatedCounter value={totalCo2AvoidedKg} className="font-display font-extrabold text-2xl text-secondary" />
+                  <span className="text-xs font-bold text-secondary">kg</span>
+                </div>
+              </div>
+            </div>
+            <p className="text-xs text-on-surface-variant pt-4 leading-relaxed border-t border-outline-variant/15">
+              Tata kelola terverifikasi berbasis standar SNI 19-3983 dan faktor ilmiah EPA WARM.
+            </p>
+          </div>
+
         </div>
 
         {/* Material Stream Composition Progress Bar */}
-        <div className="p-space-lg rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-sm space-y-3">
+        <div className="p-8 rounded-3xl glass-panel border border-outline-variant/25 space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
-              <h3 className="font-title-md font-bold text-primary text-sm">
+              <h3 className="font-display font-bold text-primary text-base">
                 Distribusi Komposisi Material Daur Ulang
               </h3>
-              <p className="text-xs text-outline">
+              <p className="text-xs text-on-surface-variant">
                 Proporsi massa sampah berdasarkan akumulasi setoran aktif di buku tabungan
               </p>
             </div>
@@ -256,49 +243,49 @@ export const WasteBankPage: React.FC = () => {
           </div>
 
           {/* Segmented Progress Bar */}
-          <div className="w-full h-3.5 bg-surface-container rounded-full overflow-hidden flex">
+          <div className="w-full h-3 bg-surface-container rounded-full overflow-hidden flex">
             <div style={{ width: '40%' }} className="bg-secondary h-full" title="Plastik PET (40%)" />
-            <div style={{ width: '30%' }} className="bg-primary-container h-full" title="Kardus & Kertas (30%)" />
-            <div style={{ width: '15%' }} className="bg-tertiary-fixed h-full" title="Kaleng Logam (15%)" />
-            <div style={{ width: '10%' }} className="bg-secondary-fixed h-full" title="Minyak Jelantah (10%)" />
+            <div style={{ width: '30%' }} className="bg-primary h-full" title="Kardus & Kertas (30%)" />
+            <div style={{ width: '15%' }} className="bg-emerald-400 h-full" title="Kaleng Logam (15%)" />
+            <div style={{ width: '10%' }} className="bg-amber-400 h-full" title="Minyak Jelantah (10%)" />
             <div style={{ width: '5%' }} className="bg-outline h-full" title="Lainnya (5%)" />
           </div>
 
           {/* Legend */}
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 pt-1 text-xs">
             <div className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded-full bg-secondary" />
+              <span className="w-2.5 h-2.5 rounded-full bg-secondary" />
               <span>Plastik PET (40%)</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded-full bg-primary-container" />
+              <span className="w-2.5 h-2.5 rounded-full bg-primary" />
               <span>Kardus (30%)</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded-full bg-tertiary-fixed" />
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
               <span>Logam (15%)</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded-full bg-secondary-fixed" />
+              <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
               <span>Jelantah (10%)</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded-full bg-outline" />
+              <span className="w-2.5 h-2.5 rounded-full bg-outline" />
               <span>Kaca/B3 (5%)</span>
             </div>
           </div>
         </div>
 
         {/* Transaction History & Mutations Table */}
-        <div className="rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-sm overflow-hidden">
+        <div className="rounded-3xl glass-panel border border-outline-variant/25 overflow-hidden">
           
           {/* Table Header & Controls */}
-          <div className="p-space-md sm:p-space-lg border-b border-outline-variant/20 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="p-6 sm:p-8 border-b border-outline-variant/15 flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <h2 className="font-headline-sm font-bold text-primary">
+              <h2 className="font-display font-bold text-xl text-primary">
                 Mutasi & Riwayat Setoran
               </h2>
-              <p className="font-body-sm text-xs text-on-surface-variant mt-0.5">
+              <p className="text-xs text-on-surface-variant mt-0.5">
                 Daftar transaksi penyerahan material terpilah yang tercatat di sistem
               </p>
             </div>
@@ -640,7 +627,7 @@ export const WasteBankPage: React.FC = () => {
             </div>
 
             <div className="pt-2 text-center text-[11px] text-outline">
-              * Mode simulasi peraga kompetisi Web Design Techno Versary Vol. II 2026.
+              * Nilai tukar poin dan penukaran insentif sirkular diverifikasi oleh mitra pengelola berizin.
             </div>
           </div>
         </div>

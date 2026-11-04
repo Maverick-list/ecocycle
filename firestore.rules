@@ -1,0 +1,719 @@
+rules_version = '2';
+
+// ===============================================================
+// ECOCYCLE PLATFORM — CLOUD FIRESTORE SECURITY RULES
+// ===============================================================
+// Version: 2.0.0 (Production-Grade Security Rules)
+// Platform: ECOCYCLE — Turning Waste Into Worth
+// Architecture: Zero-Trust, Least-Privilege, Strict Schema Validation
+// ===============================================================
+
+// ===============================================================
+// Assumed Data Models
+// ===============================================================
+//
+// Collection: /users/{userId}
+// Document ID: Matches request.auth.uid (Firebase Auth UID)
+// Fields:
+//   - id: string (optional, <= 128 chars)
+//   - email: string (required, valid email, <= 100 chars)
+//   - fullName / full_name / name: string (optional, <= 100 chars)
+//   - role: string (required, 'Warga Sirkular' | 'Admin' | 'Kolektor' | 'Pengelola Bank')
+//   - phone: string (optional, <= 25 chars, private PII)
+//   - address: string (optional, <= 300 chars, private PII)
+//   - avatarUrl / avatar_url: string (optional, <= 1000 chars, valid URL)
+//   - city: string (optional, <= 100 chars)
+//   - points: int (optional, non-negative, mutable only by admin)
+//   - streakDays / streak_days: int (optional, >= 0)
+//   - monthlyCarbonGoal / monthly_carbon_goal: number (optional, >= 0)
+//   - verified: bool (optional, mutable only by admin)
+//   - createdAt / created_at: timestamp (immutable)
+//   - updatedAt / updated_at: timestamp
+//   - preferences: map (optional, allowed keys: monthlyGoalKg, notificationsEnabled, emailDigestWeekly, publicLeaderboard, preferredDropPoint)
+//   - bio: string (optional, <= 500 chars)
+//   - affiliation: string (optional, <= 100 chars)
+//   - ecoLevel: string (optional, <= 50 chars)
+//
+// Collection: /wasteDeposits/{depositId}
+// Document ID: Auto-generated string (<= 128 chars)
+// Fields:
+//   - id: string (optional, <= 128 chars)
+//   - userId / user_id: string (required, matches author uid, immutable)
+//   - wasteType / materialName / category: string (optional, <= 100 chars)
+//   - weightKg / weight_kg / weight: number (required, > 0, <= 100000)
+//   - ratePerKg / rate_per_kg: number (optional, >= 0)
+//   - estimatedValue / estimated_value / valueIdr: number (optional, >= 0)
+//   - pointsEarned / points: number (optional, >= 0)
+//   - co2ReducedKg / co2OffsetKg: number (optional, >= 0)
+//   - waterSavedLiters: number (optional, >= 0)
+//   - dropPointName / dropPoint: string (optional, <= 200 chars)
+//   - proofPhotoUrl / photoUrl: string (optional, valid URL, <= 1000 chars)
+//   - status: string (required, 'Diajukan' on creation; 'Diterima'|'Terverifikasi'|'Ditolak'|'Selesai' by admin)
+//   - manifestCode: string (optional, <= 100 chars)
+//   - chainOfCustodyHash: string (optional, <= 128 chars)
+//   - notes: string (optional, <= 500 chars)
+//   - createdAt: timestamp
+//   - updatedAt: timestamp
+//
+// Collection: /transactions/{transactionId}
+// Document ID: Auto-generated string (<= 128 chars)
+// Fields:
+//   - id: string (optional, <= 128 chars)
+//   - userId: string (required, <= 128 chars)
+//   - depositId: string (optional, <= 128 chars)
+//   - type: string (optional, <= 50 chars)
+//   - amountIdr / valueIdr / amount: number (optional, >= 0)
+//   - points: int (optional)
+//   - weightKg: number (optional, >= 0)
+//   - wasteType: string (optional, <= 100 chars)
+//   - dropPoint: string (optional, <= 200 chars)
+//   - status: string (optional, <= 50 chars)
+//   - description / notes: string (optional, <= 500 chars)
+//   - createdAt: timestamp
+//   - updatedAt: timestamp
+//
+// Collection: /ecoPoints/{userId}
+// Document ID: Matches user UID (<= 128 chars)
+// Fields:
+//   - userId: string (optional, <= 128 chars)
+//   - balance: int (required, >= 0)
+//   - lifetimeEarned: int (optional, >= 0)
+//   - lifetimeSpent: int (optional, >= 0)
+//   - updatedAt: timestamp
+//   - createdAt: timestamp
+//
+// Collection: /challenges/{challengeId}
+// Document ID: Auto-generated string (<= 128 chars)
+// Fields:
+//   - id: string (optional, <= 128 chars)
+//   - title: string (required, <= 200 chars)
+//   - difficulty: string (optional, 'Mudah'|'Sedang'|'Komprehensif'|'Sulit')
+//   - duration: string (optional, <= 50 chars)
+//   - pointsReward: int (optional, >= 0)
+//   - description: string (optional, <= 2000 chars)
+//   - tasks: list (optional, max 50 items)
+//   - badgeName: string (optional, <= 100 chars)
+//   - badgeIcon: string (optional, <= 500 chars)
+//   - active: bool (optional)
+//   - category: string (optional, <= 100 chars)
+//   - createdAt: timestamp
+//   - updatedAt: timestamp
+//
+// Collection: /challengeParticipants/{participantId}
+// Document ID: Auto-generated string (<= 128 chars)
+// Fields:
+//   - id: string (optional, <= 128 chars)
+//   - userId: string (required, matches participant uid, immutable)
+//   - challengeId: string (required, <= 128 chars, immutable)
+//   - completed: bool (optional)
+//   - progressPercent: number (optional, 0 to 100)
+//   - tasksState: map or list (optional)
+//   - rewardClaimed: bool (optional)
+//   - joinedAt: timestamp (optional, immutable)
+//   - completedAt: timestamp (optional)
+//   - createdAt: timestamp
+//   - updatedAt: timestamp
+//
+// Collection: /wasteCategories/{categoryId}
+// Document ID: Auto-generated string (<= 128 chars)
+// Fields:
+//   - id: string (optional, <= 128 chars)
+//   - name: string (required, <= 100 chars)
+//   - icon: string (optional, <= 500 chars)
+//   - pricePerKg: number (optional, >= 0)
+//   - pointsPerKg: number (optional, >= 0)
+//   - co2Factor: number (optional, >= 0)
+//   - waterFactor: number (optional, >= 0)
+//   - stream: string (optional, <= 50 chars)
+//   - recyclability: string (optional, <= 50 chars)
+//   - prepSteps: list (optional, max 30 items)
+//   - description: string (optional, <= 2000 chars)
+//   - createdAt: timestamp
+//   - updatedAt: timestamp
+//
+// Collection: /educationalContent/{contentId}
+// Document ID: Auto-generated string (<= 128 chars)
+// Fields:
+//   - id: string (optional, <= 128 chars)
+//   - title: string (required, <= 300 chars)
+//   - category: string (optional, <= 100 chars)
+//   - readTime: string (optional, <= 50 chars)
+//   - author: string (optional, <= 100 chars)
+//   - excerpt: string (optional, <= 1000 chars)
+//   - content: string (<= 50000 chars) or list (<= 100 items)
+//   - image: string (optional, valid URL, <= 1000 chars)
+//   - featured: bool (optional)
+//   - published: bool (required)
+//   - relatedIds: list (optional, max 30 items)
+//   - publishedAt: timestamp
+//   - createdAt: timestamp
+//   - updatedAt: timestamp
+//
+// Collection: /notifications/{notificationId}
+// Document ID: Auto-generated string (<= 128 chars)
+// Fields:
+//   - id: string (optional, <= 128 chars)
+//   - userId: string (required, recipient UID, immutable)
+//   - title: string (required, <= 200 chars, immutable by user)
+//   - message: string (required, <= 1000 chars, immutable by user)
+//   - type: string (optional, <= 50 chars, immutable by user)
+//   - read: bool (required)
+//   - readAt: timestamp (optional)
+//   - data: map (optional)
+//   - createdAt: timestamp (immutable)
+//   - updatedAt: timestamp
+//
+// Collection: /leaderboard/{userId}
+// Document ID: Matches user UID (<= 128 chars)
+// Fields (STRICT NON-PII ONLY):
+//   - id / userId: string (optional, <= 128 chars)
+//   - displayName / name: string (required, <= 100 chars)
+//   - avatarUrl / avatar: string (optional, valid URL, <= 1000 chars)
+//   - points: int (required, >= 0)
+//   - totalWeightKg / weightKg: number (optional, >= 0)
+//   - badgesCount: int (optional, >= 0)
+//   - rank: int (optional, >= 1)
+//   - role: string (optional, <= 50 chars)
+//   - streakDays: int (optional, >= 0)
+//   - updatedAt: timestamp
+//
+// ===============================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===============================================================
+    // Root Level Deny-All (Security Baseline)
+    // ===============================================================
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+
+    // Check if the caller is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Check if user owns the resource based on userId parameter
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Check if caller possesses verified administrative privileges
+    // Checks custom claims token first, then falls back to users collection role lookup
+    function isAdmin() {
+      return isAuthenticated() && (
+        ('admin' in request.auth.token && request.auth.token.admin == true) ||
+        ('role' in request.auth.token && request.auth.token.role == 'Admin') ||
+        (
+          exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+          get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'Admin'
+        )
+      );
+    }
+
+    // Ensure UID field matches caller on create
+    function uidUnchanged() {
+      return !('userId' in request.resource.data) ||
+        request.resource.data.userId == request.auth.uid;
+    }
+
+    // Ensure UID field is not modified on update
+    function uidNotModified() {
+      return !('userId' in request.resource.data) ||
+        request.resource.data.userId == resource.data.userId;
+    }
+
+    // Validate that document has all required keys
+    function hasRequiredFields(fields) {
+      return request.resource.data.keys().hasAll(fields);
+    }
+
+    // Validate that document contains only allowed keys (Strict Schema Enforcement)
+    function hasOnlyAllowedFields(fields) {
+      return request.resource.data.keys().hasOnly(fields);
+    }
+
+    // Ensure immutable fields are not modified on update
+    function areImmutableFieldsUnchanged(fields) {
+      return !request.resource.data.diff(resource.data).affectedKeys().hasAny(fields);
+    }
+
+    // Validate email format and bounded length
+    function isValidEmail(email) {
+      return email is string &&
+        email.size() >= 5 &&
+        email.size() <= 100 &&
+        email.matches('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$');
+    }
+
+    // Validate URL format (http, https, or data URIs for images) with length bounds
+    function isValidUrl(url) {
+      return url is string &&
+        url.size() <= 1000 &&
+        (url.matches('^https?://.*') || url.matches('^data:image/.*'));
+    }
+
+    // ===============================================================
+    // Domain Validator Functions (Enforce Data Integrity & DoS Limits)
+    // ===============================================================
+
+    // Validator for /users/{userId}
+    function isValidUser(data) {
+      return hasOnlyAllowedFields([
+        'id', 'email', 'fullName', 'full_name', 'name', 'role',
+        'phone', 'address', 'avatarUrl', 'avatar_url', 'city',
+        'points', 'streakDays', 'streak_days', 'monthlyCarbonGoal', 'monthly_carbon_goal',
+        'verified', 'createdAt', 'created_at', 'updatedAt', 'updated_at',
+        'preferences', 'bio', 'affiliation', 'ecoLevel'
+      ]) &&
+      data.email is string && isValidEmail(data.email) &&
+      data.role is string && data.role in ['Warga Sirkular', 'Admin', 'Kolektor', 'Pengelola Bank'] &&
+      (!('fullName' in data) || (data.fullName is string && data.fullName.size() <= 100)) &&
+      (!('full_name' in data) || (data.full_name is string && data.full_name.size() <= 100)) &&
+      (!('name' in data) || (data.name is string && data.name.size() <= 100)) &&
+      (!('phone' in data) || (data.phone is string && data.phone.size() <= 25)) &&
+      (!('address' in data) || (data.address is string && data.address.size() <= 300)) &&
+      (!('avatarUrl' in data) || isValidUrl(data.avatarUrl)) &&
+      (!('avatar_url' in data) || isValidUrl(data.avatar_url)) &&
+      (!('city' in data) || (data.city is string && data.city.size() <= 100)) &&
+      (!('points' in data) || (data.points is int && data.points >= 0)) &&
+      (!('streakDays' in data) || (data.streakDays is int && data.streakDays >= 0)) &&
+      (!('streak_days' in data) || (data.streak_days is int && data.streak_days >= 0)) &&
+      (!('monthlyCarbonGoal' in data) || (data.monthlyCarbonGoal is number && data.monthlyCarbonGoal >= 0)) &&
+      (!('monthly_carbon_goal' in data) || (data.monthly_carbon_goal is number && data.monthly_carbon_goal >= 0)) &&
+      (!('verified' in data) || data.verified is bool) &&
+      (!('createdAt' in data) || data.createdAt is timestamp) &&
+      (!('created_at' in data) || data.created_at is timestamp) &&
+      (!('updatedAt' in data) || data.updatedAt is timestamp) &&
+      (!('updated_at' in data) || data.updated_at is timestamp) &&
+      (!('bio' in data) || (data.bio is string && data.bio.size() <= 500)) &&
+      (!('affiliation' in data) || (data.affiliation is string && data.affiliation.size() <= 100)) &&
+      (!('ecoLevel' in data) || (data.ecoLevel is string && data.ecoLevel.size() <= 50)) &&
+      (!('preferences' in data) || (data.preferences is map && isValidUserPreferences(data.preferences)));
+    }
+
+    // Helper validator for user preferences sub-map
+    function isValidUserPreferences(prefs) {
+      return prefs.keys().hasOnly([
+        'monthlyGoalKg', 'notificationsEnabled', 'emailDigestWeekly', 'publicLeaderboard', 'preferredDropPoint'
+      ]) &&
+      (!('monthlyGoalKg' in prefs) || (prefs.monthlyGoalKg is number && prefs.monthlyGoalKg >= 0)) &&
+      (!('notificationsEnabled' in prefs) || prefs.notificationsEnabled is bool) &&
+      (!('emailDigestWeekly' in prefs) || prefs.emailDigestWeekly is bool) &&
+      (!('publicLeaderboard' in prefs) || prefs.publicLeaderboard is bool) &&
+      (!('preferredDropPoint' in prefs) || (prefs.preferredDropPoint is string && prefs.preferredDropPoint.size() <= 200));
+    }
+
+    // Validator for /wasteDeposits/{depositId}
+    function isValidWasteDeposit(data) {
+      return hasOnlyAllowedFields([
+        'id', 'userId', 'user_id', 'wasteType', 'materialName', 'material_name', 'category',
+        'weightKg', 'weight_kg', 'weight', 'ratePerKg', 'rate_per_kg', 'estimatedValue', 'estimated_value', 'valueIdr',
+        'pointsEarned', 'points', 'co2ReducedKg', 'co2_reduced_kg', 'co2OffsetKg',
+        'waterSavedLiters', 'water_saved_liters', 'dropPointName', 'drop_point_name', 'dropPoint',
+        'proofPhotoUrl', 'proof_photo_url', 'photoUrl', 'status',
+        'manifestCode', 'manifest_code', 'chainOfCustodyHash', 'chain_of_custody_hash', 'notes',
+        'createdAt', 'created_at', 'timestamp', 'date', 'updatedAt', 'updated_at'
+      ]) &&
+      data.userId is string && data.userId.size() <= 128 &&
+      data.status is string && data.status in ['Diajukan', 'Diterima', 'Terverifikasi', 'Ditolak', 'Selesai'] &&
+      // Weight must be a positive number (> 0)
+      (
+        (('weightKg' in data) && data.weightKg is number && data.weightKg > 0 && data.weightKg <= 100000) ||
+        (('weight_kg' in data) && data.weight_kg is number && data.weight_kg > 0 && data.weight_kg <= 100000) ||
+        (('weight' in data) && data.weight is number && data.weight > 0 && data.weight <= 100000)
+      ) &&
+      // Rate and estimated values must be non-negative
+      (!('ratePerKg' in data) || (data.ratePerKg is number && data.ratePerKg >= 0)) &&
+      (!('rate_per_kg' in data) || (data.rate_per_kg is number && data.rate_per_kg >= 0)) &&
+      (!('estimatedValue' in data) || (data.estimatedValue is number && data.estimatedValue >= 0)) &&
+      (!('estimated_value' in data) || (data.estimated_value is number && data.estimated_value >= 0)) &&
+      (!('valueIdr' in data) || (data.valueIdr is number && data.valueIdr >= 0)) &&
+      (!('pointsEarned' in data) || (data.pointsEarned is number && data.pointsEarned >= 0)) &&
+      (!('points' in data) || (data.points is number && data.points >= 0)) &&
+      (!('co2ReducedKg' in data) || (data.co2ReducedKg is number && data.co2ReducedKg >= 0)) &&
+      (!('co2_reduced_kg' in data) || (data.co2_reduced_kg is number && data.co2_reduced_kg >= 0)) &&
+      (!('co2OffsetKg' in data) || (data.co2OffsetKg is number && data.co2OffsetKg >= 0)) &&
+      (!('waterSavedLiters' in data) || (data.waterSavedLiters is number && data.waterSavedLiters >= 0)) &&
+      (!('water_saved_liters' in data) || (data.water_saved_liters is number && data.water_saved_liters >= 0)) &&
+      (!('wasteType' in data) || (data.wasteType is string && data.wasteType.size() <= 100)) &&
+      (!('materialName' in data) || (data.materialName is string && data.materialName.size() <= 100)) &&
+      (!('material_name' in data) || (data.material_name is string && data.material_name.size() <= 100)) &&
+      (!('category' in data) || (data.category is string && data.category.size() <= 100)) &&
+      (!('dropPointName' in data) || (data.dropPointName is string && data.dropPointName.size() <= 200)) &&
+      (!('drop_point_name' in data) || (data.drop_point_name is string && data.drop_point_name.size() <= 200)) &&
+      (!('dropPoint' in data) || (data.dropPoint is string && data.dropPoint.size() <= 200)) &&
+      (!('proofPhotoUrl' in data) || isValidUrl(data.proofPhotoUrl)) &&
+      (!('proof_photo_url' in data) || isValidUrl(data.proof_photo_url)) &&
+      (!('photoUrl' in data) || isValidUrl(data.photoUrl)) &&
+      (!('notes' in data) || (data.notes is string && data.notes.size() <= 500)) &&
+      (!('manifestCode' in data) || (data.manifestCode is string && data.manifestCode.size() <= 100)) &&
+      (!('chainOfCustodyHash' in data) || (data.chainOfCustodyHash is string && data.chainOfCustodyHash.size() <= 128));
+    }
+
+    // Validator for /transactions/{transactionId}
+    function isValidTransaction(data) {
+      return hasOnlyAllowedFields([
+        'id', 'userId', 'user_id', 'depositId', 'deposit_id', 'type',
+        'amountIdr', 'valueIdr', 'amount', 'points', 'weightKg',
+        'wasteType', 'dropPoint', 'status', 'description', 'notes',
+        'createdAt', 'created_at', 'timestamp', 'date', 'updatedAt', 'updated_at'
+      ]) &&
+      data.userId is string && data.userId.size() <= 128 &&
+      (!('type' in data) || (data.type is string && data.type.size() <= 50)) &&
+      (!('amountIdr' in data) || (data.amountIdr is number && data.amountIdr >= 0)) &&
+      (!('valueIdr' in data) || (data.valueIdr is number && data.valueIdr >= 0)) &&
+      (!('amount' in data) || (data.amount is number && data.amount >= 0)) &&
+      (!('points' in data) || data.points is int) &&
+      (!('weightKg' in data) || (data.weightKg is number && data.weightKg >= 0)) &&
+      (!('status' in data) || (data.status is string && data.status.size() <= 50)) &&
+      (!('description' in data) || (data.description is string && data.description.size() <= 500)) &&
+      (!('notes' in data) || (data.notes is string && data.notes.size() <= 500));
+    }
+
+    // Validator for /ecoPoints/{userId}
+    function isValidEcoPoints(data) {
+      return hasOnlyAllowedFields([
+        'userId', 'balance', 'lifetimeEarned', 'lifetimeSpent', 'updatedAt', 'createdAt'
+      ]) &&
+      (!('userId' in data) || (data.userId is string && data.userId.size() <= 128)) &&
+      data.balance is int && data.balance >= 0 &&
+      (!('lifetimeEarned' in data) || (data.lifetimeEarned is int && data.lifetimeEarned >= 0)) &&
+      (!('lifetimeSpent' in data) || (data.lifetimeSpent is int && data.lifetimeSpent >= 0)) &&
+      (!('createdAt' in data) || data.createdAt is timestamp) &&
+      (!('updatedAt' in data) || data.updatedAt is timestamp);
+    }
+
+    // Validator for /challenges/{challengeId}
+    function isValidChallenge(data) {
+      return hasOnlyAllowedFields([
+        'id', 'title', 'difficulty', 'duration', 'pointsReward', 'description',
+        'tasks', 'badgeName', 'badgeIcon', 'active', 'category', 'createdAt', 'updatedAt'
+      ]) &&
+      data.title is string && data.title.size() > 0 && data.title.size() <= 200 &&
+      (!('difficulty' in data) || (data.difficulty is string && data.difficulty in ['Mudah', 'Sedang', 'Komprehensif', 'Sulit'])) &&
+      (!('duration' in data) || (data.duration is string && data.duration.size() <= 50)) &&
+      (!('pointsReward' in data) || (data.pointsReward is int && data.pointsReward >= 0)) &&
+      (!('description' in data) || (data.description is string && data.description.size() <= 2000)) &&
+      (!('badgeName' in data) || (data.badgeName is string && data.badgeName.size() <= 100)) &&
+      (!('badgeIcon' in data) || (data.badgeIcon is string && data.badgeIcon.size() <= 500)) &&
+      (!('active' in data) || data.active is bool) &&
+      (!('category' in data) || (data.category is string && data.category.size() <= 100)) &&
+      (!('tasks' in data) || (data.tasks is list && data.tasks.size() <= 50)) &&
+      (!('createdAt' in data) || data.createdAt is timestamp) &&
+      (!('updatedAt' in data) || data.updatedAt is timestamp);
+    }
+
+    // Validator for /challengeParticipants/{participantId}
+    function isValidChallengeParticipant(data) {
+      return hasOnlyAllowedFields([
+        'id', 'userId', 'challengeId', 'completed', 'progressPercent',
+        'tasksState', 'rewardClaimed', 'joinedAt', 'completedAt', 'createdAt', 'updatedAt'
+      ]) &&
+      data.userId is string && data.userId.size() <= 128 &&
+      data.challengeId is string && data.challengeId.size() <= 128 &&
+      (!('completed' in data) || data.completed is bool) &&
+      (!('progressPercent' in data) || (data.progressPercent is number && data.progressPercent >= 0 && data.progressPercent <= 100)) &&
+      (!('rewardClaimed' in data) || data.rewardClaimed is bool) &&
+      (!('tasksState' in data) || (data.tasksState is map || data.tasksState is list)) &&
+      (!('joinedAt' in data) || data.joinedAt is timestamp) &&
+      (!('completedAt' in data) || data.completedAt is timestamp) &&
+      (!('createdAt' in data) || data.createdAt is timestamp) &&
+      (!('updatedAt' in data) || data.updatedAt is timestamp);
+    }
+
+    // Validator for /wasteCategories/{categoryId}
+    function isValidWasteCategory(data) {
+      return hasOnlyAllowedFields([
+        'id', 'name', 'icon', 'pricePerKg', 'pointsPerKg', 'co2Factor',
+        'waterFactor', 'stream', 'recyclability', 'prepSteps', 'description',
+        'createdAt', 'updatedAt'
+      ]) &&
+      data.name is string && data.name.size() > 0 && data.name.size() <= 100 &&
+      (!('icon' in data) || (data.icon is string && data.icon.size() <= 500)) &&
+      (!('pricePerKg' in data) || (data.pricePerKg is number && data.pricePerKg >= 0)) &&
+      (!('pointsPerKg' in data) || (data.pointsPerKg is number && data.pointsPerKg >= 0)) &&
+      (!('co2Factor' in data) || (data.co2Factor is number && data.co2Factor >= 0)) &&
+      (!('waterFactor' in data) || (data.waterFactor is number && data.waterFactor >= 0)) &&
+      (!('stream' in data) || (data.stream is string && data.stream.size() <= 50)) &&
+      (!('recyclability' in data) || (data.recyclability is string && data.recyclability.size() <= 50)) &&
+      (!('description' in data) || (data.description is string && data.description.size() <= 2000)) &&
+      (!('prepSteps' in data) || (data.prepSteps is list && data.prepSteps.size() <= 30)) &&
+      (!('createdAt' in data) || data.createdAt is timestamp) &&
+      (!('updatedAt' in data) || data.updatedAt is timestamp);
+    }
+
+    // Validator for /educationalContent/{contentId}
+    function isValidEducationalContent(data) {
+      return hasOnlyAllowedFields([
+        'id', 'title', 'category', 'readTime', 'author', 'excerpt',
+        'content', 'image', 'featured', 'published', 'relatedIds',
+        'publishedAt', 'createdAt', 'updatedAt'
+      ]) &&
+      data.title is string && data.title.size() > 0 && data.title.size() <= 300 &&
+      data.published is bool &&
+      (!('category' in data) || (data.category is string && data.category.size() <= 100)) &&
+      (!('readTime' in data) || (data.readTime is string && data.readTime.size() <= 50)) &&
+      (!('author' in data) || (data.author is string && data.author.size() <= 100)) &&
+      (!('excerpt' in data) || (data.excerpt is string && data.excerpt.size() <= 1000)) &&
+      (!('content' in data) || (
+        (data.content is string && data.content.size() <= 50000) ||
+        (data.content is list && data.content.size() <= 100)
+      )) &&
+      (!('image' in data) || isValidUrl(data.image)) &&
+      (!('featured' in data) || data.featured is bool) &&
+      (!('relatedIds' in data) || (data.relatedIds is list && data.relatedIds.size() <= 30)) &&
+      (!('publishedAt' in data) || data.publishedAt is timestamp) &&
+      (!('createdAt' in data) || data.createdAt is timestamp) &&
+      (!('updatedAt' in data) || data.updatedAt is timestamp);
+    }
+
+    // Validator for /notifications/{notificationId}
+    function isValidNotification(data) {
+      return hasOnlyAllowedFields([
+        'id', 'userId', 'title', 'message', 'type', 'read', 'readAt', 'data', 'createdAt', 'updatedAt'
+      ]) &&
+      data.userId is string && data.userId.size() <= 128 &&
+      data.title is string && data.title.size() > 0 && data.title.size() <= 200 &&
+      data.message is string && data.message.size() > 0 && data.message.size() <= 1000 &&
+      data.read is bool &&
+      (!('type' in data) || (data.type is string && data.type.size() <= 50)) &&
+      (!('readAt' in data) || data.readAt is timestamp) &&
+      (!('data' in data) || data.data is map) &&
+      (!('createdAt' in data) || data.createdAt is timestamp) &&
+      (!('updatedAt' in data) || data.updatedAt is timestamp);
+    }
+
+    // Validator for /leaderboard/{userId} (Strict Non-PII Enforced)
+    function isValidLeaderboardEntry(data) {
+      return hasOnlyAllowedFields([
+        'id', 'userId', 'displayName', 'name', 'avatarUrl', 'avatar',
+        'points', 'totalWeightKg', 'weightKg', 'badgesCount', 'rank',
+        'role', 'streakDays', 'updatedAt'
+      ]) &&
+      (
+        (('displayName' in data) && data.displayName is string && data.displayName.size() <= 100) ||
+        (('name' in data) && data.name is string && data.name.size() <= 100)
+      ) &&
+      (
+        (('points' in data) && data.points is int && data.points >= 0)
+      ) &&
+      (!('avatarUrl' in data) || isValidUrl(data.avatarUrl)) &&
+      (!('avatar' in data) || isValidUrl(data.avatar)) &&
+      (!('totalWeightKg' in data) || (data.totalWeightKg is number && data.totalWeightKg >= 0)) &&
+      (!('weightKg' in data) || (data.weightKg is number && data.weightKg >= 0)) &&
+      (!('badgesCount' in data) || (data.badgesCount is int && data.badgesCount >= 0)) &&
+      (!('rank' in data) || (data.rank is int && data.rank >= 1)) &&
+      (!('role' in data) || (data.role is string && data.role.size() <= 50)) &&
+      (!('streakDays' in data) || (data.streakDays is int && data.streakDays >= 0)) &&
+      (!('userId' in data) || (data.userId is string && data.userId.size() <= 128)) &&
+      (!('updatedAt' in data) || data.updatedAt is timestamp);
+    }
+
+
+    // ===============================================================
+    // Collection Rules
+    // ===============================================================
+
+    // ---------------------------------------------------------------
+    // 1. /users/{userId}
+    // ---------------------------------------------------------------
+    match /users/{userId} {
+      // Read: Only the authenticated user themselves or an administrator
+      allow read: if isOwner(userId) || isAdmin();
+
+      // Create: Only the authenticated user themselves (or admin) with strict bootstrap defaults
+      allow create: if (isOwner(userId) || isAdmin()) &&
+                       isValidUser(request.resource.data) &&
+                       (
+                         isAdmin() ||
+                         (
+                           request.resource.data.role == 'Warga Sirkular' &&
+                           (!('points' in request.resource.data) || request.resource.data.points == 0) &&
+                           (!('verified' in request.resource.data) || request.resource.data.verified == false)
+                         )
+                       );
+
+      // Update: User can update their own profile, but CANNOT alter role, points, verified status, or createdAt
+      allow update: if (isOwner(userId) || isAdmin()) &&
+                       isValidUser(request.resource.data) &&
+                       (
+                         isAdmin() ||
+                         (
+                           areImmutableFieldsUnchanged(['role', 'points', 'verified', 'createdAt', 'created_at']) &&
+                           request.resource.data.role == resource.data.role
+                         )
+                       );
+
+      // Delete: Only administrators can delete user profile documents
+      allow delete: if isAdmin();
+    }
+
+    // ---------------------------------------------------------------
+    // 2. /wasteDeposits/{depositId}
+    // ---------------------------------------------------------------
+    match /wasteDeposits/{depositId} {
+      // Read: Only the owner of the deposit or an administrator
+      allow read: if isAuthenticated() &&
+                     (
+                       resource.data.userId == request.auth.uid ||
+                       ('user_id' in resource.data && resource.data.user_id == request.auth.uid) ||
+                       isAdmin()
+                     );
+
+      // Create: Authenticated users can create deposits for themselves with initial status 'Diajukan'
+      allow create: if isAuthenticated() &&
+                       (
+                         request.resource.data.userId == request.auth.uid ||
+                         ('user_id' in request.resource.data && request.resource.data.user_id == request.auth.uid)
+                       ) &&
+                       request.resource.data.status == 'Diajukan' &&
+                       isValidWasteDeposit(request.resource.data);
+
+      // Update / Delete: Only administrators (prevents client-side balance/verification tampering)
+      allow update: if isAdmin() && isValidWasteDeposit(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    // ---------------------------------------------------------------
+    // 3. /transactions/{transactionId}
+    // ---------------------------------------------------------------
+    match /transactions/{transactionId} {
+      // Read: Owner or administrator
+      allow read: if isAuthenticated() &&
+                     (
+                       resource.data.userId == request.auth.uid ||
+                       ('user_id' in resource.data && resource.data.user_id == request.auth.uid) ||
+                       isAdmin()
+                     );
+
+      // Create / Update / Delete: Only administrators / trusted backend server
+      allow create: if isAdmin() && isValidTransaction(request.resource.data);
+      allow update: if isAdmin() && isValidTransaction(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    // ---------------------------------------------------------------
+    // 4. /ecoPoints/{userId}
+    // ---------------------------------------------------------------
+    match /ecoPoints/{userId} {
+      // Read: Owner or administrator
+      allow read: if isOwner(userId) || isAdmin();
+
+      // Write (Create / Update / Delete): Only administrators (prevents self-awarding points)
+      allow create: if isAdmin() && isValidEcoPoints(request.resource.data);
+      allow update: if isAdmin() && isValidEcoPoints(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    // ---------------------------------------------------------------
+    // 5. /challenges/{challengeId}
+    // ---------------------------------------------------------------
+    match /challenges/{challengeId} {
+      // Read: Public read access for all community members
+      allow read: if true;
+
+      // Write: Only administrators can create, update, or remove challenges
+      allow create: if isAdmin() && isValidChallenge(request.resource.data);
+      allow update: if isAdmin() && isValidChallenge(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    // ---------------------------------------------------------------
+    // 6. /challengeParticipants/{participantId}
+    // ---------------------------------------------------------------
+    match /challengeParticipants/{participantId} {
+      // Read: Participant or administrator
+      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
+
+      // Create: Authenticated users can join challenges for themselves
+      allow create: if isAuthenticated() &&
+                       request.resource.data.userId == request.auth.uid &&
+                       isValidChallengeParticipant(request.resource.data);
+
+      // Update: Participants can update their own progress, cannot alter ownership or challenge ID
+      allow update: if isAuthenticated() &&
+                       (
+                         isAdmin() ||
+                         (
+                           resource.data.userId == request.auth.uid &&
+                           request.resource.data.userId == request.auth.uid &&
+                           areImmutableFieldsUnchanged(['userId', 'challengeId', 'createdAt', 'joinedAt'])
+                         )
+                       ) &&
+                       isValidChallengeParticipant(request.resource.data);
+
+      // Delete: Only administrators
+      allow delete: if isAdmin();
+    }
+
+    // ---------------------------------------------------------------
+    // 7. /wasteCategories/{categoryId}
+    // ---------------------------------------------------------------
+    match /wasteCategories/{categoryId} {
+      // Read: Public catalog of waste sorting categories and rates
+      allow read: if true;
+
+      // Write: Only administrators can configure categories and rate pricing
+      allow create: if isAdmin() && isValidWasteCategory(request.resource.data);
+      allow update: if isAdmin() && isValidWasteCategory(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    // ---------------------------------------------------------------
+    // 8. /educationalContent/{contentId}
+    // ---------------------------------------------------------------
+    match /educationalContent/{contentId} {
+      // Read: Public if published == true, or administrator if draft/unpublished
+      allow read: if resource.data.published == true || isAdmin();
+
+      // Write: Only administrators can author and publish educational content
+      allow create: if isAdmin() && isValidEducationalContent(request.resource.data);
+      allow update: if isAdmin() && isValidEducationalContent(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    // ---------------------------------------------------------------
+    // 9. /notifications/{notificationId}
+    // ---------------------------------------------------------------
+    match /notifications/{notificationId} {
+      // Read: Recipient user or administrator
+      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
+
+      // Update: Recipient can mark notifications as read, cannot tamper with payload/title/type
+      allow update: if isAuthenticated() &&
+                       (
+                         isAdmin() ||
+                         (
+                           resource.data.userId == request.auth.uid &&
+                           request.resource.data.userId == resource.data.userId &&
+                           areImmutableFieldsUnchanged(['userId', 'title', 'message', 'type', 'createdAt'])
+                         )
+                       ) &&
+                       isValidNotification(request.resource.data);
+
+      // Create / Delete: Only administrators / backend system
+      allow create: if isAdmin() && isValidNotification(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    // ---------------------------------------------------------------
+    // 10. /leaderboard/{userId}
+    // ---------------------------------------------------------------
+    match /leaderboard/{userId} {
+      // Read: Public read for community gamification (strictly non-PII attributes only)
+      allow read: if true;
+
+      // Write: Only administrators / trusted background functions can update aggregated leaderboard stats
+      allow create: if isAdmin() && isValidLeaderboardEntry(request.resource.data);
+      allow update: if isAdmin() && isValidLeaderboardEntry(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+  }
+}

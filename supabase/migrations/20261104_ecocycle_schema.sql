@@ -119,18 +119,34 @@ ALTER TABLE public.user_achievements ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.user_activities ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.user_preferences ENABLE ROW LEVEL SECURITY;
 
--- 1. Profiles Policies
+-- 1. Profiles Policies (Strict Owner Isolation for sensitive data)
 CREATE POLICY "Users can view own profile"
   ON public.profiles FOR SELECT
   USING (auth.uid() = id);
+
+CREATE POLICY "Users can insert own profile"
+  ON public.profiles FOR INSERT
+  WITH CHECK (auth.uid() = id);
 
 CREATE POLICY "Users can update own profile"
   ON public.profiles FOR UPDATE
   USING (auth.uid() = id);
 
-CREATE POLICY "Public can view basic leaderboard profile info"
-  ON public.profiles FOR SELECT
-  USING (TRUE);
+-- Secure Public Leaderboard View (Exposes only non-sensitive gamification attributes)
+CREATE OR REPLACE VIEW public.leaderboard_view AS
+  SELECT 
+    id, 
+    full_name, 
+    role, 
+    points, 
+    streak_days, 
+    avatar_url, 
+    city, 
+    created_at
+  FROM public.profiles
+  WHERE points > 0;
+
+GRANT SELECT ON public.leaderboard_view TO anon, authenticated;
 
 -- 2. Waste Deposits Policies
 CREATE POLICY "Users can view own deposits"
@@ -143,6 +159,10 @@ CREATE POLICY "Users can insert own deposits"
 
 CREATE POLICY "Users can update own deposits"
   ON public.waste_deposits FOR UPDATE
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can delete own deposits"
+  ON public.waste_deposits FOR DELETE
   USING (auth.uid() = user_id);
 
 -- 3. Community Challenges Policies

@@ -65,7 +65,7 @@ export const INITIAL_TRANSACTIONS: WasteTransaction[] = [
     weightKg: 5.0,
     points: 100,
     valueIdr: 10000,
-    dropPoint: 'Hub Sirkular FKOM UNIKUN',
+    dropPoint: 'Hub Sirkular Sentral Terpadu',
     status: 'Terverifikasi',
     co2OffsetKg: 2.0,
     waterSavedLiters: 25,

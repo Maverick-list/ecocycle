@@ -50,7 +50,7 @@ export const TOUR_CHAPTERS: TourChapter[] = [
     keyActions: [
       'Pilih kategori material (Plastik, Kertas, Logam, Minyak Jelantah, atau Organik).',
       'Masukkan berat timbangan fisik (contoh: 3.5 kg).',
-      'Pilih lokasi hub penerima resmi (contoh: Hub Sentral FKOM UNIKU).',
+      'Pilih lokasi hub penerima resmi (contoh: Hub Sirkular Sentral Terpadu).',
       'Unggah foto bukti material bersih yang sudah dipersiapkan.',
       'Konfirmasi setoran untuk langsung menambah saldo rupiah dan EcoPoints.',
     ],

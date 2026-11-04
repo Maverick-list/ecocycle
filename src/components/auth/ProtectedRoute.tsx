@@ -36,7 +36,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
             <div className="flex items-center gap-2">
               <Icon name="info" size={16} />
               <span>
-                <strong>Mode Demonstrasi Pengembang:</strong> Kredensial Supabase belum terisi di <code>.env</code>. Halaman ini saat ini menggunakan basis data lokal persisten.
+                <strong>Mode Demonstrasi Pengembang:</strong> Kredensial Cloud (Google Firebase / Supabase) belum terisi di <code>.env</code>. Halaman ini saat ini menggunakan basis data lokal persisten.
               </span>
             </div>
             <a

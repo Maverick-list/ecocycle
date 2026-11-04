@@ -1,136 +1,234 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { User, Session, AuthError } from '@supabase/supabase-js';
+import { updatePassword as fbUpdatePassword, User as FirebaseUser } from 'firebase/auth';
+import { authService } from '../services/authService';
+import { firebaseAuth } from '../lib/firebaseAuth';
+import { isFirebaseConfigured, auth } from '../lib/firebase';
 import { supabase, isSupabaseConfigured } from '../services/supabaseClient';
+import { trackEvent } from '../lib/analytics';
 
-interface AuthContextType {
-  user: User | null;
-  session: Session | null;
+export interface AppUser {
+  id: string;
+  uid: string;
+  email: string | null;
+  displayName: string | null;
+  photoURL?: string | null;
+  user_metadata?: {
+    full_name?: string;
+    avatar_url?: string;
+  };
+  emailVerified?: boolean;
+}
+
+export interface AuthContextType {
+  user: AppUser | null;
+  session: any | null;
   loading: boolean;
   isConfigured: boolean;
-  signInWithEmail: (email: string, password: string) => Promise<{ error: AuthError | Error | null }>;
-  signUpWithEmail: (email: string, password: string, fullName: string) => Promise<{ error: AuthError | Error | null }>;
-  signInWithGoogle: () => Promise<{ error: AuthError | Error | null }>;
+  provider: 'firebase' | 'supabase' | 'none';
+  signInWithEmail: (email: string, password: string) => Promise<{ error: Error | null }>;
+  signUpWithEmail: (email: string, password: string, fullName: string) => Promise<{ error: Error | null }>;
+  signInWithGoogle: () => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
-  resetPassword: (email: string) => Promise<{ error: AuthError | Error | null }>;
-  updatePassword: (newPassword: string) => Promise<{ error: AuthError | Error | null }>;
+  resetPassword: (email: string) => Promise<{ error: Error | null }>;
+  updatePassword: (newPassword: string) => Promise<{ error: Error | null }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const mapFirebaseUser = (fbUser: FirebaseUser): AppUser => ({
+  id: fbUser.uid,
+  uid: fbUser.uid,
+  email: fbUser.email,
+  displayName: fbUser.displayName,
+  photoURL: fbUser.photoURL,
+  user_metadata: {
+    full_name: fbUser.displayName || undefined,
+    avatar_url: fbUser.photoURL || undefined
+  },
+  emailVerified: fbUser.emailVerified
+});
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
+  const [user, setUser] = useState<AppUser | null>(null);
+  const [session, setSession] = useState<any | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
+  // Active provider: Prioritize Firebase, fallback to Supabase
+  const activeProvider: 'firebase' | 'supabase' | 'none' = isFirebaseConfigured
+    ? 'firebase'
+    : isSupabaseConfigured
+    ? 'supabase'
+    : 'none';
+
+  const isConfigured = activeProvider !== 'none';
+
   useEffect(() => {
-    if (!isSupabaseConfigured) {
+    if (activeProvider === 'firebase') {
+      // 1. Firebase Auth listener
+      const unsubscribe = firebaseAuth.onAuthStateChange((fbUser) => {
+        if (fbUser) {
+          const mapped = mapFirebaseUser(fbUser);
+          setUser(mapped);
+          setSession({ user: mapped, provider: 'firebase' });
+        } else {
+          setUser(null);
+          setSession(null);
+        }
+        setLoading(false);
+      });
+
+      return () => {
+        unsubscribe();
+      };
+    } else if (activeProvider === 'supabase') {
+      // 2. Supabase Auth fallback
+      supabase.auth.getSession().then(({ data: { session: initialSession } }) => {
+        setSession(initialSession);
+        if (initialSession?.user) {
+          setUser({
+            id: initialSession.user.id,
+            uid: initialSession.user.id,
+            email: initialSession.user.email ?? null,
+            displayName: initialSession.user.user_metadata?.full_name ?? null,
+            photoURL: initialSession.user.user_metadata?.avatar_url ?? null,
+            user_metadata: initialSession.user.user_metadata,
+            emailVerified: Boolean(initialSession.user.email_confirmed_at)
+          });
+        } else {
+          setUser(null);
+        }
+        setLoading(false);
+      }).catch(() => {
+        setLoading(false);
+      });
+
+      const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, currentSession) => {
+        setSession(currentSession);
+        if (currentSession?.user) {
+          setUser({
+            id: currentSession.user.id,
+            uid: currentSession.user.id,
+            email: currentSession.user.email ?? null,
+            displayName: currentSession.user.user_metadata?.full_name ?? null,
+            photoURL: currentSession.user.user_metadata?.avatar_url ?? null,
+            user_metadata: currentSession.user.user_metadata,
+            emailVerified: Boolean(currentSession.user.email_confirmed_at)
+          });
+        } else {
+          setUser(null);
+        }
+        setLoading(false);
+      });
+
+      return () => {
+        subscription.unsubscribe();
+      };
+    } else {
+      // Neither configured
       setLoading(false);
-      return;
     }
-
-    // 1. Get initial session
-    supabase.auth.getSession().then(({ data: { session: initialSession } }) => {
-      setSession(initialSession);
-      setUser(initialSession?.user ?? null);
-      setLoading(false);
-    }).catch(() => {
-      setLoading(false);
-    });
-
-    // 2. Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, currentSession) => {
-      setSession(currentSession);
-      setUser(currentSession?.user ?? null);
-      setLoading(false);
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, []);
+  }, [activeProvider]);
 
   const signInWithEmail = async (email: string, password: string) => {
-    if (!isSupabaseConfigured) {
-      return {
-        error: new Error(
-          'Supabase belum dikonfigurasi. Harap tambahkan VITE_SUPABASE_URL dan VITE_SUPABASE_ANON_KEY pada berkas .env Anda.'
-        ),
-      };
+    if (activeProvider === 'firebase') {
+      const res = await authService.login(email, password);
+      return { error: res.error };
+    } else if (activeProvider === 'supabase') {
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      return { error };
     }
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    return { error };
+    return {
+      error: new Error(
+        'Layanan autentikasi cloud belum dikonfigurasi. Harap lengkapi variabel Firebase atau Supabase pada berkas .env Anda.'
+      )
+    };
   };
 
   const signUpWithEmail = async (email: string, password: string, fullName: string) => {
-    if (!isSupabaseConfigured) {
-      return {
-        error: new Error(
-          'Supabase belum dikonfigurasi. Harap tambahkan VITE_SUPABASE_URL dan VITE_SUPABASE_ANON_KEY pada berkas .env Anda.'
-        ),
-      };
+    if (activeProvider === 'firebase') {
+      const res = await authService.register(email, password, fullName);
+      return { error: res.error };
+    } else if (activeProvider === 'supabase') {
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: { full_name: fullName },
+          emailRedirectTo: `${window.location.origin}/auth/callback`
+        }
+      });
+      return { error };
     }
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          full_name: fullName,
-        },
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
-      },
-    });
-    return { error };
+    return {
+      error: new Error(
+        'Layanan autentikasi cloud belum dikonfigurasi. Harap lengkapi variabel Firebase atau Supabase pada berkas .env Anda.'
+      )
+    };
   };
 
   const signInWithGoogle = async () => {
-    if (!isSupabaseConfigured) {
-      return {
-        error: new Error(
-          'Supabase OAuth belum dikonfigurasi. Harap aktifkan Google Provider di konsol Supabase Anda.'
-        ),
-      };
+    if (activeProvider === 'firebase') {
+      const res = await authService.loginWithGoogle();
+      return { error: res.error };
+    } else if (activeProvider === 'supabase') {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`
+        }
+      });
+      return { error };
     }
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-      },
-    });
-    return { error };
+    return {
+      error: new Error(
+        'Google OAuth belum dikonfigurasi. Harap aktifkan Google Provider di konsol Firebase atau Supabase Anda.'
+      )
+    };
   };
 
   const signOut = async () => {
-    if (isSupabaseConfigured) {
+    if (activeProvider === 'firebase') {
+      await authService.logout();
+    } else if (activeProvider === 'supabase') {
       await supabase.auth.signOut();
     }
+    trackEvent('logout');
     setUser(null);
     setSession(null);
   };
 
   const resetPassword = async (email: string) => {
-    if (!isSupabaseConfigured) {
-      return {
-        error: new Error(
-          'Supabase belum dikonfigurasi. Harap sediakan kredensial Supabase di berkas .env.'
-        ),
-      };
+    if (activeProvider === 'firebase') {
+      return await authService.resetPassword(email);
+    } else if (activeProvider === 'supabase') {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/auth/callback?type=recovery`
+      });
+      return { error };
     }
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/auth/callback?type=recovery`,
-    });
-    return { error };
+    return {
+      error: new Error(
+        'Layanan pemulihan kata sandi belum aktif. Hubungkan kredensial cloud di berkas .env.'
+      )
+    };
   };
 
   const updatePassword = async (newPassword: string) => {
-    if (!isSupabaseConfigured) {
-      return {
-        error: new Error('Supabase belum dikonfigurasi.'),
-      };
+    if (activeProvider === 'firebase') {
+      if (auth && auth.currentUser) {
+        try {
+          await fbUpdatePassword(auth.currentUser, newPassword);
+          return { error: null };
+        } catch (err: any) {
+          return { error: err };
+        }
+      }
+      return { error: new Error('Tidak ada sesi pengguna aktif untuk memperbarui sandi.') };
+    } else if (activeProvider === 'supabase') {
+      const { error } = await supabase.auth.updateUser({ password: newPassword });
+      return { error };
     }
-    const { error } = await supabase.auth.updateUser({ password: newPassword });
-    return { error };
+    return { error: new Error('Layanan autentikasi belum dikonfigurasi.') };
   };
 
   return (
@@ -139,13 +237,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         user,
         session,
         loading,
-        isConfigured: isSupabaseConfigured,
+        isConfigured,
+        provider: activeProvider,
         signInWithEmail,
         signUpWithEmail,
         signInWithGoogle,
         signOut,
         resetPassword,
-        updatePassword,
+        updatePassword
       }}
     >
       {children}

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+  <!-- Beranda Utama -->
+  <url>
+    <loc>https://ecocycle.id/</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Bank Sampah Digital -->
+  <url>
+    <loc>https://ecocycle.id/bank-sampah</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Pemilahan Pintar (Katalog & AI Identifier) -->
+  <url>
+    <loc>https://ecocycle.id/pemilahan-pintar</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- Neraca Dampak Ekologis -->
+  <url>
+    <loc>https://ecocycle.id/dampak-ekologis</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- Analitik Komprehensif -->
+  <url>
+    <loc>https://ecocycle.id/analitik</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Akademi Sirkular (Edukasi & Panduan) -->
+  <url>
+    <loc>https://ecocycle.id/akademi</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Tantangan Komunitas & Leaderboard -->
+  <url>
+    <loc>https://ecocycle.id/tantangan</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Panduan Interaktif -->
+  <url>
+    <loc>https://ecocycle.id/panduan</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Tanya Jawab Resmi (FAQ) -->
+  <url>
+    <loc>https://ecocycle.id/faq</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Hub Jaringan & Kontak -->
+  <url>
+    <loc>https://ecocycle.id/kontak</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.65</priority>
+  </url>
+
+</urlset>

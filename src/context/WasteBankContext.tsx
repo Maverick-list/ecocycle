@@ -2,6 +2,10 @@ import React, { createContext, useContext, useState, useEffect, useMemo } from '
 import { WasteTransaction, WasteStreamType } from '../types';
 import { WasteBankService } from '../services/wasteBankService';
 import { StorageService } from '../services/storageService';
+import { useAuth } from './AuthContext';
+import { SupabaseDataService } from '../services/supabaseDataService';
+import { FirebaseDataService } from '../services/firebaseDataService';
+import { trackEvent } from '../lib/analytics';
 
 interface ToastMessage {
   id: string;
@@ -50,9 +54,32 @@ const STORAGE_KEY_HAS_PLEDGED = 'ecocycle_has_pledged_v2';
 const STORAGE_KEY_BONUS_POINTS = 'ecocycle_bonus_points_v2';
 
 export const WasteBankProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { user, isConfigured } = useAuth();
+
   const [transactions, setTransactions] = useState<WasteTransaction[]>(() => {
     return WasteBankService.getTransactions();
   });
+
+  // Sync with Cloud (Firebase or Supabase) when authenticated
+  useEffect(() => {
+    if (user) {
+      if (FirebaseDataService.isConfigured) {
+        FirebaseDataService.fetchUserDeposits(user.id).then(({ deposits, error }) => {
+          if (!error && deposits.length > 0) {
+            setTransactions(deposits);
+          }
+        });
+      } else if (isConfigured) {
+        SupabaseDataService.fetchUserDeposits(user.id).then(({ deposits, error }) => {
+          if (!error && deposits.length > 0) {
+            setTransactions(deposits);
+          }
+        });
+      }
+    } else {
+      setTransactions(WasteBankService.getTransactions());
+    }
+  }, [user, isConfigured]);
 
   const [bonusPoints, setBonusPoints] = useState<number>(() => {
     return StorageService.get<number>(STORAGE_KEY_BONUS_POINTS, 0);
@@ -100,6 +127,27 @@ export const WasteBankProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   }) => {
     const newTrx = WasteBankService.createTransaction(data);
     setTransactions(WasteBankService.getTransactions());
+
+    // Track GA4 event
+    trackEvent('deposit_submitted', {
+      category: data.wasteType,
+      weight: data.weightKg,
+      points: newTrx.points
+    });
+
+    // Asynchronously sync with Cloud (Firebase or Supabase) if authenticated
+    if (user) {
+      if (FirebaseDataService.isConfigured) {
+        FirebaseDataService.submitDeposit(user.id, newTrx).catch((err: any) => {
+          console.warn('[Firebase Sync] Could not save deposit to Firestore:', err);
+        });
+      } else if (isConfigured) {
+        SupabaseDataService.insertDeposit(user.id, newTrx).catch((err: any) => {
+          console.warn('[Supabase Sync] Could not save deposit remotely:', err);
+        });
+      }
+    }
+
     showToast(`Setoran ${data.wasteType} (${data.weightKg} kg) berhasil dicatat! +${newTrx.points} Poin`, 'success');
     return newTrx;
   };

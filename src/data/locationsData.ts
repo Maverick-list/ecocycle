@@ -25,13 +25,13 @@ export const DROP_POINTS: DropPointStation[] = [
   },
   {
     id: 'dp-3',
-    name: 'Hub Sirkular FKOM Universitas Kuningan',
-    address: 'Gedung FKOM UNIKU, Jl. Cut Nyak Dhien No. 36A, Cijoho',
+    name: 'Hub Sirkular Sentral Terpadu Kuningan',
+    address: 'Jl. Cut Nyak Dhien No. 36A, Cijoho',
     subdistrict: 'Kuningan',
     city: 'Kabupaten Kuningan',
     hours: 'Senin - Jumat: 08.30 - 16.30 WIB',
     status: 'Buka Sekarang',
-    acceptedTypes: ['Kardus & Kertas', 'Plastik PET', 'Kaleng Logam', 'E-Waste Mahasiswa'],
+    acceptedTypes: ['Kardus & Kertas', 'Plastik PET', 'Kaleng Logam', 'E-Waste Komunitas'],
     contact: '+62 857-1234-9988'
   },
   {

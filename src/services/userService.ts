@@ -7,14 +7,14 @@ const USER_PROFILE_KEY = 'ecocycle_user_profile_v3';
 
 export const DEFAULT_USER_PROFILE: UserProfile = {
   id: 'usr-eco-8821',
-  name: 'Firza Ilmi Pratama',
-  email: 'firza.ilmi@student.uniku.ac.id',
+  name: 'Pratama Kusuma',
+  email: 'pratama.kusuma@ecocycle.id',
   phone: '+62 812-3456-7890',
-  role: 'Duta Sirkular Kampus',
-  affiliation: 'Fakultas Ilmu Komputer, Universitas Kuningan',
+  role: 'Duta Sirkular Mandiri',
+  affiliation: 'Inisiatif Pengelolaan Sumber Daya Lestari',
   avatar: '/assets/images/avatar_user.jpg',
-  bio: 'Pencinta lingkungan dan penggerak gaya hidup minim sampah di lingkungan kampus FKOM UNIKU. Aktif menyetor limbah bernilai sejak 2025.',
-  location: 'Cigugur, Kabupaten Kuningan, Jawa Barat',
+  bio: 'Pegiat keberlanjutan dan penggerak ekonomi sirkular perkotaan. Berkomitmen mengurangi residu material ke tempat pembuangan akhir melalui pemilahan presisi.',
+  location: 'Kuningan, Jawa Barat',
   joinedDate: '15 September 2025',
   ecoLevel: 'Pejuang Sirkular Tingkat 3',
   currentStreakDays: 14,
@@ -23,7 +23,7 @@ export const DEFAULT_USER_PROFILE: UserProfile = {
     notificationsEnabled: true,
     emailDigestWeekly: true,
     publicLeaderboard: true,
-    preferredDropPoint: 'Drop-Point Kampus 1 FKOM UNIKU'
+    preferredDropPoint: 'Hub Sirkular Sentral Kuningan Kota'
   }
 };
 

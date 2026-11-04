@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { PageTransition } from '../../components/ui/PageTransition';
 import { Icon } from '../../components/ui/Icon';
 import { EcocycleLogo } from '../../components/brand/EcocycleLogo';
+import { SEOHead } from '../../components/seo/SEOHead';
 
 export const SignUpPage: React.FC = () => {
   const { signUpWithEmail, isConfigured } = useAuth();
@@ -53,16 +54,17 @@ export const SignUpPage: React.FC = () => {
   };
 
   return (
-    <PageTransition>
-      <div className="min-h-[85vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-surface">
-        <div className="max-w-md w-full space-y-6">
+    <PageTransition className="w-full bg-surface text-on-surface py-16 sm:py-24">
+      <SEOHead title="Daftar Akun Baru" canonical="/daftar" noindex={true} />
+      <div className="min-h-[75vh] flex items-center justify-center px-4 sm:px-6 lg:px-8">
+        <div className="max-w-md w-full space-y-8">
           
           {/* Header */}
-          <div className="text-center space-y-2">
-            <Link to="/" className="inline-block">
+          <div className="text-center space-y-3">
+            <Link to="/" className="inline-block hover:opacity-90 transition-opacity">
               <EcocycleLogo size="lg" showTagline={true} />
             </Link>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-primary tracking-tight pt-2">
+            <h1 className="font-display font-extrabold text-2xl sm:text-3xl text-primary tracking-tight pt-2">
               Buat Akun Sirkular Baru
             </h1>
             <p className="text-xs text-on-surface-variant">
@@ -71,18 +73,18 @@ export const SignUpPage: React.FC = () => {
           </div>
 
           {!isConfigured && (
-            <div className="p-3.5 rounded-2xl bg-secondary-fixed/30 border border-secondary/30 text-xs text-secondary space-y-1">
-              <span className="font-bold block">💡 Info Pengembang</span>
+            <div className="p-4 rounded-2xl glass-panel border border-secondary/30 text-xs text-secondary space-y-1">
+              <span className="font-bold block">💡 Mode Demonstrasi Terbuka</span>
               <p className="text-[11px] text-on-surface-variant leading-relaxed">
-                Supabase Auth belum diaktifkan via <code>.env</code>. Pengisian formulir ini akan memvalidasi alur dan mengarahkan ke halaman verifikasi email.
+                Arsitektur autentikasi Google Firebase dan Supabase terintegrasi secara modular. Anda dapat menguji alur verifikasi langsung atau menghubungkan kredensial di <code>.env</code>.
               </p>
             </div>
           )}
 
           {/* Form Panel */}
-          <div className="glass-panel-elevated p-6 sm:p-8 rounded-3xl space-y-5 border border-outline-variant/30 shadow-xl">
+          <div className="glass-panel-elevated p-8 sm:p-10 rounded-3xl space-y-6 border border-outline-variant/25 shadow-2xl">
             {errorMessage && (
-              <div className="p-3.5 rounded-xl bg-error-container text-on-error-container text-xs flex items-start gap-2 animate-fadeIn">
+              <div className="p-4 rounded-2xl bg-error/15 text-error text-xs flex items-start gap-2.5 animate-fadeIn border border-error/20">
                 <Icon name="alert" size={16} className="text-error shrink-0 mt-0.5" />
                 <span>{errorMessage}</span>
               </div>
@@ -90,30 +92,30 @@ export const SignUpPage: React.FC = () => {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-on-surface-variant uppercase mb-1">
+                <label className="block text-xs font-bold text-outline uppercase tracking-wider mb-1.5">
                   Nama Lengkap
                 </label>
                 <div className="relative">
-                  <div className="absolute left-3 top-3 text-outline">
+                  <div className="absolute left-3.5 top-3.5 text-outline">
                     <Icon name="user" size={16} />
                   </div>
                   <input
                     type="text"
                     required
-                    placeholder="Contoh: Rina Mahasiswi UNIKU"
+                    placeholder="Contoh: Rina Safitri"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    className="w-full h-11 pl-10 pr-3.5 rounded-xl bg-surface-container text-xs text-on-surface outline-none focus:ring-2 focus:ring-secondary border border-outline-variant/20"
+                    className="w-full h-11 pl-10 pr-4 rounded-xl glass-panel text-xs text-on-surface outline-none focus:ring-2 focus:ring-secondary/50 border border-outline-variant/25"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-on-surface-variant uppercase mb-1">
+                <label className="block text-xs font-bold text-outline uppercase tracking-wider mb-1.5">
                   Alamat Surel (Email)
                 </label>
                 <div className="relative">
-                  <div className="absolute left-3 top-3 text-outline">
+                  <div className="absolute left-3.5 top-3.5 text-outline">
                     <Icon name="mail" size={16} />
                   </div>
                   <input
@@ -122,71 +124,73 @@ export const SignUpPage: React.FC = () => {
                     placeholder="nama@email.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full h-11 pl-10 pr-3.5 rounded-xl bg-surface-container text-xs text-on-surface outline-none focus:ring-2 focus:ring-secondary border border-outline-variant/20"
+                    className="w-full h-11 pl-10 pr-4 rounded-xl glass-panel text-xs text-on-surface outline-none focus:ring-2 focus:ring-secondary/50 border border-outline-variant/25"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-on-surface-variant uppercase mb-1">
-                  Kata Sandi (Min. 6 Karakter)
+                <label className="block text-xs font-bold text-outline uppercase tracking-wider mb-1.5">
+                  Kata Sandi
                 </label>
                 <div className="relative">
-                  <div className="absolute left-3 top-3 text-outline">
+                  <div className="absolute left-3.5 top-3.5 text-outline">
                     <Icon name="verified" size={16} />
                   </div>
                   <input
                     type="password"
                     required
-                    placeholder="••••••••"
+                    placeholder="Minimal 6 karakter"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full h-11 pl-10 pr-3.5 rounded-xl bg-surface-container text-xs text-on-surface outline-none focus:ring-2 focus:ring-secondary border border-outline-variant/20"
+                    className="w-full h-11 pl-10 pr-4 rounded-xl glass-panel text-xs text-on-surface outline-none focus:ring-2 focus:ring-secondary/50 border border-outline-variant/25"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-on-surface-variant uppercase mb-1">
-                  Ulangi Kata Sandi
+                <label className="block text-xs font-bold text-outline uppercase tracking-wider mb-1.5">
+                  Konfirmasi Kata Sandi
                 </label>
                 <div className="relative">
-                  <div className="absolute left-3 top-3 text-outline">
+                  <div className="absolute left-3.5 top-3.5 text-outline">
                     <Icon name="verified" size={16} />
                   </div>
                   <input
                     type="password"
                     required
-                    placeholder="••••••••"
+                    placeholder="Ulangi kata sandi Anda"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="w-full h-11 pl-10 pr-3.5 rounded-xl bg-surface-container text-xs text-on-surface outline-none focus:ring-2 focus:ring-secondary border border-outline-variant/20"
+                    className="w-full h-11 pl-10 pr-4 rounded-xl glass-panel text-xs text-on-surface outline-none focus:ring-2 focus:ring-secondary/50 border border-outline-variant/25"
                   />
                 </div>
               </div>
 
-              <label className="flex items-start gap-2 pt-1 cursor-pointer text-xs text-on-surface-variant">
-                <input
-                  type="checkbox"
-                  checked={agreed}
-                  onChange={(e) => setAgreed(e.target.checked)}
-                  className="mt-0.5 rounded text-secondary focus:ring-secondary"
-                />
-                <span>
-                  Saya setuju untuk mematuhi kaidah pemilahan bersih dan pedoman etika data ECOCYCLE.
-                </span>
-              </label>
+              <div className="pt-2">
+                <label className="flex items-start gap-2.5 cursor-pointer text-xs text-on-surface-variant">
+                  <input
+                    type="checkbox"
+                    checked={agreed}
+                    onChange={(e) => setAgreed(e.target.checked)}
+                    className="mt-0.5 w-4 h-4 rounded text-secondary focus:ring-secondary accent-secondary cursor-pointer"
+                  />
+                  <span>
+                    Saya menyetujui komitmen pemilahan material presisi dan etika privasi data ECOCYCLE.
+                  </span>
+                </label>
+              </div>
 
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full h-11 rounded-xl bg-primary text-on-primary font-bold text-xs hover:bg-primary-container transition-all cursor-pointer shadow-md flex items-center justify-center gap-2 mt-2"
+                className="w-full h-11 rounded-xl bg-secondary text-white font-bold text-xs hover:bg-secondary/90 transition-all cursor-pointer shadow-md flex items-center justify-center gap-2 mt-4 hover:scale-[1.01] active:scale-[0.99]"
               >
                 {isLoading ? (
-                  <div className="w-5 h-5 border-2 border-surface border-t-transparent rounded-full animate-spin" />
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                 ) : (
                   <>
-                    <span>Daftar Akun Baru</span>
+                    <span>Daftar Akun Sekarang</span>
                     <Icon name="arrow_forward" size={14} />
                   </>
                 )}
@@ -197,7 +201,7 @@ export const SignUpPage: React.FC = () => {
           <div className="text-center text-xs text-on-surface-variant">
             <span>Sudah memiliki akun? </span>
             <Link to="/masuk" className="font-bold text-secondary hover:underline">
-              Masuk di Sini
+              Masuk di sini
             </Link>
           </div>
 

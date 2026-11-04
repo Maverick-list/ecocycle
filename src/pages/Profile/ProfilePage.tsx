@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useWasteBank } from '../../context/WasteBankContext';
 import { useAuth } from '../../context/AuthContext';
 import { UserService } from '../../services/userService';
+import { SupabaseDataService } from '../../services/supabaseDataService';
+import { FirebaseDataService } from '../../services/firebaseDataService';
 import { UserProfile } from '../../types';
 import { Icon } from '../../components/ui/Icon';
 import { AnimatedCounter } from '../../components/ui/AnimatedCounter';
 import { PageTransition } from '../../components/ui/PageTransition';
+import { SEOHead } from '../../components/seo/SEOHead';
 import { DROP_POINTS } from '../../data/locationsData';
 import { COMMUNITY_CHALLENGES } from '../../data/challengesData';
 
@@ -16,7 +19,7 @@ export const ProfilePage: React.FC = () => {
     totalBalanceIdr, 
     totalWeightKg, 
     totalCo2AvoidedKg,
-    openDetailTrx,
+    openDetailTrx, 
     showToast 
   } = useWasteBank();
 
@@ -45,6 +48,47 @@ export const ProfilePage: React.FC = () => {
   // Calculate monthly goal progress
   const monthlyProgressPercent = Math.min(100, Math.round((totalWeightKg / monthlyGoal) * 100));
 
+  // Sync remote profile from Cloud (Firebase or Supabase) when user is authenticated
+  useEffect(() => {
+    if (user) {
+      if (FirebaseDataService.isConfigured) {
+        FirebaseDataService.fetchUserProfile(user.id).then(({ profile: remoteProfile, error }) => {
+          if (!error && remoteProfile) {
+            setProfile(prev => ({
+              ...prev,
+              id: remoteProfile.id || prev.id,
+              name: remoteProfile.name || prev.name,
+              email: remoteProfile.email || prev.email,
+              phone: remoteProfile.phone || prev.phone,
+              location: remoteProfile.location || prev.location,
+              avatar: remoteProfile.avatar || prev.avatar,
+            }));
+            setEditName(remoteProfile.name || editName);
+            setEditPhone(remoteProfile.phone || editPhone);
+            setEditLocation(remoteProfile.location || editLocation);
+          }
+        });
+      } else if (isConfigured) {
+        SupabaseDataService.fetchProfile(user.id).then(({ profile: remoteProfile, error }) => {
+          if (!error && remoteProfile) {
+            setProfile(prev => ({
+              ...prev,
+              id: remoteProfile.id,
+              name: remoteProfile.full_name || prev.name,
+              email: remoteProfile.email || prev.email,
+              phone: remoteProfile.phone || prev.phone,
+              location: remoteProfile.address || prev.location,
+              avatar: remoteProfile.avatar_url || prev.avatar,
+            }));
+            setEditName(remoteProfile.full_name || editName);
+            setEditPhone(remoteProfile.phone || editPhone);
+            setEditLocation(remoteProfile.address || editLocation);
+          }
+        });
+      }
+    }
+  }, [user, isConfigured]);
+
   const handleSaveProfile = (e: React.FormEvent) => {
     e.preventDefault();
     const updated = UserService.updateProfile({
@@ -55,6 +99,26 @@ export const ProfilePage: React.FC = () => {
       avatar: editAvatar
     });
     setProfile(updated);
+
+    // If authenticated, update remote cloud profile (Firebase or Supabase)
+    if (user) {
+      if (FirebaseDataService.isConfigured) {
+        FirebaseDataService.updateUserProfile(user.id, {
+          name: editName,
+          phone: editPhone,
+          location: editLocation,
+          bio: editBio,
+          avatar: editAvatar,
+        }).catch(err => console.warn('[Firebase Sync] Profile update warning:', err));
+      } else if (isConfigured) {
+        SupabaseDataService.updateProfile(user.id, {
+          full_name: editName,
+          phone: editPhone,
+          address: editLocation,
+        }).catch(err => console.warn('[Supabase Sync] Profile update warning:', err));
+      }
+    }
+
     setIsEditModalOpen(false);
     showToast('Profil pengguna berhasil diperbarui!', 'success');
   };
@@ -93,77 +157,77 @@ export const ProfilePage: React.FC = () => {
   ];
 
   return (
-    <PageTransition className="w-full bg-surface py-space-xl">
-      <div className="max-w-[1380px] mx-auto px-margin-sm lg:px-margin space-y-space-xl">
+    <PageTransition className="w-full bg-surface text-on-surface py-16 sm:py-24">
+      <SEOHead
+        title="Pusat Kendali Pengguna Terpadu"
+        canonical="/profil"
+        description="Dasbor profil pribadi, neraca tabungan daur ulang, koleksi lencana sirkular, dan preferensi akun."
+        noindex={true}
+      />
+      <div className="max-w-[1240px] mx-auto px-6 sm:px-8 lg:px-12 space-y-12">
         
-        {/* Top Breadcrumb & Sesi Keamanan */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-outline-variant/30 pb-space-sm">
+        {/* Top Breadcrumb & Status Bar */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-outline-variant/20">
           <div className="flex items-center gap-2 text-xs font-semibold text-secondary">
             <span className="w-2.5 h-2.5 rounded-full bg-secondary animate-pulse" />
             <span className="uppercase tracking-wider">
               {user ? `Akun Terautentikasi: ${user.email}` : 'Pusat Kendali Pengguna Terpadu'}
             </span>
           </div>
-          <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-[11px] font-medium border ${
-            user
-              ? 'bg-secondary/10 border-secondary/30 text-secondary'
-              : 'bg-secondary-fixed/30 border-secondary/20 text-secondary'
-          }`}>
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-pill text-xs font-medium text-secondary">
             <Icon name={user ? 'verified' : 'info'} size={14} />
             <span>
               {user
-                ? `Sesi Supabase Aktif (${user.email || 'Autentikasi'}) • RLS Diaktifkan`
+                ? `Sesi Cloud Aktif (${user.email || 'Autentikasi'})`
                 : isConfigured
-                ? 'Supabase Cloud Terhubung • Masuk untuk sinkronisasi akun'
-                : 'Mode Peraga Sandbox: Data tersimpan di basis data lokal peramban'}
+                ? 'Cloud Terhubung • Masuk untuk sinkronisasi'
+                : 'Mode Peraga Sandbox • Tersimpan di Penyimpanan Lokal'}
             </span>
           </div>
         </div>
 
         {/* 1. HERO PROFILE CARD */}
-        <div className="rounded-2xl bg-surface-container-lowest border border-outline-variant/30 p-space-lg sm:p-space-xl shadow-md overflow-hidden relative">
-          <div className="absolute top-0 right-0 w-80 h-80 bg-secondary/5 rounded-full blur-3xl pointer-events-none" />
-          
-          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-space-lg relative z-10">
+        <div className="rounded-3xl glass-panel-elevated border border-outline-variant/25 p-8 sm:p-12 shadow-xl overflow-hidden relative">
+          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 relative z-10">
             {/* Left: Avatar + Identity */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-space-md">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
               <div className="relative shrink-0">
                 <img
                   src={profile.avatar}
                   alt={profile.name}
-                  className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl object-cover ring-4 ring-secondary/20 shadow-lg"
+                  className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl object-cover ring-4 ring-secondary/20 shadow-xl"
                   onError={(e) => {
                     (e.target as HTMLElement).style.display = 'none';
                   }}
                 />
-                <span className="absolute -bottom-2 -right-2 px-2.5 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-bold text-[10px] uppercase shadow-sm flex items-center gap-1">
+                <span className="absolute -bottom-2 -right-2 px-3 py-0.5 rounded-full bg-secondary text-white font-bold text-[10px] uppercase shadow-md flex items-center gap-1">
                   <Icon name="verified" size={12} />
                   <span>Aktif</span>
                 </span>
               </div>
 
-              <div className="space-y-1">
-                <div className="flex flex-wrap items-center gap-2">
-                  <h1 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg font-bold text-primary tracking-tight">
+              <div className="space-y-2">
+                <div className="flex flex-wrap items-center gap-3">
+                  <h1 className="font-display font-extrabold text-2xl sm:text-3xl text-primary tracking-tight">
                     {profile.name}
                   </h1>
-                  <span className="px-2.5 py-0.5 rounded-full bg-primary text-on-primary font-bold text-xs">
+                  <span className="px-3 py-1 rounded-full bg-secondary/15 text-secondary font-bold text-xs">
                     {profile.ecoLevel}
                   </span>
                 </div>
                 <p className="text-xs font-semibold text-secondary">
                   {profile.role} • {profile.affiliation}
                 </p>
-                <p className="text-xs text-on-surface-variant max-w-xl line-clamp-2 pt-1 leading-relaxed">
+                <p className="text-xs text-on-surface-variant max-w-xl line-clamp-2 leading-relaxed">
                   {profile.bio}
                 </p>
-                <div className="flex flex-wrap items-center gap-4 text-[11px] text-outline pt-2">
-                  <span className="flex items-center gap-1">
-                    <Icon name="map_pin" size={13} className="text-secondary" />
+                <div className="flex flex-wrap items-center gap-4 text-xs text-outline pt-1">
+                  <span className="flex items-center gap-1.5">
+                    <Icon name="map_pin" size={14} className="text-secondary" />
                     <span>{profile.location}</span>
                   </span>
-                  <span className="flex items-center gap-1">
-                    <Icon name="calendar" size={13} className="text-secondary" />
+                  <span className="flex items-center gap-1.5">
+                    <Icon name="calendar" size={14} className="text-secondary" />
                     <span>Bergabung {profile.joinedDate}</span>
                   </span>
                 </div>
@@ -171,12 +235,12 @@ export const ProfilePage: React.FC = () => {
             </div>
 
             {/* Right: Streak & Actions */}
-            <div className="flex flex-col sm:flex-row lg:flex-col items-start lg:items-end gap-3 w-full lg:w-auto shrink-0 pt-2 lg:pt-0">
-              <div className="flex items-center gap-2.5 px-4 py-2 rounded-xl bg-surface-container border border-outline-variant/30 shadow-sm w-full sm:w-auto justify-center">
+            <div className="flex flex-col sm:flex-row lg:flex-col items-start lg:items-end gap-3 w-full lg:w-auto shrink-0">
+              <div className="flex items-center gap-3 px-5 py-2.5 rounded-2xl glass-panel border border-outline-variant/20 shadow-sm w-full sm:w-auto justify-center">
                 <span className="text-2xl">🔥</span>
                 <div>
                   <span className="text-[10px] text-outline uppercase font-bold block">Konsistensi Aksi</span>
-                  <span className="text-sm font-bold text-primary font-metric-display">
+                  <span className="text-sm font-bold text-primary">
                     {profile.currentStreakDays} Hari Beruntun
                   </span>
                 </div>
@@ -192,7 +256,7 @@ export const ProfilePage: React.FC = () => {
                   setEditAvatar(profile.avatar);
                   setIsEditModalOpen(true);
                 }}
-                className="h-10 px-5 rounded-lg bg-primary text-on-primary font-title-md text-xs font-bold hover:bg-primary-container transition-all cursor-pointer flex items-center gap-2 shadow-sm w-full sm:w-auto justify-center"
+                className="h-11 px-5 rounded-xl bg-secondary text-white font-sans text-xs font-bold hover:bg-secondary/90 transition-all cursor-pointer flex items-center gap-2 shadow-md w-full sm:w-auto justify-center hover:scale-[1.02] active:scale-[0.98]"
               >
                 <Icon name="edit" size={14} />
                 <span>Perbarui Profil</span>
@@ -202,26 +266,26 @@ export const ProfilePage: React.FC = () => {
         </div>
 
         {/* 2. PERSONAL ECO-STAT BENTO MATRIX */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           
           {/* Card 1: Total Weight + Monthly Target Progress */}
-          <div className="p-space-lg rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-sm flex flex-col justify-between">
+          <div className="p-8 rounded-3xl glass-panel border border-outline-variant/25 flex flex-col justify-between space-y-4">
             <div>
               <div className="flex items-center justify-between mb-2">
-                <span className="font-label-caps text-outline uppercase font-bold text-[11px]">Akumulasi Setoran</span>
+                <span className="text-[11px] font-bold uppercase tracking-wider text-outline">Akumulasi Setoran</span>
                 <Icon name="recycle" size={20} className="text-secondary" />
               </div>
               <div className="flex items-baseline gap-1 my-2">
-                <AnimatedCounter value={totalWeightKg} decimals={1} className="font-metric-display text-4xl font-extrabold text-primary" />
+                <AnimatedCounter value={totalWeightKg} decimals={1} className="font-display font-extrabold text-3xl sm:text-4xl text-primary" />
                 <span className="text-sm font-bold text-secondary">kg</span>
               </div>
               <p className="text-xs text-on-surface-variant">
-                Target Bulan Ini: <strong>{monthlyGoal} kg</strong>
+                Target Bulan Ini: <strong className="text-on-surface">{monthlyGoal} kg</strong>
               </p>
             </div>
 
-            <div className="pt-3 border-t border-outline-variant/20 space-y-1">
-              <div className="flex justify-between text-[11px] font-bold">
+            <div className="pt-3 border-t border-outline-variant/15 space-y-1.5">
+              <div className="flex justify-between text-xs font-bold">
                 <span className="text-outline">Pencapaian Target</span>
                 <span className="text-secondary">{monthlyProgressPercent}%</span>
               </div>
@@ -235,37 +299,37 @@ export const ProfilePage: React.FC = () => {
           </div>
 
           {/* Card 2: Saldo EcoPoints */}
-          <div className="p-space-lg rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-sm flex flex-col justify-between">
+          <div className="p-8 rounded-3xl glass-panel border border-outline-variant/25 flex flex-col justify-between space-y-4">
             <div>
               <div className="flex items-center justify-between mb-2">
-                <span className="font-label-caps text-outline uppercase font-bold text-[11px]">Saldo EcoPoints</span>
+                <span className="text-[11px] font-bold uppercase tracking-wider text-outline">Saldo EcoPoints</span>
                 <Icon name="coins" size={20} className="text-secondary" />
               </div>
               <div className="flex items-baseline gap-1 my-2">
-                <AnimatedCounter value={totalPoints} className="font-metric-display text-4xl font-extrabold text-secondary" />
+                <AnimatedCounter value={totalPoints} className="font-display font-extrabold text-3xl sm:text-4xl text-secondary" />
                 <span className="text-sm font-bold text-primary">Pts</span>
               </div>
               <p className="text-xs text-on-surface-variant">
-                Dapat ditukarkan kupon token & bibit pohon
+                Dapat ditukarkan kupon reward & bibit pohon
               </p>
             </div>
 
-            <div className="pt-3 border-t border-outline-variant/20 flex items-center justify-between text-xs font-semibold text-primary">
+            <div className="pt-3 border-t border-outline-variant/15 flex items-center justify-between text-xs font-semibold text-primary">
               <span>Status Dompet:</span>
               <span className="text-secondary font-bold">Aktif & Terverifikasi</span>
             </div>
           </div>
 
           {/* Card 3: Saldo Rupiah */}
-          <div className="p-space-lg rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-sm flex flex-col justify-between">
+          <div className="p-8 rounded-3xl glass-panel border border-outline-variant/25 flex flex-col justify-between space-y-4">
             <div>
               <div className="flex items-center justify-between mb-2">
-                <span className="font-label-caps text-outline uppercase font-bold text-[11px]">Nilai Konversi Simpanan</span>
+                <span className="text-[11px] font-bold uppercase tracking-wider text-outline">Konversi Simpanan</span>
                 <Icon name="wallet" size={20} className="text-secondary" />
               </div>
               <div className="my-2">
-                <span className="font-metric-display text-3xl font-extrabold text-primary">
-                  Rp {totalBalanceIdr.toLocaleString('id-ID')}
+                <span className="font-display font-extrabold text-3xl sm:text-4xl text-primary">
+                  Rp{totalBalanceIdr.toLocaleString('id-ID')}
                 </span>
               </div>
               <p className="text-xs text-on-surface-variant">
@@ -273,45 +337,45 @@ export const ProfilePage: React.FC = () => {
               </p>
             </div>
 
-            <div className="pt-3 border-t border-outline-variant/20 flex items-center justify-between text-xs text-outline">
+            <div className="pt-3 border-t border-outline-variant/15 flex items-center justify-between text-xs text-outline">
               <span>Frekuensi Transaksi:</span>
-              <span className="font-bold text-primary">{transactions.length} Kali Setor</span>
+              <strong className="text-on-surface">{transactions.length} Kali Setor</strong>
             </div>
           </div>
 
           {/* Card 4: Reduksi Karbon */}
-          <div className="p-space-lg rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-sm flex flex-col justify-between">
+          <div className="p-8 rounded-3xl glass-panel border border-outline-variant/25 flex flex-col justify-between space-y-4">
             <div>
               <div className="flex items-center justify-between mb-2">
-                <span className="font-label-caps text-outline uppercase font-bold text-[11px]">Jejak Karbon Terhindar</span>
+                <span className="text-[11px] font-bold uppercase tracking-wider text-outline">Jejak Karbon Terhindar</span>
                 <Icon name="cloud" size={20} className="text-secondary" />
               </div>
               <div className="flex items-baseline gap-1 my-2">
-                <AnimatedCounter value={totalCo2AvoidedKg} decimals={1} className="font-metric-display text-4xl font-extrabold text-primary" />
+                <AnimatedCounter value={totalCo2AvoidedKg} decimals={1} className="font-display font-extrabold text-3xl sm:text-4xl text-primary" />
                 <span className="text-sm font-bold text-secondary">kg CO₂e</span>
               </div>
               <p className="text-xs text-on-surface-variant">
-                Setara serapan ~{(totalCo2AvoidedKg / 21.77).toFixed(1)} pohon dewasa per tahun
+                Setara ~{(totalCo2AvoidedKg / 21.77).toFixed(1)} pohon dewasa/tahun
               </p>
             </div>
 
-            <div className="pt-3 border-t border-outline-variant/20 text-[11px] text-outline flex items-center gap-1">
+            <div className="pt-3 border-t border-outline-variant/15 text-xs text-outline flex items-center gap-1.5">
               <Icon name="leaf" size={13} className="text-secondary" />
-              <span>Standar US EPA WARM v15</span>
+              <span>Standar US EPA WARM</span>
             </div>
           </div>
 
         </div>
 
         {/* 3. TABBED DASHBOARD CONTROLS */}
-        <div className="flex flex-wrap items-center gap-2 border-b border-outline-variant/20 pb-2">
+        <div className="flex flex-wrap items-center gap-2 border-b border-outline-variant/20 pb-3">
           <button
             type="button"
             onClick={() => setActiveTab('transaksi')}
-            className={`px-4 py-2 rounded-lg font-title-md text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
+            className={`px-5 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-2 ${
               activeTab === 'transaksi'
-                ? 'bg-primary text-on-primary shadow-sm'
-                : 'text-on-surface-variant hover:bg-surface-container'
+                ? 'bg-secondary text-white shadow-sm'
+                : 'glass-pill hover:bg-surface-container text-on-surface'
             }`}
           >
             <Icon name="receipt" size={16} />
@@ -321,10 +385,10 @@ export const ProfilePage: React.FC = () => {
           <button
             type="button"
             onClick={() => setActiveTab('lencana')}
-            className={`px-4 py-2 rounded-lg font-title-md text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
+            className={`px-5 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-2 ${
               activeTab === 'lencana'
-                ? 'bg-primary text-on-primary shadow-sm'
-                : 'text-on-surface-variant hover:bg-surface-container'
+                ? 'bg-secondary text-white shadow-sm'
+                : 'glass-pill hover:bg-surface-container text-on-surface'
             }`}
           >
             <Icon name="award" size={16} />
@@ -334,10 +398,10 @@ export const ProfilePage: React.FC = () => {
           <button
             type="button"
             onClick={() => setActiveTab('linimasa')}
-            className={`px-4 py-2 rounded-lg font-title-md text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
+            className={`px-5 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-2 ${
               activeTab === 'linimasa'
-                ? 'bg-primary text-on-primary shadow-sm'
-                : 'text-on-surface-variant hover:bg-surface-container'
+                ? 'bg-secondary text-white shadow-sm'
+                : 'glass-pill hover:bg-surface-container text-on-surface'
             }`}
           >
             <Icon name="activity" size={16} />
@@ -347,10 +411,10 @@ export const ProfilePage: React.FC = () => {
           <button
             type="button"
             onClick={() => setActiveTab('pengaturan')}
-            className={`px-4 py-2 rounded-lg font-title-md text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
+            className={`px-5 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-2 ${
               activeTab === 'pengaturan'
-                ? 'bg-primary text-on-primary shadow-sm'
-                : 'text-on-surface-variant hover:bg-surface-container'
+                ? 'bg-secondary text-white shadow-sm'
+                : 'glass-pill hover:bg-surface-container text-on-surface'
             }`}
           >
             <Icon name="settings" size={16} />
@@ -362,48 +426,48 @@ export const ProfilePage: React.FC = () => {
         
         {/* TAB 1: TRANSAKSI SAYA */}
         {activeTab === 'transaksi' && (
-          <div className="space-y-space-md">
-            <div className="rounded-2xl border border-outline-variant/30 bg-surface-container-lowest shadow-sm overflow-hidden">
-              <div className="p-4 border-b border-outline-variant/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="space-y-6">
+            <div className="rounded-3xl border border-outline-variant/25 glass-panel shadow-xl overflow-hidden">
+              <div className="p-6 sm:p-8 border-b border-outline-variant/15 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                  <h3 className="font-headline-sm text-sm font-bold text-primary">
+                  <h3 className="font-display font-bold text-lg text-primary">
                     Buku Mutasi Penyetoran Mandiri
                   </h3>
-                  <p className="text-xs text-on-surface-variant mt-0.5">
-                    Klik nomor tiket atau ikon rincian untuk membuka lembar manifest verifikasi resmi.
+                  <p className="text-xs text-on-surface-variant mt-1 leading-relaxed">
+                    Klik nomor tiket atau tombol manifest untuk membuka lembar verifikasi resmi timbangan.
                   </p>
                 </div>
-                <span className="text-[11px] text-outline font-medium">
+                <span className="text-xs text-outline font-medium">
                   {transactions.length} Catatan Tersimpan
                 </span>
               </div>
 
               {transactions.length === 0 ? (
-                <div className="p-12 text-center text-on-surface-variant space-y-2">
+                <div className="p-16 text-center text-on-surface-variant space-y-3">
                   <Icon name="receipt" size={36} className="text-outline mx-auto" />
-                  <p className="text-sm font-bold text-primary">Belum ada riwayat setoran</p>
+                  <p className="font-display font-bold text-primary text-base">Belum Ada Riwayat Setoran</p>
                   <p className="text-xs">Mulai setor sampah Anda di drop-point terdekat untuk mengumpulkan EcoPoints.</p>
                 </div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-left border-collapse text-xs">
                     <thead>
-                      <tr className="bg-surface-container-low text-outline font-label-caps text-[10px] uppercase border-b border-outline-variant/20">
-                        <th className="py-3 px-4">No. Registrasi</th>
-                        <th className="py-3 px-4">Waktu</th>
-                        <th className="py-3 px-4">Material</th>
-                        <th className="py-3 px-4 text-right">Bobot</th>
-                        <th className="py-3 px-4 text-right">Nilai Rupiah</th>
-                        <th className="py-3 px-4 text-right">Poin</th>
-                        <th className="py-3 px-4">Titik Drop-Point</th>
-                        <th className="py-3 px-4 text-center">Status</th>
-                        <th className="py-3 px-4 text-center">Manifest</th>
+                      <tr className="border-b border-outline-variant/15 glass-panel text-outline text-[11px] uppercase tracking-wider font-semibold">
+                        <th className="py-4 px-6">No. Registrasi</th>
+                        <th className="py-4 px-6">Waktu</th>
+                        <th className="py-4 px-6">Material</th>
+                        <th className="py-4 px-6 text-right">Bobot</th>
+                        <th className="py-4 px-6 text-right">Nilai Rupiah</th>
+                        <th className="py-4 px-6 text-right">Poin</th>
+                        <th className="py-4 px-6">Titik Drop-Point</th>
+                        <th className="py-4 px-6 text-center">Status</th>
+                        <th className="py-4 px-6 text-center">Manifest</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-outline-variant/10 text-on-surface">
                       {transactions.map(trx => (
-                        <tr key={trx.id} className="hover:bg-surface-container-low/50 transition-colors">
-                          <td className="py-3 px-4 font-mono font-bold">
+                        <tr key={trx.id} className="hover:bg-surface-container/40 transition-colors">
+                          <td className="py-4 px-6 font-mono font-bold">
                             <button
                               type="button"
                               onClick={() => openDetailTrx(trx)}
@@ -413,26 +477,26 @@ export const ProfilePage: React.FC = () => {
                               {trx.photoUrl && <Icon name="image" size={13} className="text-secondary" />}
                             </button>
                           </td>
-                          <td className="py-3 px-4 text-outline whitespace-nowrap">{trx.date}</td>
-                          <td className="py-3 px-4 font-semibold text-primary">{trx.wasteType}</td>
-                          <td className="py-3 px-4 text-right font-bold tabular-nums">{trx.weightKg.toFixed(1)} kg</td>
-                          <td className="py-3 px-4 text-right font-bold text-primary tabular-nums">
-                            Rp {trx.valueIdr.toLocaleString('id-ID')}
+                          <td className="py-4 px-6 text-outline whitespace-nowrap">{trx.date}</td>
+                          <td className="py-4 px-6 font-semibold text-primary">{trx.wasteType}</td>
+                          <td className="py-4 px-6 text-right font-bold tabular-nums">{trx.weightKg.toFixed(1)} kg</td>
+                          <td className="py-4 px-6 text-right font-bold text-primary tabular-nums">
+                            Rp{trx.valueIdr.toLocaleString('id-ID')}
                           </td>
-                          <td className="py-3 px-4 text-right font-bold text-secondary tabular-nums">
+                          <td className="py-4 px-6 text-right font-bold text-secondary tabular-nums">
                             +{trx.points} Pts
                           </td>
-                          <td className="py-3 px-4 text-outline truncate max-w-[160px]">{trx.dropPoint}</td>
-                          <td className="py-3 px-4 text-center">
-                            <span className="px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-bold text-[10px] uppercase">
+                          <td className="py-4 px-6 text-outline truncate max-w-[160px]">{trx.dropPoint}</td>
+                          <td className="py-4 px-6 text-center">
+                            <span className="px-2.5 py-1 rounded-full bg-secondary/15 text-secondary font-bold text-[10px] uppercase">
                               {trx.status}
                             </span>
                           </td>
-                          <td className="py-3 px-4 text-center">
+                          <td className="py-4 px-6 text-center">
                             <button
                               type="button"
                               onClick={() => openDetailTrx(trx)}
-                              className="p-1.5 rounded-lg hover:bg-surface-container text-secondary hover:text-primary transition-colors cursor-pointer"
+                              className="p-2 rounded-xl glass-pill hover:bg-surface-container text-secondary hover:text-primary transition-colors cursor-pointer"
                               title="Buka Lembar Manifest"
                             >
                               <Icon name="receipt" size={16} />
@@ -450,44 +514,44 @@ export const ProfilePage: React.FC = () => {
 
         {/* TAB 2: LENCANA & PENCAPAIAN */}
         {activeTab === 'lencana' && (
-          <div className="space-y-space-md">
-            <div className="p-space-lg rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-sm space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-outline-variant/20 pb-3">
+          <div className="space-y-6">
+            <div className="p-8 sm:p-12 rounded-3xl glass-panel border border-outline-variant/25 shadow-xl space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-outline-variant/15 pb-4">
                 <div>
-                  <h3 className="font-headline-sm text-sm font-bold text-primary">
+                  <h3 className="font-display font-bold text-xl text-primary">
                     Etalase Pencapaian Sirkular
                   </h3>
-                  <p className="text-xs text-on-surface-variant mt-0.5">
+                  <p className="text-xs text-on-surface-variant mt-1 leading-relaxed">
                     Lencana digital diperoleh melalui aksi nyata konsisten memilah dan mengurangi limbah.
                   </p>
                 </div>
-                <span className="px-3 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-bold text-xs">
+                <span className="px-3.5 py-1.5 rounded-full bg-secondary/15 text-secondary font-bold text-xs">
                   {completedBadges.length} dari {COMMUNITY_CHALLENGES.length} Lencana Terbuka
                 </span>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {COMMUNITY_CHALLENGES.map(ch => (
                   <div
                     key={ch.id}
-                    className={`p-4 rounded-xl border transition-all text-center space-y-2.5 ${
+                    className={`p-6 rounded-3xl border transition-all text-center space-y-3 ${
                       ch.completed
-                        ? 'bg-primary text-on-primary border-primary shadow-md'
-                        : 'bg-surface-container-low border-outline-variant/30 opacity-60'
+                        ? 'glass-panel-elevated border-secondary/40 shadow-md'
+                        : 'glass-panel border-outline-variant/20 opacity-60'
                     }`}
                   >
-                    <div className="w-14 h-14 mx-auto rounded-full bg-surface-container-lowest/20 flex items-center justify-center text-3xl shadow-inner">
+                    <div className="w-16 h-16 mx-auto rounded-2xl glass-panel flex items-center justify-center text-3xl shadow-sm">
                       {ch.completed ? '🎖️' : '🔒'}
                     </div>
                     <div>
-                      <h4 className="font-title-md font-bold text-xs">
+                      <h4 className="font-display font-bold text-sm text-primary">
                         {ch.badgeName}
                       </h4>
-                      <p className="text-[11px] opacity-80 line-clamp-2 mt-0.5">
+                      <p className="text-xs text-on-surface-variant line-clamp-2 mt-1 leading-relaxed">
                         {ch.description}
                       </p>
                     </div>
-                    <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-surface-container-lowest/30">
+                    <span className="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase glass-pill">
                       {ch.completed ? 'Terverifikasi Selesai' : 'Belum Terbuka'}
                     </span>
                   </div>
@@ -499,32 +563,32 @@ export const ProfilePage: React.FC = () => {
 
         {/* TAB 3: LINIMASA JEJAK LANGKAH */}
         {activeTab === 'linimasa' && (
-          <div className="rounded-2xl bg-surface-container-lowest border border-outline-variant/30 p-space-lg sm:p-space-xl shadow-sm space-y-space-md">
-            <div className="border-b border-outline-variant/20 pb-3">
-              <h3 className="font-headline-sm text-sm font-bold text-primary">
+          <div className="rounded-3xl glass-panel border border-outline-variant/25 p-8 sm:p-12 shadow-xl space-y-6">
+            <div className="border-b border-outline-variant/15 pb-4">
+              <h3 className="font-display font-bold text-xl text-primary">
                 Kronologi Jejak Langkah Ekologis
               </h3>
-              <p className="text-xs text-on-surface-variant mt-0.5">
+              <p className="text-xs text-on-surface-variant mt-1 leading-relaxed">
                 Rekaman historis interaksi Anda dalam sistem ECOCYCLE.
               </p>
             </div>
 
-            <div className="relative pl-6 space-y-6 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-outline-variant/30">
+            <div className="relative pl-8 space-y-8 before:absolute before:left-3 before:top-2 before:bottom-2 before:w-0.5 before:bg-outline-variant/25">
               {activities.map(act => (
-                <div key={act.id} className="relative space-y-1">
-                  <span className="absolute -left-6 top-1 w-4 h-4 rounded-full bg-secondary ring-4 ring-surface" />
+                <div key={act.id} className="relative space-y-1.5">
+                  <span className="absolute -left-8 top-1.5 w-6 h-6 rounded-full bg-secondary text-white flex items-center justify-center text-[10px] ring-4 ring-surface" />
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                    <span className="font-title-md font-bold text-xs text-primary flex items-center gap-1.5">
-                      <Icon name={act.icon} size={14} className="text-secondary" />
+                    <span className="font-display font-bold text-sm text-primary flex items-center gap-2">
+                      <Icon name={act.icon} size={15} className="text-secondary" />
                       <span>{act.title}</span>
                     </span>
-                    <span className="text-[11px] text-outline">{act.timestamp}</span>
+                    <span className="text-xs text-outline font-medium">{act.timestamp}</span>
                   </div>
                   <p className="text-xs text-on-surface-variant leading-relaxed">
                     {act.description}
                   </p>
                   {act.pointsDelta && (
-                    <span className="inline-block text-[11px] font-bold text-secondary">
+                    <span className="inline-block text-xs font-bold text-secondary">
                       +{act.pointsDelta} EcoPoints
                     </span>
                   )}
@@ -536,21 +600,21 @@ export const ProfilePage: React.FC = () => {
 
         {/* TAB 4: PENGATURAN & PREFERENSI */}
         {activeTab === 'pengaturan' && (
-          <div className="rounded-2xl bg-surface-container-lowest border border-outline-variant/30 p-space-lg sm:p-space-xl shadow-sm space-y-space-md max-w-2xl">
-            <div className="border-b border-outline-variant/20 pb-3">
-              <h3 className="font-headline-sm text-sm font-bold text-primary">
+          <div className="rounded-3xl glass-panel border border-outline-variant/25 p-8 sm:p-12 shadow-xl space-y-8 max-w-2xl">
+            <div className="border-b border-outline-variant/15 pb-4">
+              <h3 className="font-display font-bold text-xl text-primary">
                 Preferensi Akun & Target Ekologis
               </h3>
-              <p className="text-xs text-on-surface-variant mt-0.5">
+              <p className="text-xs text-on-surface-variant mt-1 leading-relaxed">
                 Konfigurasikan target pemilahan bulanan dan notifikasi jadwal penjemputan.
               </p>
             </div>
 
-            <div className="space-y-4 text-xs text-on-surface">
+            <div className="space-y-6 text-xs text-on-surface">
               {/* Monthly Goal Slider */}
-              <div className="space-y-2 p-4 rounded-xl bg-surface-container-low border border-outline-variant/20">
+              <div className="space-y-3 p-6 rounded-2xl glass-panel border border-outline-variant/20">
                 <div className="flex items-center justify-between font-bold">
-                  <span>Target Pilahan Bulanan</span>
+                  <span className="text-primary text-sm">Target Pilahan Bulanan</span>
                   <span className="text-secondary text-base font-extrabold">{monthlyGoal} kg / bulan</span>
                 </div>
                 <input
@@ -570,14 +634,14 @@ export const ProfilePage: React.FC = () => {
               </div>
 
               {/* Preferred Drop-Point */}
-              <div>
-                <label className="block font-bold text-on-surface-variant uppercase text-[11px] mb-1">
+              <div className="space-y-2">
+                <label className="block font-bold text-outline uppercase text-[11px] tracking-wider">
                   Titik Drop-Point Pilihan Utama
                 </label>
                 <select
                   value={preferredDropPoint}
                   onChange={(e) => setPreferredDropPoint(e.target.value)}
-                  className="w-full h-11 px-3 rounded-lg bg-surface-container text-xs text-on-surface outline-none border border-outline-variant/20 focus:ring-2 focus:ring-secondary"
+                  className="w-full h-11 px-4 rounded-xl glass-panel text-xs text-on-surface outline-none border border-outline-variant/25 focus:ring-2 focus:ring-secondary/50"
                 >
                   {DROP_POINTS.map(dp => (
                     <option key={dp.id} value={dp.name}>{dp.name} ({dp.subdistrict})</option>
@@ -587,7 +651,7 @@ export const ProfilePage: React.FC = () => {
 
               {/* Toggles */}
               <div className="space-y-3 pt-2">
-                <label className="flex items-center justify-between p-3 rounded-xl bg-surface-container-low cursor-pointer">
+                <label className="flex items-center justify-between p-4 rounded-2xl glass-panel border border-outline-variant/15 cursor-pointer">
                   <div>
                     <span className="font-bold text-primary block">Notifikasi Setoran & Verifikasi</span>
                     <span className="text-[11px] text-outline">Pemberitahuan saat bobot diverifikasi oleh timbangan hub</span>
@@ -600,10 +664,10 @@ export const ProfilePage: React.FC = () => {
                   />
                 </label>
 
-                <label className="flex items-center justify-between p-3 rounded-xl bg-surface-container-low cursor-pointer">
+                <label className="flex items-center justify-between p-4 rounded-2xl glass-panel border border-outline-variant/15 cursor-pointer">
                   <div>
                     <span className="font-bold text-primary block">Ringkasan Warta Mingguan</span>
-                    <span className="text-[11px] text-outline">Laporan reduksi emisi dan statistik kampus tiap hari Senin</span>
+                    <span className="text-[11px] text-outline">Laporan reduksi emisi dan audit material tiap Senin</span>
                   </div>
                   <input
                     type="checkbox"
@@ -615,12 +679,12 @@ export const ProfilePage: React.FC = () => {
               </div>
 
               {/* Keamanan & Sesi Akun */}
-              <div className="p-4 rounded-xl bg-surface-container-low border border-outline-variant/20 space-y-3">
+              <div className="p-6 rounded-2xl glass-panel border border-outline-variant/20 space-y-4">
                 <span className="font-bold text-primary block text-xs uppercase tracking-wider">
                   Keamanan & Status Autentikasi
                 </span>
                 {user ? (
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     <div className="flex items-center justify-between text-xs">
                       <span className="text-outline">Surel Terautentikasi:</span>
                       <span className="font-mono font-bold text-primary">{user.email}</span>
@@ -636,7 +700,7 @@ export const ProfilePage: React.FC = () => {
                           await signOut();
                           showToast('Berhasil keluar dari akun.', 'info');
                         }}
-                        className="px-4 py-2 rounded-lg bg-error-container text-on-error-container font-bold text-xs hover:bg-error hover:text-on-error transition-colors cursor-pointer"
+                        className="px-5 py-2.5 rounded-xl bg-error/15 text-error font-bold text-xs hover:bg-error/25 transition-colors cursor-pointer"
                       >
                         Keluar dari Akun (Sign Out)
                       </button>
@@ -646,11 +710,11 @@ export const ProfilePage: React.FC = () => {
                   <div className="flex items-center justify-between">
                     <div>
                       <span className="text-xs text-on-surface-variant block">Anda sedang dalam mode peraga.</span>
-                      <span className="text-[11px] text-outline">Masuk dengan Supabase untuk mengaktifkan RLS privat.</span>
+                      <span className="text-[11px] text-outline">Masuk ke akun untuk mengaktifkan sinkronisasi cloud.</span>
                     </div>
                     <a
                       href="/masuk"
-                      className="px-4 py-2 rounded-lg bg-primary text-on-primary font-bold text-xs hover:bg-primary-container transition-colors"
+                      className="px-4 py-2 rounded-xl bg-secondary text-white font-bold text-xs hover:bg-secondary/90 transition-colors"
                     >
                       Masuk ke Akun
                     </a>
@@ -659,11 +723,11 @@ export const ProfilePage: React.FC = () => {
               </div>
 
               {/* Action Buttons */}
-              <div className="pt-4 border-t border-outline-variant/20 flex flex-wrap items-center justify-between gap-3">
+              <div className="pt-6 border-t border-outline-variant/15 flex flex-wrap items-center justify-between gap-4">
                 <button
                   type="button"
                   onClick={handleResetProfile}
-                  className="h-10 px-4 rounded-lg text-error hover:bg-error-container text-xs font-bold transition-colors cursor-pointer"
+                  className="h-11 px-5 rounded-xl text-error hover:bg-error/10 text-xs font-bold transition-colors cursor-pointer"
                 >
                   Reset Profil ke Awal
                 </button>
@@ -671,7 +735,7 @@ export const ProfilePage: React.FC = () => {
                 <button
                   type="button"
                   onClick={handleSaveSettings}
-                  className="h-10 px-6 rounded-lg bg-primary text-on-primary font-bold text-xs hover:bg-primary-container transition-all cursor-pointer shadow-sm"
+                  className="h-11 px-6 rounded-xl bg-secondary text-white font-bold text-xs hover:bg-secondary/90 transition-all cursor-pointer shadow-md"
                 >
                   Simpan Pengaturan
                 </button>
@@ -685,40 +749,40 @@ export const ProfilePage: React.FC = () => {
       {/* EDIT PROFILE MODAL */}
       {isEditModalOpen && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-primary/70 backdrop-blur-md animate-fadeIn"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-fadeIn"
           onClick={(e) => {
             if (e.target === e.currentTarget) setIsEditModalOpen(false);
           }}
         >
-          <div className="bg-surface-container-lowest rounded-2xl max-w-lg w-full border border-outline-variant/30 shadow-2xl p-space-lg sm:p-space-xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-outline-variant/20">
-              <h3 className="font-headline-sm text-sm font-bold text-primary flex items-center gap-2">
-                <Icon name="edit" size={16} className="text-secondary" />
+          <div className="glass-panel-elevated bg-surface text-on-surface rounded-3xl max-w-lg w-full border border-outline-variant/30 shadow-2xl p-6 sm:p-8 space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-outline-variant/15">
+              <h3 className="font-display font-bold text-lg text-primary flex items-center gap-2">
+                <Icon name="edit" size={18} className="text-secondary" />
                 <span>Perbarui Identitas Pengguna</span>
               </h3>
               <button
                 type="button"
                 onClick={() => setIsEditModalOpen(false)}
-                className="w-8 h-8 rounded-full flex items-center justify-center text-outline hover:text-primary cursor-pointer"
+                className="w-9 h-9 rounded-full glass-pill flex items-center justify-center text-outline hover:text-primary cursor-pointer"
               >
                 <Icon name="close" size={18} />
               </button>
             </div>
 
-            <form onSubmit={handleSaveProfile} className="space-y-3 text-xs text-on-surface">
+            <form onSubmit={handleSaveProfile} className="space-y-4 text-xs text-on-surface">
               {/* Avatar Selector */}
               <div>
-                <label className="block font-bold text-on-surface-variant uppercase text-[11px] mb-1.5">
+                <label className="block font-bold text-outline uppercase text-[11px] mb-2 tracking-wider">
                   Pilih Avatar Profil
                 </label>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-4">
                   {avatarOptions.map(opt => (
                     <button
                       key={opt.path}
                       type="button"
                       onClick={() => setEditAvatar(opt.path)}
-                      className={`relative w-16 h-16 rounded-xl overflow-hidden border-2 transition-all cursor-pointer ${
-                        editAvatar === opt.path ? 'border-secondary ring-2 ring-secondary/30 scale-105' : 'border-outline-variant/40 opacity-70'
+                      className={`relative w-16 h-16 rounded-2xl overflow-hidden border-2 transition-all cursor-pointer ${
+                        editAvatar === opt.path ? 'border-secondary ring-4 ring-secondary/25 scale-105' : 'border-outline-variant/30 opacity-70'
                       }`}
                     >
                       <img src={opt.path} alt={opt.label} className="w-full h-full object-cover" />
@@ -728,7 +792,7 @@ export const ProfilePage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block font-bold text-on-surface-variant uppercase text-[11px] mb-1">
+                <label className="block font-bold text-outline uppercase text-[11px] mb-1.5 tracking-wider">
                   Nama Lengkap
                 </label>
                 <input
@@ -736,57 +800,57 @@ export const ProfilePage: React.FC = () => {
                   required
                   value={editName}
                   onChange={(e) => setEditName(e.target.value)}
-                  className="w-full h-10 px-3 rounded-lg bg-surface-container text-xs text-on-surface outline-none border border-outline-variant/20 focus:ring-2 focus:ring-secondary"
+                  className="w-full h-11 px-4 rounded-xl glass-panel text-xs text-on-surface outline-none border border-outline-variant/25 focus:ring-2 focus:ring-secondary/50"
                 />
               </div>
 
               <div>
-                <label className="block font-bold text-on-surface-variant uppercase text-[11px] mb-1">
+                <label className="block font-bold text-outline uppercase text-[11px] mb-1.5 tracking-wider">
                   Nomor Kontak / WhatsApp
                 </label>
                 <input
                   type="text"
                   value={editPhone}
                   onChange={(e) => setEditPhone(e.target.value)}
-                  className="w-full h-10 px-3 rounded-lg bg-surface-container text-xs text-on-surface outline-none border border-outline-variant/20 focus:ring-2 focus:ring-secondary"
+                  className="w-full h-11 px-4 rounded-xl glass-panel text-xs text-on-surface outline-none border border-outline-variant/25 focus:ring-2 focus:ring-secondary/50"
                 />
               </div>
 
               <div>
-                <label className="block font-bold text-on-surface-variant uppercase text-[11px] mb-1">
+                <label className="block font-bold text-outline uppercase text-[11px] mb-1.5 tracking-wider">
                   Lokasi / Alamat Domisili
                 </label>
                 <input
                   type="text"
                   value={editLocation}
                   onChange={(e) => setEditLocation(e.target.value)}
-                  className="w-full h-10 px-3 rounded-lg bg-surface-container text-xs text-on-surface outline-none border border-outline-variant/20 focus:ring-2 focus:ring-secondary"
+                  className="w-full h-11 px-4 rounded-xl glass-panel text-xs text-on-surface outline-none border border-outline-variant/25 focus:ring-2 focus:ring-secondary/50"
                 />
               </div>
 
               <div>
-                <label className="block font-bold text-on-surface-variant uppercase text-[11px] mb-1">
+                <label className="block font-bold text-outline uppercase text-[11px] mb-1.5 tracking-wider">
                   Biografi Singkat
                 </label>
                 <textarea
                   rows={3}
                   value={editBio}
                   onChange={(e) => setEditBio(e.target.value)}
-                  className="w-full p-2.5 rounded-lg bg-surface-container text-xs text-on-surface outline-none border border-outline-variant/20 focus:ring-2 focus:ring-secondary"
+                  className="w-full p-4 rounded-xl glass-panel text-xs text-on-surface outline-none border border-outline-variant/25 focus:ring-2 focus:ring-secondary/50"
                 />
               </div>
 
-              <div className="pt-3 border-t border-outline-variant/20 flex justify-end gap-2">
+              <div className="pt-4 border-t border-outline-variant/15 flex justify-end gap-3">
                 <button
                   type="button"
                   onClick={() => setIsEditModalOpen(false)}
-                  className="h-10 px-4 rounded-lg text-outline hover:bg-surface-container font-bold text-xs cursor-pointer"
+                  className="h-11 px-5 rounded-xl glass-pill text-outline hover:text-on-surface font-semibold text-xs cursor-pointer"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="h-10 px-6 rounded-lg bg-secondary text-on-secondary font-bold text-xs hover:bg-secondary/90 transition-all cursor-pointer shadow-sm"
+                  className="h-11 px-6 rounded-xl bg-secondary text-white font-bold text-xs hover:bg-secondary/90 transition-all cursor-pointer shadow-md"
                 >
                   Simpan Perubahan
                 </button>

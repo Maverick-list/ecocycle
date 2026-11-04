@@ -8,7 +8,7 @@ interface CinematicEcoHeroVideoProps {
 
 export const CinematicEcoHeroVideo: React.FC<CinematicEcoHeroVideoProps> = ({
   className = '',
-  videoSrc = '/assets/videos/ecocycle-hero-cinematic.mp4',
+  videoSrc = '/media/ecocycle-hero-videotron.mp4',
   posterSrc = '/assets/images/hero_sorting.jpg',
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -160,34 +160,34 @@ export const CinematicEcoHeroVideo: React.FC<CinematicEcoHeroVideoProps> = ({
   }, [videoLoaded, hasVideoError]);
 
   return (
-    <div className={`absolute inset-0 overflow-hidden pointer-events-none select-none ${className}`}>
-      {/* 1. Underlying MP4 Video element */}
+    <div className={`absolute inset-0 overflow-hidden pointer-events-none select-none z-0 ${className}`}>
+      {/* 1. Underlying Moving Videotron (User Provided Video at 30% Opacity) */}
       <video
         ref={videoRef}
         autoPlay
         muted
         loop
         playsInline
+        preload="auto"
         poster={posterSrc}
-        className={`w-full h-full object-cover transition-opacity duration-1000 ${
-          videoLoaded && !hasVideoError ? 'opacity-30' : 'opacity-0'
-        }`}
+        aria-hidden="true"
+        tabIndex={-1}
+        className="w-full h-full object-cover opacity-30 transition-opacity duration-700"
       >
         <source src={videoSrc} type="video/mp4" />
       </video>
 
-      {/* 2. Generative Cinematic Canvas Fallback */}
-      <canvas
-        ref={canvasRef}
-        className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ${
-          videoLoaded && !hasVideoError ? 'opacity-0' : 'opacity-40'
-        }`}
-      />
+      {/* 2. Generative Organic Leaf Fallback (Only active if video fails to load) */}
+      {hasVideoError && (
+        <canvas
+          ref={canvasRef}
+          className="absolute inset-0 w-full h-full opacity-30"
+        />
+      )}
 
-      {/* 3. Deep Editorial Glass Gradient Overlays for Guaranteed Text Readability */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#00170e]/95 via-[#002517]/85 to-[#002517]/70" />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#002517] via-transparent to-[#00170e]/60" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(203,240,117,0.08),transparent_70%)]" />
+      {/* 3. Soft Ambient Vignette for Elegant Visual Depth & Readability */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-[#062B1D]/35 pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_50%,transparent_35%,rgba(6,43,29,0.25)_100%)] pointer-events-none" />
     </div>
   );
 };

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { EcocycleLogo } from '../brand/EcocycleLogo';
 
 interface LoadingExperienceProps {
   onComplete?: () => void;
@@ -15,12 +14,12 @@ export const LoadingExperience: React.FC<LoadingExperienceProps> = ({
   const [isVisible, setIsVisible] = useState<boolean>(() => {
     if (forceShow) return true;
     if (typeof window === 'undefined') return false;
-    const hasSeenIntro = sessionStorage.getItem('ecocycle_intro_completed');
+    const hasSeenIntro = sessionStorage.getItem('ecocycle_living_intro_v4');
     return !hasSeenIntro;
   });
 
   const [progress, setProgress] = useState<number>(0);
-  const [statusText, setStatusText] = useState<string>('Menyiapkan Ekosistem Sirkular...');
+  const [stage, setStage] = useState<number>(1); // 1: background, 2: leaf unfold, 3: orbit, 4: wordmark
 
   useEffect(() => {
     if (!isVisible) {
@@ -29,47 +28,43 @@ export const LoadingExperience: React.FC<LoadingExperienceProps> = ({
     }
 
     if (shouldReduceMotion) {
-      sessionStorage.setItem('ecocycle_intro_completed', 'true');
+      sessionStorage.setItem('ecocycle_living_intro_v4', 'true');
       setIsVisible(false);
       if (onComplete) onComplete();
       return;
     }
 
-    const statuses = [
-      { at: 15, text: 'Menginisialisasi Hub Lingkungan...' },
-      { at: 40, text: 'Memuat Model Audit Material EPA WARM...' },
-      { at: 70, text: 'Menghubungkan Rantai Lacak SNI 19-3983...' },
-      { at: 90, text: 'Menyiapkan Pengalaman Ekologis...' },
-      { at: 100, text: 'Selamat Datang di ECOCYCLE' },
-    ];
+    // Sequence stages
+    const timerStage2 = setTimeout(() => setStage(2), 200);
+    const timerStage3 = setTimeout(() => setStage(3), 600);
+    const timerStage4 = setTimeout(() => setStage(4), 1000);
 
     const interval = setInterval(() => {
       setProgress((prev) => {
-        const next = prev + Math.floor(Math.random() * 8) + 4;
+        const next = prev + Math.floor(Math.random() * 6) + 4;
         if (next >= 100) {
           clearInterval(interval);
-          setStatusText('Selamat Datang di ECOCYCLE');
           setTimeout(() => {
-            sessionStorage.setItem('ecocycle_intro_completed', 'true');
+            sessionStorage.setItem('ecocycle_living_intro_v4', 'true');
             setIsVisible(false);
             if (onComplete) onComplete();
-          }, 600);
+          }, 500);
           return 100;
-        }
-
-        const currentStatus = statuses.find((s) => next >= s.at && prev < s.at);
-        if (currentStatus) {
-          setStatusText(currentStatus.text);
         }
         return next;
       });
-    }, 60);
+    }, 45);
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      clearTimeout(timerStage2);
+      clearTimeout(timerStage3);
+      clearTimeout(timerStage4);
+    };
   }, [isVisible, shouldReduceMotion, onComplete]);
 
   const handleSkip = () => {
-    sessionStorage.setItem('ecocycle_intro_completed', 'true');
+    sessionStorage.setItem('ecocycle_living_intro_v4', 'true');
     setIsVisible(false);
     if (onComplete) onComplete();
   };
@@ -80,113 +75,149 @@ export const LoadingExperience: React.FC<LoadingExperienceProps> = ({
     <AnimatePresence>
       {isVisible && (
         <motion.div
-          key="intro-screen"
+          key="living-intro"
           initial={{ opacity: 1 }}
           exit={{
             opacity: 0,
-            scale: 1.04,
-            transition: { duration: 0.85, ease: [0.16, 1, 0.3, 1] },
+            scale: 1.05,
+            filter: 'blur(10px)',
+            transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] },
           }}
-          className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#00170e] text-surface-bright overflow-hidden select-none"
+          className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#02140d] text-white overflow-hidden select-none"
         >
-          {/* Ambient organic particle glow backgrounds */}
+          {/* 1. Deep Forest Ambient Lighting */}
           <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-secondary/20 blur-[120px] animate-pulse-glow" />
-            <div className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-tertiary-fixed/15 blur-[140px] animate-pulse-glow" style={{ animationDelay: '2s' }} />
+            <div className="absolute top-1/3 left-1/3 w-[500px] h-[500px] rounded-full bg-[#006c48]/25 blur-[140px] animate-pulse-subtle" />
+            <div className="absolute bottom-1/3 right-1/3 w-[450px] h-[450px] rounded-full bg-[#cbf075]/10 blur-[150px] animate-pulse-subtle" style={{ animationDelay: '2s' }} />
           </div>
 
-          {/* Animated SVG Circular Orbits and Leaves in Background */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-40">
-            <svg width="600" height="600" viewBox="0 0 600 600" fill="none" className="animate-spin-slow">
-              <circle cx="300" cy="300" r="260" stroke="#CBF075" strokeWidth="1" strokeDasharray="6 8" opacity="0.3" />
-              <circle cx="300" cy="300" r="190" stroke="#006C48" strokeWidth="1.5" strokeDasharray="12 16" opacity="0.4" />
-              <circle cx="300" cy="300" r="120" stroke="#CBF075" strokeWidth="1" strokeDasharray="4 6" opacity="0.5" />
-              
-              {/* Orbital leaf nodes */}
-              <circle cx="300" cy="40" r="5" fill="#CBF075" />
-              <circle cx="490" cy="300" r="4" fill="#006C48" />
-              <circle cx="110" cy="300" r="4" fill="#CBF075" />
-              <circle cx="300" cy="560" r="5" fill="#006C48" />
-            </svg>
-          </div>
-
-          {/* Central Reveal Stage */}
-          <div className="relative z-10 flex flex-col items-center max-w-md w-full px-6 text-center space-y-6">
+          {/* 2. Unfolding Circular Ecological Rings */}
+          <div className="relative z-10 flex flex-col items-center text-center space-y-8 max-w-lg px-8">
             
-            {/* Logo Mark Reveal */}
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0, y: 15 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-              className="p-4 rounded-3xl bg-primary/60 border border-tertiary-fixed/20 shadow-2xl backdrop-blur-md"
-            >
-              <EcocycleLogo size="xl" variant="dark" showTagline={true} />
-            </motion.div>
+            {/* Centerpiece SVG: Leaf & Circular Recycling Orbit */}
+            <div className="relative w-36 h-36 flex items-center justify-center">
+              
+              {/* Outer Circular Recycling Orbit developing */}
+              <motion.svg
+                width="144"
+                height="144"
+                viewBox="0 0 144 144"
+                className="absolute inset-0"
+                initial={{ rotate: 0 }}
+                animate={{ rotate: 360 }}
+                transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
+              >
+                <circle
+                  cx="72"
+                  cy="72"
+                  r="66"
+                  stroke="rgba(203, 240, 117, 0.25)"
+                  strokeWidth="1.5"
+                  strokeDasharray="6 8"
+                  fill="none"
+                />
+                <circle
+                  cx="72"
+                  cy="72"
+                  r="52"
+                  stroke="rgba(0, 200, 120, 0.35)"
+                  strokeWidth="1"
+                  strokeDasharray="12 16"
+                  fill="none"
+                />
+                <circle cx="72" cy="6" r="3.5" fill="#CBF075" />
+                <circle cx="138" cy="72" r="3" fill="#34d399" />
+                <circle cx="72" cy="138" r="3.5" fill="#CBF075" />
+                <circle cx="6" cy="72" r="3" fill="#34d399" />
+              </motion.svg>
 
-            {/* Moving Gradient Slogan */}
+              {/* Geometric Interlocking Leaves Unfolding */}
+              <motion.div
+                initial={{ scale: 0.6, opacity: 0, rotate: -20 }}
+                animate={{
+                  scale: stage >= 2 ? 1 : 0.6,
+                  opacity: stage >= 2 ? 1 : 0,
+                  rotate: stage >= 2 ? 0 : -20,
+                }}
+                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                className="p-5 rounded-3xl bg-[#032317]/80 border border-[#cbf075]/25 shadow-2xl backdrop-blur-xl"
+              >
+                <svg width="56" height="56" viewBox="0 0 48 48" fill="none">
+                  <defs>
+                    <linearGradient id="introLeafGrad" x1="6" y1="6" x2="42" y2="42" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stopColor="#CBF075" />
+                      <stop offset="50%" stopColor="#00A86B" />
+                      <stop offset="100%" stopColor="#002517" />
+                    </linearGradient>
+                    <linearGradient id="introLeafGrad2" x1="42" y1="42" x2="6" y2="6" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stopColor="#CBF075" />
+                      <stop offset="60%" stopColor="#059669" />
+                      <stop offset="100%" stopColor="#064e3b" />
+                    </linearGradient>
+                  </defs>
+                  <path
+                    d="M24 6C15.163 6 8 13.163 8 22C8 28.5 13 34 19 35C19 30 18 25 21 21C24 17 29 16 34 16C33 10.5 29 6 24 6Z"
+                    fill="url(#introLeafGrad)"
+                  />
+                  <path
+                    d="M24 42C32.837 42 40 34.837 40 26C40 19.5 35 14 29 13C29 18 30 23 27 27C24 31 19 32 14 32C15 37.5 19 42 24 42Z"
+                    fill="url(#introLeafGrad2)"
+                    opacity="0.95"
+                  />
+                  <circle cx="24" cy="24" r="3.5" fill="#CBF075" />
+                  <circle cx="24" cy="24" r="1.5" fill="#002517" />
+                </svg>
+              </motion.div>
+            </div>
+
+            {/* 3. Wordmark & Living Ecological Thesis */}
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.25, duration: 0.6 }}
-              className="space-y-1.5"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{
+                opacity: stage >= 4 ? 1 : 0,
+                y: stage >= 4 ? 0 : 15,
+              }}
+              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+              className="space-y-2"
             >
-              <h2 className="text-xl sm:text-2xl font-bold animated-eco-gradient tracking-tight">
-                Teknologi Ekonomi Sirkular Berkelanjutan
+              <h2 className="font-display font-extrabold text-3xl sm:text-4xl tracking-tighter text-white">
+                ECO<span className="text-[#cbf075]">CYCLE</span>
               </h2>
-              <p className="text-xs text-primary-fixed-dim/90 font-medium">
-                Kuningan Green Initiative • Web Design Competition 2026
+              <p className="font-sans text-xs uppercase tracking-[0.25em] text-[#94f6c4] font-bold">
+                A Living Circular Economy Experience
               </p>
             </motion.div>
 
-            {/* Sophisticated Progress Bar */}
+            {/* 4. Minimal Progress Indicator */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.35, duration: 0.5 }}
-              className="w-full max-w-xs space-y-2 pt-2"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              className="w-full max-w-xs space-y-2.5 pt-2"
             >
-              <div className="flex justify-between items-center text-[11px] font-bold text-tertiary-fixed">
-                <span className="truncate max-w-[200px] text-left text-surface-dim font-medium">{statusText}</span>
-                <span className="tabular-nums font-mono">{progress}%</span>
+              <div className="flex justify-between items-center text-[11px] font-mono text-white/60">
+                <span>Inisialisasi Ekosistem Sirkular</span>
+                <span className="text-[#cbf075] font-bold tabular-nums">{progress}%</span>
               </div>
-              <div className="w-full h-1.5 rounded-full bg-primary-container border border-primary-fixed-variant/40 overflow-hidden relative">
+              <div className="w-full h-1 rounded-full bg-white/10 overflow-hidden">
                 <motion.div
-                  className="h-full rounded-full bg-gradient-to-r from-secondary via-tertiary-fixed to-secondary-fixed"
+                  className="h-full bg-gradient-to-r from-[#00A86B] via-[#cbf075] to-[#34d399]"
                   style={{ width: `${progress}%` }}
-                  transition={{ ease: 'easeOut', duration: 0.15 }}
                 />
               </div>
             </motion.div>
 
-            {/* Skip Button */}
-            <motion.button
+            {/* Skip Option */}
+            <button
               type="button"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.8 }}
-              whileHover={{ opacity: 1, scale: 1.05 }}
               onClick={handleSkip}
-              className="pt-4 text-[11px] uppercase tracking-widest text-outline-variant hover:text-tertiary-fixed cursor-pointer transition-colors flex items-center gap-1.5 font-bold"
+              className="text-[11px] uppercase tracking-widest text-white/40 hover:text-[#cbf075] transition-colors cursor-pointer font-bold pt-2 flex items-center gap-1 focus:outline-none"
             >
               <span>Lewati Pengantar</span>
               <span>→</span>
-            </motion.button>
-          </div>
+            </button>
 
-          {/* Organic Leaf-Unfolding Aperture Masks (Reveal on exit) */}
-          <motion.div
-            initial={{ scaleY: 1 }}
-            exit={{ scaleY: 0 }}
-            transition={{ duration: 0.85, ease: [0.65, 0, 0.35, 1] }}
-            style={{ transformOrigin: 'top' }}
-            className="absolute inset-x-0 top-0 h-1/2 bg-[#00170e] z-20 pointer-events-none"
-          />
-          <motion.div
-            initial={{ scaleY: 1 }}
-            exit={{ scaleY: 0 }}
-            transition={{ duration: 0.85, ease: [0.65, 0, 0.35, 1] }}
-            style={{ transformOrigin: 'bottom' }}
-            className="absolute inset-x-0 bottom-0 h-1/2 bg-[#00170e] z-20 pointer-events-none"
-          />
+          </div>
         </motion.div>
       )}
     </AnimatePresence>

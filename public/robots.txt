@@ -1,0 +1,36 @@
+# ==========================================
+# ECOCYCLE - Robots Configuration
+# https://ecocycle.id
+# ==========================================
+
+User-agent: *
+Allow: /
+Allow: /bank-sampah
+Allow: /pemilahan-pintar
+Allow: /dampak-ekologis
+Allow: /analitik
+Allow: /akademi
+Allow: /akademi/*
+Allow: /tantangan
+Allow: /faq
+Allow: /panduan
+Allow: /kontak
+Allow: /assets/
+Allow: /media/
+
+# Disallow private user and authentication state paths
+Disallow: /profil
+Disallow: /profil/*
+Disallow: /masuk
+Disallow: /daftar
+Disallow: /lupa-password
+Disallow: /verifikasi-email
+Disallow: /auth/
+Disallow: /auth/*
+
+# Crawl-delay for polite indexation
+Crawl-delay: 1
+
+# Host & Sitemap location
+Host: https://ecocycle.id
+Sitemap: https://ecocycle.id/sitemap.xml

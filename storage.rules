@@ -1,0 +1,53 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isImage() {
+      return request.resource.contentType.matches('image/.*');
+    }
+
+    function isUnderSizeLimit(maxMegabytes) {
+      return request.resource.size <= maxMegabytes * 1024 * 1024;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && (
+        request.auth.token.admin == true ||
+        request.auth.token.role == 'Admin'
+      );
+    }
+
+    // Default deny all
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+
+    // User profile pictures: max 5MB, images only
+    match /users/{userId}/{fileName} {
+      allow read: if true; // Profile photos are readable for social & leaderboard display
+      allow write: if isOwner(userId) && isImage() && isUnderSizeLimit(5);
+    }
+
+    // Waste deposit proof photos: max 10MB, images only
+    match /wasteDeposits/{userId}/{fileName} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow write: if isOwner(userId) && isImage() && isUnderSizeLimit(10);
+    }
+
+    // Educational articles and platform media assets
+    match /educationalContent/{fileName} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}

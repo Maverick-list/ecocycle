@@ -80,7 +80,7 @@ export const DEMO_LEADERBOARD_USERS: LeaderboardUser[] = [
   {
     id: 'usr-1',
     name: 'Nabila Ramadhani',
-    role: 'Mahasiswi FKOM UNIKU • Duta Sirkular',
+    role: 'Penggerak Daur Ulang Komunitas',
     avatar: '/assets/images/avatar_female.jpg',
     points: 1840,
     weightKg: 48.5,
@@ -90,7 +90,7 @@ export const DEMO_LEADERBOARD_USERS: LeaderboardUser[] = [
   {
     id: 'usr-2',
     name: 'Farhan Kurniawan',
-    role: 'Mahasiswa TI • Pegiat Kos Zero-Waste',
+    role: 'Koordinator Zero-Waste Distrik',
     avatar: '/assets/images/avatar_male.jpg',
     points: 1420,
     weightKg: 36.2,
