@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { DROP_POINTS, FAQ_ITEMS } from '../../data/locationsData';
 import { useWasteBank } from '../../context/WasteBankContext';
+import { StorageService } from '../../services/storageService';
 
 export const ContactPage: React.FC = () => {
   const { showToast } = useWasteBank();
@@ -24,8 +25,19 @@ export const ContactPage: React.FC = () => {
 
     setIsSubmitting(true);
     setTimeout(() => {
+      // Store in local demonstration storage
+      const existing = StorageService.get<Array<{ name: string; email: string; category: string; message: string; date: string }>>('ecocycle_contact_messages_v2', []);
+      const newEntry = {
+        name,
+        email,
+        category,
+        message,
+        date: new Date().toLocaleString('id-ID')
+      };
+      StorageService.set('ecocycle_contact_messages_v2', [newEntry, ...existing]);
+
       setIsSubmitting(false);
-      showToast(`Pesan Anda berhasil dikirim! Tim kami akan menghubungi ${email}.`, 'success');
+      showToast(`Pesan terkirim & tercatat secara lokal! Tim ECOCYCLE akan menghubungi ${email}.`, 'success');
       setName('');
       setEmail('');
       setMessage('');

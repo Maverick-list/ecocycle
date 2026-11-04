@@ -14,18 +14,31 @@ export const WasteDepositPage: React.FC = () => {
   const [date, setDate] = useState<string>(() => new Date().toISOString().split('T')[0]);
   const [dropPoint, setDropPoint] = useState<string>(DROP_POINTS[0].name);
   const [notes, setNotes] = useState<string>('');
+  const [photoUrl, setPhotoUrl] = useState<string | undefined>(undefined);
   const [submitted, setSubmitted] = useState<boolean>(false);
 
   const currentCategoryConfig = WASTE_CATEGORIES.find(c => c.name === selectedCategory) || WASTE_CATEGORIES[0];
   const estimatedPoints = Math.round(weightKg * currentCategoryConfig.pointsPerKg);
   const estimatedIdr = Math.round(weightKg * currentCategoryConfig.pricePerKg);
   const estimatedCo2 = parseFloat((weightKg * currentCategoryConfig.co2Factor).toFixed(2));
+  const estimatedWater = Math.round(weightKg * currentCategoryConfig.waterFactor);
 
   const handleAdjustWeight = (delta: number) => {
     setWeightKg(prev => {
       const updated = parseFloat((prev + delta).toFixed(1));
       return updated >= 0.1 ? updated : 0.1;
     });
+  };
+
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPhotoUrl(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -35,11 +48,10 @@ export const WasteDepositPage: React.FC = () => {
     addTransaction({
       wasteType: selectedCategory,
       weightKg,
-      points: estimatedPoints,
-      valueIdr: estimatedIdr,
       dropPoint,
-      co2OffsetKg: estimatedCo2,
-      notes: notes || 'Setoran via formulir penuh'
+      date,
+      photoUrl,
+      notes: notes || 'Setoran via formulir penuh mandiri'
     });
 
     setSubmitted(true);
@@ -61,8 +73,12 @@ export const WasteDepositPage: React.FC = () => {
             Pencatatan Setoran Sampah Terpilah
           </h1>
           <p className="font-body-md text-on-surface-variant max-w-xl mt-1">
-            Catat estimasi bobot sampah Anda untuk mendapatkan nomor registrasi setoran dan perolehan poin instan.
+            Catat estimasi bobot sampah Anda untuk mendapatkan nomor registrasi setoran, dokumentasi foto, dan perolehan EcoPoints instan.
           </p>
+          <div className="mt-3 inline-flex items-center gap-2 px-3 py-1 rounded-md bg-secondary-fixed/30 border border-secondary/20 text-[11px] text-secondary font-semibold">
+            <span className="material-symbols-outlined text-sm">info</span>
+            <span>Simulasi data tersimpan pada LocalStorage peramban untuk keperluan penilaian lomba.</span>
+          </div>
         </div>
 
         {submitted ? (
@@ -77,10 +93,19 @@ export const WasteDepositPage: React.FC = () => {
               Material <strong>{selectedCategory} ({weightKg} kg)</strong> telah dicatat ke buku tabungan digital Anda dengan perolehan <strong>+{estimatedPoints} EcoPoints</strong> (≈ Rp {estimatedIdr.toLocaleString('id-ID')}).
             </p>
 
+            {photoUrl && (
+              <div className="w-32 h-32 mx-auto rounded-xl overflow-hidden border border-outline-variant/40 shadow-sm mt-2">
+                <img src={photoUrl} alt="Bukti Foto Setoran" className="w-full h-full object-cover" />
+              </div>
+            )}
+
             <div className="pt-4 flex flex-wrap justify-center gap-3">
               <button
                 type="button"
-                onClick={() => setSubmitted(false)}
+                onClick={() => {
+                  setSubmitted(false);
+                  setPhotoUrl(undefined);
+                }}
                 className="h-11 px-5 rounded-lg bg-surface-container hover:bg-surface-container-high text-primary font-bold text-xs cursor-pointer"
               >
                 Catat Setoran Lainnya
@@ -194,10 +219,55 @@ export const WasteDepositPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Step 5: Optional Notes */}
+            {/* Step 5: Photo Evidence */}
             <div>
               <label className="block text-xs font-bold text-on-surface-variant uppercase mb-1">
-                5. Keterangan Wadah / Catatan Pemilahan
+                5. Bukti Foto Material (Opsional)
+              </label>
+              <div className="p-4 rounded-xl border border-dashed border-outline-variant bg-surface-container-low flex flex-col sm:flex-row items-center gap-4">
+                {photoUrl ? (
+                  <div className="relative w-24 h-24 rounded-lg overflow-hidden border border-outline shrink-0">
+                    <img src={photoUrl} alt="Preview Bukti Setoran" className="w-full h-full object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => setPhotoUrl(undefined)}
+                      className="absolute top-1 right-1 w-5 h-5 bg-error text-on-error rounded-full flex items-center justify-center text-xs"
+                      title="Hapus foto"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ) : (
+                  <div className="w-24 h-24 rounded-lg bg-surface-container flex flex-col items-center justify-center text-outline shrink-0">
+                    <span className="material-symbols-outlined text-3xl">photo_camera</span>
+                    <span className="text-[10px]">Unggah Foto</span>
+                  </div>
+                )}
+                <div className="flex-1 text-center sm:text-left space-y-2">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handlePhotoUpload}
+                    id="page-file-upload"
+                    className="hidden"
+                  />
+                  <label
+                    htmlFor="page-file-upload"
+                    className="inline-block px-4 py-2 rounded-lg bg-surface-container-high hover:bg-secondary-container hover:text-on-secondary-container text-xs font-bold text-primary cursor-pointer transition-colors"
+                  >
+                    {photoUrl ? 'Ganti Foto Bukti' : 'Pilih Foto dari Galeri / Kamera'}
+                  </label>
+                  <p className="text-[11px] text-outline">
+                    Format JPG, PNG, atau WebP (Disimpan lokal sebagai manifest verifikasi drop-point).
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Step 6: Optional Notes */}
+            <div>
+              <label className="block text-xs font-bold text-on-surface-variant uppercase mb-1">
+                6. Keterangan Wadah / Catatan Pemilahan
               </label>
               <input
                 type="text"
@@ -209,26 +279,34 @@ export const WasteDepositPage: React.FC = () => {
             </div>
 
             {/* Conversion Summary Banner */}
-            <div className="p-4 rounded-xl bg-surface-container-low border border-secondary/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="p-4 rounded-xl bg-surface-container-low border border-secondary/30 grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
                 <span className="text-[11px] text-outline uppercase font-bold block">
-                  Nilai Konversi yang Dihasilkan
+                  Estimasi Perolehan
                 </span>
                 <div className="flex items-baseline gap-2 mt-0.5">
                   <span className="text-2xl font-bold font-metric-display text-secondary">
                     +{estimatedPoints} Poin
                   </span>
-                  <span className="text-sm font-bold text-primary">
+                  <span className="text-xs font-bold text-primary">
                     (Rp {estimatedIdr.toLocaleString('id-ID')})
                   </span>
                 </div>
               </div>
-              <div className="text-left sm:text-right">
+              <div>
                 <span className="text-[11px] text-outline uppercase font-bold block">
-                  Reduksi Emisi
+                  Reduksi Emisi Karbon
                 </span>
-                <span className="text-base font-bold text-primary">
+                <span className="text-xl font-bold text-primary">
                   ~{estimatedCo2} kg CO₂e
+                </span>
+              </div>
+              <div>
+                <span className="text-[11px] text-outline uppercase font-bold block">
+                  Konservasi Air Bersih
+                </span>
+                <span className="text-xl font-bold text-primary">
+                  ~{estimatedWater} Liter
                 </span>
               </div>
             </div>

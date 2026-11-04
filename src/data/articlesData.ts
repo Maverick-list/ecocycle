@@ -11,6 +11,7 @@ export const ACADEMY_ARTICLES: Article[] = [
     excerpt: 'Membedah perjalanan molekuler plastik PET dari minyak bumi, botol minum di meja Anda, hingga ancaman mikroplastik di rantai makanan laut.',
     image: '/assets/images/facility_aerial.jpg',
     featured: true,
+    relatedIds: ['art-2', 'art-3'],
     content: [
       'Plastik Polyethylene Terephthalate (PET) merupakan polimer sintetis rantai panjang yang direkayasa agar sangat tahan terhadap oksidasi dan pelapukan biologis. Sifat inilah yang menjadikannya wadah minuman ideal, namun menjadi bencana ketika berakhir di tempat pembuangan akhir (TPA).',
       'Dalam kondisi TPA tanpa sinar matahari, satu botol plastik membutuhkan waktu antara 450 hingga 1.000 tahun untuk terdegradasi. Yang lebih mengkhawatirkan, plastik tidak pernah benar-benar lenyap; ia hanya terfragmentasi menjadi partikel mikroplastik (< 5mm) yang kini telah terdeteksi dalam air minum kemasan, garam meja, hingga jaringan organ tubuh manusia.',
@@ -26,6 +27,7 @@ export const ACADEMY_ARTICLES: Article[] = [
     date: '22 Okt 2025',
     excerpt: 'Metode sederhana mengolah 60% timbunan sampah dapur menjadi pupuk organik kaya hara tanpa menimbulkan bau busuk atau mengundang belatung.',
     image: '/assets/images/workshop.jpg',
+    relatedIds: ['art-1', 'art-4'],
     content: [
       'Lebih dari 60% sampah perkotaan di Indonesia adalah bahan organik basah. Ketika sampah ini tertimbun di TPA dan mengalami fermentasi anaerobik (tanpa oksigen), ia menghasilkan gas metana (CH₄) yang 28 kali lebih kuat memicu pemanasan global dibanding karbon dioksida.',
       'Kunci pengomposan aerobik yang sukses adalah rasio C:N (Karbon terhadap Nitrogen). Sampah basah seperti sisa sayur dan kulit buah adalah Unsur Hijau (Nitrogen), sedangkan daun kering, sekam, atau kardus cokelat sobek adalah Unsur Cokelat (Karbon).',
@@ -41,6 +43,7 @@ export const ACADEMY_ARTICLES: Article[] = [
     date: '16 Okt 2025',
     excerpt: 'Kandungan timbal, kadmium, dan merkuri dalam sampah elektronik dapat merembes ke air tanah jika tidak dikelola lewat jalur formal.',
     image: '/assets/images/hero_sorting.jpg',
+    relatedIds: ['art-1', 'art-4'],
     content: [
       'Pertumbuhan pesat perangkat pintar melahirkan krisis baru: timbunan sampah elektronik (e-waste) yang meningkat lebih dari 8% setiap tahun di Indonesia. Sayangnya, kurang dari 10% e-waste rumah tangga dikelola melalui jalur pengolahan berizin.',
       'Sebuah baterai litium-ion atau ponsel bekas mengandung logam berat beracun seperti Kadmium (merusak ginjal), Timbal (merusak sistem saraf pusat), dan Merkuri (racun bioakumulatif). Ketika terbakar di TPA terbuka, asapnya melepaskan dioksin karsinogenik ke udara sekitar permukiman.',
@@ -56,6 +59,7 @@ export const ACADEMY_ARTICLES: Article[] = [
     date: '10 Okt 2025',
     excerpt: 'Tips realistis bagi keluarga muda dan anak kos untuk mengurangi plastik sekali pakai tanpa mengubah drastis gaya hidup sehari-hari.',
     image: '/assets/images/drop_point.jpg',
+    relatedIds: ['art-2', 'art-3'],
     content: [
       '1. Siapkan Tas Belanja Kain di Kendaraan: Simpan selalu 2 kantong lipat di motor atau mobil agar tidak perlu menggunakan kantong kresek saat belanja mendadak.',
       '2. Beli Bahan Makanan Kering Curah: Manfaatkan toples kaca bekas selai untuk membeli beras, kacang-kacangan, atau bumbu dapur tanpa kemasan sachet plastik.',

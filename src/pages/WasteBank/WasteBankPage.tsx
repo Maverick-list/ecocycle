@@ -11,6 +11,7 @@ export const WasteBankPage: React.FC = () => {
     totalWeightKg,
     totalCo2AvoidedKg,
     openDepositModal,
+    openDetailTrx,
     seedSampleData,
     resetTransactions,
     deleteTransaction,
@@ -357,8 +358,20 @@ export const WasteBankPage: React.FC = () => {
                 <tbody className="divide-y divide-outline-variant/10 font-body-sm text-xs text-on-surface">
                   {filteredTransactions.map((trx) => (
                     <tr key={trx.id} className="hover:bg-surface-container-low/50 transition-colors">
-                      <td className="py-3.5 px-4 font-mono font-bold text-primary">
-                        {trx.id}
+                      <td className="py-3.5 px-4 font-mono font-bold">
+                        <button
+                          type="button"
+                          onClick={() => openDetailTrx(trx)}
+                          className="text-primary hover:text-secondary hover:underline cursor-pointer flex items-center gap-1.5"
+                          title="Klik untuk melihat lembar manifest detail"
+                        >
+                          <span>{trx.id}</span>
+                          {trx.photoUrl && (
+                            <span className="material-symbols-outlined text-[14px] text-secondary" title="Memiliki bukti foto">
+                              image
+                            </span>
+                          )}
+                        </button>
                       </td>
                       <td className="py-3.5 px-4 text-outline whitespace-nowrap">
                         {trx.date}
@@ -384,7 +397,16 @@ export const WasteBankPage: React.FC = () => {
                         </span>
                       </td>
                       <td className="py-3.5 px-4 text-center">
-                        <div className="flex items-center justify-center gap-1.5">
+                        <div className="flex items-center justify-center gap-1">
+                          {/* View detail button */}
+                          <button
+                            type="button"
+                            onClick={() => openDetailTrx(trx)}
+                            className="p-1 rounded hover:bg-surface-container text-secondary hover:text-primary transition-colors cursor-pointer"
+                            title="Buka Lembar Manifest & Bukti Setor"
+                          >
+                            <span className="material-symbols-outlined text-[16px]">receipt_long</span>
+                          </button>
                           {/* Edit button */}
                           <button
                             type="button"

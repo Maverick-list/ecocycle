@@ -8,6 +8,7 @@ export const WASTE_CATEGORIES: WasteCategoryConfig[] = [
     pricePerKg: 3500,
     pointsPerKg: 35,
     co2Factor: 1.5,
+    waterFactor: 24,
     stream: 'Anorganik',
     recyclability: 'Tinggi',
     prepSteps: [
@@ -25,6 +26,7 @@ export const WASTE_CATEGORIES: WasteCategoryConfig[] = [
     pricePerKg: 3000,
     pointsPerKg: 30,
     co2Factor: 1.1,
+    waterFactor: 28,
     stream: 'Anorganik',
     recyclability: 'Tinggi',
     prepSteps: [
@@ -42,6 +44,7 @@ export const WASTE_CATEGORIES: WasteCategoryConfig[] = [
     pricePerKg: 3000,
     pointsPerKg: 30,
     co2Factor: 3.2,
+    waterFactor: 40,
     stream: 'Anorganik',
     recyclability: 'Tinggi',
     prepSteps: [
@@ -58,6 +61,7 @@ export const WASTE_CATEGORIES: WasteCategoryConfig[] = [
     pricePerKg: 2000,
     pointsPerKg: 20,
     co2Factor: 0.4,
+    waterFactor: 5,
     stream: 'Anorganik',
     recyclability: 'Sedang',
     prepSteps: [
@@ -74,6 +78,7 @@ export const WASTE_CATEGORIES: WasteCategoryConfig[] = [
     pricePerKg: 8000,
     pointsPerKg: 80,
     co2Factor: 2.1,
+    waterFactor: 100,
     stream: 'Anorganik',
     recyclability: 'Tinggi',
     prepSteps: [
@@ -90,6 +95,7 @@ export const WASTE_CATEGORIES: WasteCategoryConfig[] = [
     pricePerKg: 10000,
     pointsPerKg: 100,
     co2Factor: 4.8,
+    waterFactor: 50,
     stream: 'E-Waste',
     recyclability: 'Khusus',
     prepSteps: [
@@ -106,6 +112,7 @@ export const WASTE_CATEGORIES: WasteCategoryConfig[] = [
     pricePerKg: 1500,
     pointsPerKg: 15,
     co2Factor: 0.8,
+    waterFactor: 8,
     stream: 'Organik',
     recyclability: 'Tinggi',
     prepSteps: [
@@ -125,6 +132,7 @@ export const SORTING_ITEMS = [
     stream: 'Anorganik',
     tag: 'Daur Ulang Tinggi',
     difficulty: 'Mudah',
+    binColor: 'Tong Biru (Anorganik Kering)',
     steps: ['Kosongkan cairan', 'Bilas', 'Lepas label & tutup', 'Pipihkan'],
     dos: 'Remas botol hingga pipih untuk menghemat ruang tampung.',
     donts: 'Jangan mencampur puntung rokok atau sampah lain ke dalam botol.'
@@ -136,6 +144,7 @@ export const SORTING_ITEMS = [
     stream: 'Anorganik',
     tag: 'Nilai Ekonomis',
     difficulty: 'Mudah',
+    binColor: 'Tong Biru (Kertas & Karton)',
     steps: ['Lepas lakban plastik', 'Buka lipatan', 'Tumpuk rata', 'Ikat tali'],
     dos: 'Jaga tetap kering dari cipratan air hujan.',
     donts: 'Jangan menyertakan kardus yang basah kuyup atau berjamur parah.'
@@ -147,6 +156,7 @@ export const SORTING_ITEMS = [
     stream: 'Anorganik',
     tag: 'Daur Ulang 100%',
     difficulty: 'Mudah',
+    binColor: 'Tong Biru (Logam)',
     steps: ['Bilas sisa gula', 'Keringkan', 'Injak hingga ceper'],
     dos: 'Aluminium dapat didaur ulang tanpa penurunan kualitas berulang kali.',
     donts: 'Jangan menyatukan kaleng aerosol bertekanan tanpa melubanginya aman.'
@@ -158,6 +168,7 @@ export const SORTING_ITEMS = [
     stream: 'Anorganik',
     tag: 'Daur Ulang Kaca',
     difficulty: 'Sedang',
+    binColor: 'Tong Biru / Kotak Beling Khusus',
     steps: ['Bilas bersih', 'Lepas tutup seng/plastik', 'Simpan wadah tegak'],
     dos: 'Kelompokkan berdasarkan warna kaca jika memungkinkan (bening/hijau/cokelat).',
     donts: 'Jangan memecahkan botol sengaja karena membahayakan petugas pilah.'
@@ -169,6 +180,7 @@ export const SORTING_ITEMS = [
     stream: 'Anorganik',
     tag: 'Bahan Biodiesel',
     difficulty: 'Sedang',
+    binColor: 'Jeriken Jeriken Khusus Jelantah',
     steps: ['Dinginkan', 'Saring endapan', 'Tampung di jeriken tertutup'],
     dos: 'Setorkan secara berkala minimal 2–5 liter untuk diproses biodiesel.',
     donts: 'JANGAN PERNAH menuang minyak jelantah ke wastafel atau selokan.'
@@ -180,6 +192,7 @@ export const SORTING_ITEMS = [
     stream: 'E-Waste',
     tag: 'Limbah B3/E-Waste',
     difficulty: 'Khusus',
+    binColor: 'Drop-Box E-Waste Khusus',
     steps: ['Gulung rapi', 'Pisahkan dari sampah umum', 'Setor ke drop-point e-waste'],
     dos: 'Serahkan ke fasilitas berizin karena mengandung tembaga dan polimer khusus.',
     donts: 'Jangan membakar kabel untuk mengambil tembaga karena asapnya beracun.'
@@ -191,6 +204,7 @@ export const SORTING_ITEMS = [
     stream: 'Organik',
     tag: 'Bahan Kompos',
     difficulty: 'Mudah',
+    binColor: 'Tong Hijau (Organik Basah)',
     steps: ['Tiriskan air', 'Cacah kasar', 'Masukkan tong biopori/komposter'],
     dos: 'Campurkan dengan daun kering atau serbuk gergaji untuk rasio karbon-nitrogen seimbang.',
     donts: 'Jangan campur tulang daging besar atau minyak goreng ke komposter biasa.'
@@ -202,6 +216,7 @@ export const SORTING_ITEMS = [
     stream: 'B3',
     tag: 'B3 Berbahaya',
     difficulty: 'Khusus',
+    binColor: 'Wadah Tertutup B3 Khusus',
     steps: ['Tutup kedua kutub dengan isolasi', 'Simpan di wadah plastik kering', 'Drop ke kotak B3'],
     dos: 'Baterai bekas mengandung logam berat merkuri, kadmium, dan timbal.',
     donts: 'Jangan buang baterai ke tong sampah biasa atau membakarnya.'

@@ -14,6 +14,7 @@ export interface WasteCategoryConfig {
   pricePerKg: number;
   pointsPerKg: number;
   co2Factor: number; // kg CO2 avoided per kg
+  waterFactor: number; // Liters of water saved per kg
   stream: 'Organik' | 'Anorganik' | 'B3' | 'E-Waste';
   recyclability: 'Tinggi' | 'Sedang' | 'Khusus';
   prepSteps: string[];
@@ -23,6 +24,7 @@ export interface WasteCategoryConfig {
 export interface WasteTransaction {
   id: string;
   date: string;
+  timestamp: number;
   wasteType: WasteStreamType;
   weightKg: number;
   points: number;
@@ -30,7 +32,10 @@ export interface WasteTransaction {
   dropPoint: string;
   status: 'Terverifikasi' | 'Menunggu Audit' | 'Selesai';
   co2OffsetKg: number;
+  waterSavedLiters: number;
+  photoUrl?: string; // Base64 data URL for photo evidence
   notes?: string;
+  userRef?: string;
 }
 
 export interface Article {
@@ -44,6 +49,7 @@ export interface Article {
   content: string[];
   image: string;
   featured?: boolean;
+  relatedIds: string[];
 }
 
 export interface MythFactItem {
@@ -68,9 +74,24 @@ export interface CommunityChallenge {
   pointsReward: number;
   description: string;
   tasks: ChallengeTask[];
+  joined: boolean;
   completed: boolean;
+  rewardClaimed: boolean;
   badgeName: string;
   badgeIcon: string;
+  completedAt?: string;
+}
+
+export interface LeaderboardUser {
+  id: string;
+  name: string;
+  role: string;
+  avatar: string;
+  points: number;
+  weightKg: number;
+  rank: number;
+  badgesCount: number;
+  isCurrentUser?: boolean;
 }
 
 export interface DropPointStation {

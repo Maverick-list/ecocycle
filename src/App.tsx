@@ -4,6 +4,7 @@ import { WasteBankProvider } from './context/WasteBankContext';
 import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
 import { WasteDepositModal } from './components/features/WasteDepositModal';
+import { DepositDetailModal } from './components/features/DepositDetailModal';
 import { Toast } from './components/ui/Toast';
 
 import { HomePage } from './pages/Home/HomePage';
@@ -62,6 +63,7 @@ export const App: React.FC = () => {
 
           {/* Global Modal & Notifications */}
           <WasteDepositModal />
+          <DepositDetailModal />
           <Toast />
         </div>
       </BrowserRouter>

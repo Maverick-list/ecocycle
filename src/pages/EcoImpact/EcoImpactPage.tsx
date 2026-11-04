@@ -1,20 +1,36 @@
 import React, { useState } from 'react';
+import {
+  AreaChart,
+  Area,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Cell
+} from 'recharts';
 import { useWasteBank } from '../../context/WasteBankContext';
+import { ImpactService } from '../../services/impactService';
 
 export const EcoImpactPage: React.FC = () => {
-  const { totalWeightKg, totalCo2AvoidedKg, treesPlantedEquivalent } = useWasteBank();
+  const { transactions } = useWasteBank();
+
+  // Aggregate metrics computed via service
+  const metrics = ImpactService.calculateAggregateMetrics(transactions);
+  const monthlyTrends = ImpactService.getMonthlyTrends(transactions);
+  const categoryBreakdown = ImpactService.getCategoryBreakdown(transactions);
 
   // Scenario Simulator sliders
   const [dailyBottles, setDailyBottles] = useState<number>(3);
   const [weeklyCompostKg, setWeeklyCompostKg] = useState<number>(2);
 
   // Computed scenario outcomes
-  // 1 bottle = ~0.03 kg PET = ~0.045 kg CO2 avoided
   const annualBottlesCount = dailyBottles * 365;
   const annualPlasticKg = parseFloat((annualBottlesCount * 0.03).toFixed(1));
   const annualPlasticCo2 = parseFloat((annualPlasticKg * 1.5).toFixed(1));
 
-  // 1 kg food waste diverted from landfill saves ~0.8 kg CO2e methane
   const annualCompostKg = weeklyCompostKg * 52;
   const annualCompostCo2 = parseFloat((annualCompostKg * 0.8).toFixed(1));
 
@@ -40,6 +56,12 @@ export const EcoImpactPage: React.FC = () => {
           <p className="font-body-md text-on-surface-variant max-w-2xl mt-1">
             Perhitungan kuantitatif saintifik atas reduksi emisi gas rumah kaca, konservasi air, dan pengalihan material dari Tempat Pemrosesan Akhir (TPA).
           </p>
+          <div className="mt-3 inline-flex items-center gap-2 px-3 py-1 rounded-md bg-secondary-fixed/30 border border-secondary/20 text-[11px] text-secondary font-semibold">
+            <span className="material-symbols-outlined text-sm">auto_graph</span>
+            <span>
+              Diperbarui dinamis berdasarkan <strong>{transactions.length} setoran</strong> di buku tabungan Anda (Kontribusi Anda: <strong>{metrics.userWeight} kg</strong> / <strong>{metrics.userCo2} kg CO₂e</strong>).
+            </span>
+          </div>
         </div>
 
         {/* 4 Macro Key Metric Bento Cards */}
@@ -47,66 +69,195 @@ export const EcoImpactPage: React.FC = () => {
           
           <div className="p-space-lg rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-sm flex flex-col justify-between">
             <div className="flex items-center justify-between">
-              <span className="font-label-caps text-outline uppercase font-bold">Limbah Terdivergen</span>
+              <span className="font-label-caps text-outline uppercase font-bold text-[11px]">Limbah Terdivergen</span>
               <span className="material-symbols-outlined text-secondary">recycling</span>
             </div>
             <div className="my-3">
               <span className="font-metric-display text-4xl font-extrabold text-primary">
-                {(totalWeightKg + 14820).toLocaleString('id-ID')}
+                {metrics.totalWeightKg.toLocaleString('id-ID')}
               </span>
               <span className="text-sm font-bold text-secondary ml-1">kg</span>
             </div>
             <span className="text-xs text-on-surface-variant">
-              Teralihkan 100% dari TPA kota
+              Teralihkan 100% dari TPA (User: {metrics.userWeight} kg)
             </span>
           </div>
 
           <div className="p-space-lg rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-sm flex flex-col justify-between">
             <div className="flex items-center justify-between">
-              <span className="font-label-caps text-outline uppercase font-bold">Reduksi Gas Rumah Kaca</span>
+              <span className="font-label-caps text-outline uppercase font-bold text-[11px]">Reduksi Gas Rumah Kaca</span>
               <span className="material-symbols-outlined text-secondary">cloud_done</span>
             </div>
             <div className="my-3">
               <span className="font-metric-display text-4xl font-extrabold text-primary">
-                {(totalCo2AvoidedKg + 2240).toLocaleString('id-ID')}
+                {metrics.totalCo2Kg.toLocaleString('id-ID')}
               </span>
               <span className="text-sm font-bold text-secondary ml-1">kg CO₂e</span>
             </div>
             <span className="text-xs text-on-surface-variant">
-              Mencegah pemanasan global lokal
+              Mencegah pemanasan lokal (User: {metrics.userCo2} kg)
             </span>
           </div>
 
           <div className="p-space-lg rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-sm flex flex-col justify-between">
             <div className="flex items-center justify-between">
-              <span className="font-label-caps text-outline uppercase font-bold">Ekuivalensi Pohon</span>
+              <span className="font-label-caps text-outline uppercase font-bold text-[11px]">Ekuivalensi Pohon</span>
               <span className="material-symbols-outlined text-secondary">forest</span>
             </div>
             <div className="my-3">
               <span className="font-metric-display text-4xl font-extrabold text-primary">
-                {(treesPlantedEquivalent + 103).toFixed(0)}
+                {metrics.treeEquivalents.toLocaleString('id-ID')}
               </span>
               <span className="text-sm font-bold text-secondary ml-1">Pohon Dewasa</span>
             </div>
             <span className="text-xs text-on-surface-variant">
-              Kapasitas serapan CO₂ tahunan
+              Standar serapan EPA ~21.77 kg CO₂/thn
             </span>
           </div>
 
           <div className="p-space-lg rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-sm flex flex-col justify-between">
             <div className="flex items-center justify-between">
-              <span className="font-label-caps text-outline uppercase font-bold">Air Bersih Terhemat</span>
+              <span className="font-label-caps text-outline uppercase font-bold text-[11px]">Air Bersih Terhemat</span>
               <span className="material-symbols-outlined text-secondary">water_drop</span>
             </div>
             <div className="my-3">
               <span className="font-metric-display text-4xl font-extrabold text-primary">
-                {(totalWeightKg * 28 + 36500).toLocaleString('id-ID')}
+                {metrics.totalWaterLiters.toLocaleString('id-ID')}
               </span>
               <span className="text-sm font-bold text-secondary ml-1">Liter</span>
             </div>
             <span className="text-xs text-on-surface-variant">
-              Dibanding manufaktur polimer perawan
+              Dibanding manufaktur polimer virgin
             </span>
+          </div>
+
+        </div>
+
+        {/* Visual Analytics Bento (Interactive Recharts) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+          
+          {/* Monthly Trend Area Chart (7 cols) */}
+          <div className="lg:col-span-7 p-space-lg rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-sm flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <span className="font-label-caps text-secondary font-bold uppercase text-[11px] tracking-wider">
+                  Dinamika Tren Pemulihan
+                </span>
+                <span className="text-[11px] text-outline font-medium">6 Bulan Terakhir</span>
+              </div>
+              <h3 className="font-headline-sm font-bold text-primary">
+                Volume Sampah & Reduksi CO₂e Bulanan
+              </h3>
+              <p className="text-xs text-on-surface-variant mt-0.5 mb-4">
+                Pertumbuhan partisipasi warga dan efisiensi pengalihan material dari bulan ke bulan (dalam kg).
+              </p>
+            </div>
+
+            <div className="w-full h-64 sm:h-72">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={monthlyTrends} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="colorVolume" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#006c48" stopOpacity={0.4}/>
+                      <stop offset="95%" stopColor="#006c48" stopOpacity={0.0}/>
+                    </linearGradient>
+                    <linearGradient id="colorCo2" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#123b2a" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="#123b2a" stopOpacity={0.0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e8e9e2" />
+                  <XAxis dataKey="month" stroke="#717a73" fontSize={11} tickLine={false} />
+                  <YAxis stroke="#717a73" fontSize={11} tickLine={false} />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: '#ffffff', 
+                      borderRadius: '12px', 
+                      border: '1px solid #d4d7cf',
+                      fontSize: '11px',
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.08)'
+                    }} 
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey="volumeKg" 
+                    name="Volume Terpilah (kg)" 
+                    stroke="#006c48" 
+                    strokeWidth={2.5}
+                    fillOpacity={1} 
+                    fill="url(#colorVolume)" 
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey="co2Kg" 
+                    name="Reduksi CO₂e (kg)" 
+                    stroke="#123b2a" 
+                    strokeWidth={2}
+                    strokeDasharray="4 4"
+                    fillOpacity={1} 
+                    fill="url(#colorCo2)" 
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div className="flex items-center justify-center gap-6 pt-3 border-t border-outline-variant/20 text-xs">
+              <div className="flex items-center gap-2">
+                <span className="w-3 h-3 rounded-full bg-secondary inline-block" />
+                <span className="text-on-surface font-medium">Volume Sampah (kg)</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="w-3 h-3 rounded-full bg-primary inline-block" />
+                <span className="text-on-surface font-medium">Reduksi CO₂e (kg)</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Category Distribution Bar Chart (5 cols) */}
+          <div className="lg:col-span-5 p-space-lg rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-sm flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <span className="font-label-caps text-secondary font-bold uppercase text-[11px] tracking-wider">
+                  Audit Komposisi Material
+                </span>
+                <span className="text-[11px] text-outline font-medium">Agregat Saat Ini</span>
+              </div>
+              <h3 className="font-headline-sm font-bold text-primary">
+                Proporsi Fraksi Material Sirkular
+              </h3>
+              <p className="text-xs text-on-surface-variant mt-0.5 mb-4">
+                Distribusi fraksi sampah terpilah yang telah masuk ke rantai logistik daur ulang.
+              </p>
+            </div>
+
+            <div className="w-full h-64 sm:h-72">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={categoryBreakdown} layout="vertical" margin={{ top: 5, right: 20, left: 25, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e8e9e2" horizontal={false} />
+                  <XAxis type="number" stroke="#717a73" fontSize={11} tickLine={false} />
+                  <YAxis type="category" dataKey="name" stroke="#717a73" fontSize={10} tickLine={false} width={85} />
+                  <Tooltip 
+                    formatter={(val) => [`${val} kg`, 'Total Terkumpul']}
+                    contentStyle={{ 
+                      backgroundColor: '#ffffff', 
+                      borderRadius: '12px', 
+                      border: '1px solid #d4d7cf',
+                      fontSize: '11px',
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.08)'
+                    }} 
+                  />
+                  <Bar dataKey="value" radius={[0, 6, 6, 0]}>
+                    {categoryBreakdown.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div className="pt-3 border-t border-outline-variant/20 text-[11px] text-outline text-center">
+              Material terbanyak saat ini: <strong>Plastik PET</strong> & <strong>Kardus</strong>
+            </div>
           </div>
 
         </div>
@@ -180,7 +331,7 @@ export const EcoImpactPage: React.FC = () => {
 
             {/* Projected Outputs Card (6 cols) */}
             <div className="lg:col-span-6 bg-surface-container-lowest text-on-surface p-space-lg rounded-2xl shadow-lg border border-outline-variant/30 space-y-4">
-              <span className="font-label-caps text-secondary font-bold uppercase tracking-wider block">
+              <span className="font-label-caps text-secondary font-bold uppercase tracking-wider block text-xs">
                 Proyeksi Kontribusi Ekologis Tahunan (1 Tahun)
               </span>
 

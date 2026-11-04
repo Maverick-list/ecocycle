@@ -9,9 +9,9 @@ export const WasteDepositModal: React.FC = () => {
 
   const [selectedCategory, setSelectedCategory] = useState<WasteStreamType>('Plastik PET');
   const [weightKg, setWeightKg] = useState<number>(2.5);
-  const [date, setDate] = useState<string>(() => new Date().toISOString().split('T')[0]);
   const [dropPoint, setDropPoint] = useState<string>(DROP_POINTS[0].name);
   const [notes, setNotes] = useState<string>('');
+  const [photoUrl, setPhotoUrl] = useState<string | undefined>(undefined);
 
   if (!isDepositModalOpen) return null;
 
@@ -28,6 +28,17 @@ export const WasteDepositModal: React.FC = () => {
     });
   };
 
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPhotoUrl(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (weightKg <= 0) return;
@@ -35,13 +46,12 @@ export const WasteDepositModal: React.FC = () => {
     addTransaction({
       wasteType: selectedCategory,
       weightKg,
-      points: estimatedPoints,
-      valueIdr: estimatedIdr,
       dropPoint,
-      co2OffsetKg: estimatedCo2,
+      photoUrl,
       notes: notes || undefined
     });
 
+    setPhotoUrl(undefined);
     closeDepositModal();
   };
 
@@ -141,38 +151,59 @@ export const WasteDepositModal: React.FC = () => {
             </div>
           </div>
 
-          {/* Step 3 & 4: Date & Drop Point */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
-            <div>
-              <label className="block font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider mb-space-xs font-bold">
-                3. Tanggal Penyerahan
-              </label>
-              <input
-                type="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                className="w-full h-11 px-3 rounded-lg bg-surface-container text-body-sm text-on-surface outline-none focus:ring-2 focus:ring-secondary"
-              />
-            </div>
-            <div>
-              <label className="block font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider mb-space-xs font-bold">
-                4. Lokasi Drop-Point
-              </label>
-              <select
-                value={dropPoint}
-                onChange={(e) => setDropPoint(e.target.value)}
-                className="w-full h-11 px-3 rounded-lg bg-surface-container text-body-sm text-on-surface outline-none focus:ring-2 focus:ring-secondary"
-              >
-                {DROP_POINTS.map((dp) => (
-                  <option key={dp.id} value={dp.name}>
-                    {dp.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+          {/* Step 3: Location Drop Point */}
+          <div>
+            <label className="block font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider mb-space-xs font-bold">
+              3. Lokasi Drop-Point Tujuan
+            </label>
+            <select
+              value={dropPoint}
+              onChange={(e) => setDropPoint(e.target.value)}
+              className="w-full h-11 px-3 rounded-lg bg-surface-container text-body-sm text-on-surface outline-none focus:ring-2 focus:ring-secondary"
+            >
+              {DROP_POINTS.map((dp) => (
+                <option key={dp.id} value={dp.name}>
+                  {dp.name} ({dp.city})
+                </option>
+              ))}
+            </select>
           </div>
 
-          {/* Optional Notes */}
+          {/* Step 4: Photo Evidence (Optional) */}
+          <div>
+            <label className="block font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider mb-space-xs font-bold">
+              4. Foto Bukti Sampah (Opsional)
+            </label>
+            {photoUrl ? (
+              <div className="flex items-center gap-3 p-2 rounded-xl bg-surface-container border border-outline-variant/30">
+                <img src={photoUrl} alt="Preview" className="w-16 h-16 rounded-lg object-cover" />
+                <div className="flex-1 text-xs">
+                  <span className="font-bold text-primary block">Foto Terlampir</span>
+                  <span className="text-outline text-[11px]">Siap diverifikasi di drop-point</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setPhotoUrl(undefined)}
+                  className="px-3 h-8 rounded bg-error/10 text-error text-xs font-bold hover:bg-error/20 cursor-pointer"
+                >
+                  Hapus
+                </button>
+              </div>
+            ) : (
+              <label className="border-2 border-dashed border-outline-variant/40 rounded-xl p-3 flex items-center justify-center gap-2 cursor-pointer hover:bg-surface-container/50 transition-colors text-xs text-outline">
+                <span className="material-symbols-outlined text-lg">add_a_photo</span>
+                <span>Unggah Foto Bukti Material (Klik Di Sini)</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handlePhotoUpload}
+                  className="hidden"
+                />
+              </label>
+            )}
+          </div>
+
+          {/* Step 5: Optional Notes */}
           <div>
             <label className="block font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider mb-space-xs font-bold">
               5. Catatan Tambahan (Opsional)
@@ -189,7 +220,7 @@ export const WasteDepositModal: React.FC = () => {
           {/* Live Valuation Summary Card */}
           <div className="p-space-md rounded-xl bg-surface-container-low border border-outline-variant/30 flex items-center justify-between">
             <div>
-              <span className="font-label-caps text-label-caps text-on-surface-variant block uppercase">
+              <span className="font-label-caps text-label-caps text-on-surface-variant block uppercase font-bold">
                 Estimasi Perolehan Poin & Nilai
               </span>
               <div className="flex items-baseline gap-2 mt-1">
@@ -202,13 +233,17 @@ export const WasteDepositModal: React.FC = () => {
               </div>
             </div>
             <div className="text-right">
-              <span className="font-label-caps text-label-caps text-outline block uppercase">
+              <span className="font-label-caps text-label-caps text-outline block uppercase font-bold">
                 Reduksi CO₂e
               </span>
               <span className="font-title-md font-bold text-primary">
                 ~{estimatedCo2} kg
               </span>
             </div>
+          </div>
+
+          <div className="text-[10px] text-outline italic text-center">
+            * Nilai konversi merupakan estimasi simulasi kompetisi, bukan transaksi tunai perbankan riil.
           </div>
 
           {/* Submit Actions */}
