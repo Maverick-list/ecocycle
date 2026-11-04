@@ -1,0 +1,260 @@
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useWasteBank } from '../../context/WasteBankContext';
+import { WASTE_CATEGORIES } from '../../data/wasteData';
+import { DROP_POINTS } from '../../data/locationsData';
+import { WasteStreamType } from '../../types';
+
+export const WasteDepositPage: React.FC = () => {
+  const navigate = useNavigate();
+  const { addTransaction } = useWasteBank();
+
+  const [selectedCategory, setSelectedCategory] = useState<WasteStreamType>('Plastik PET');
+  const [weightKg, setWeightKg] = useState<number>(3.5);
+  const [date, setDate] = useState<string>(() => new Date().toISOString().split('T')[0]);
+  const [dropPoint, setDropPoint] = useState<string>(DROP_POINTS[0].name);
+  const [notes, setNotes] = useState<string>('');
+  const [submitted, setSubmitted] = useState<boolean>(false);
+
+  const currentCategoryConfig = WASTE_CATEGORIES.find(c => c.name === selectedCategory) || WASTE_CATEGORIES[0];
+  const estimatedPoints = Math.round(weightKg * currentCategoryConfig.pointsPerKg);
+  const estimatedIdr = Math.round(weightKg * currentCategoryConfig.pricePerKg);
+  const estimatedCo2 = parseFloat((weightKg * currentCategoryConfig.co2Factor).toFixed(2));
+
+  const handleAdjustWeight = (delta: number) => {
+    setWeightKg(prev => {
+      const updated = parseFloat((prev + delta).toFixed(1));
+      return updated >= 0.1 ? updated : 0.1;
+    });
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (weightKg <= 0) return;
+
+    addTransaction({
+      wasteType: selectedCategory,
+      weightKg,
+      points: estimatedPoints,
+      valueIdr: estimatedIdr,
+      dropPoint,
+      co2OffsetKg: estimatedCo2,
+      notes: notes || 'Setoran via formulir penuh'
+    });
+
+    setSubmitted(true);
+  };
+
+  return (
+    <div className="w-full bg-surface py-space-xl">
+      <div className="max-w-[1000px] mx-auto px-margin-sm lg:px-margin space-y-space-lg">
+        
+        {/* Breadcrumb & Header */}
+        <div className="border-b border-outline-variant/30 pb-space-md">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="w-2.5 h-2.5 rounded-full bg-secondary" />
+            <span className="font-label-caps text-secondary font-bold uppercase tracking-wider">
+              Formulir Penyerahan Mandiri
+            </span>
+          </div>
+          <h1 className="font-headline-xl text-headline-xl-mobile md:text-headline-xl font-bold text-primary tracking-tight">
+            Pencatatan Setoran Sampah Terpilah
+          </h1>
+          <p className="font-body-md text-on-surface-variant max-w-xl mt-1">
+            Catat estimasi bobot sampah Anda untuk mendapatkan nomor registrasi setoran dan perolehan poin instan.
+          </p>
+        </div>
+
+        {submitted ? (
+          <div className="p-space-xl rounded-2xl bg-surface-container-lowest border border-secondary shadow-xl text-center space-y-4 animate-fadeIn">
+            <div className="w-16 h-16 mx-auto rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center text-3xl">
+              ✓
+            </div>
+            <h2 className="font-headline-md font-bold text-primary">
+              Setoran Berhasil Didaftarkan!
+            </h2>
+            <p className="font-body-md text-on-surface-variant max-w-md mx-auto text-sm">
+              Material <strong>{selectedCategory} ({weightKg} kg)</strong> telah dicatat ke buku tabungan digital Anda dengan perolehan <strong>+{estimatedPoints} EcoPoints</strong> (≈ Rp {estimatedIdr.toLocaleString('id-ID')}).
+            </p>
+
+            <div className="pt-4 flex flex-wrap justify-center gap-3">
+              <button
+                type="button"
+                onClick={() => setSubmitted(false)}
+                className="h-11 px-5 rounded-lg bg-surface-container hover:bg-surface-container-high text-primary font-bold text-xs cursor-pointer"
+              >
+                Catat Setoran Lainnya
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate('/bank-sampah')}
+                className="h-11 px-6 rounded-lg bg-primary text-on-primary font-bold text-xs hover:bg-primary-container cursor-pointer flex items-center gap-1.5"
+              >
+                <span>Buka Buku Tabungan</span>
+                <span className="material-symbols-outlined text-sm">arrow_forward</span>
+              </button>
+            </div>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="p-space-lg sm:p-space-xl rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-md space-y-space-md">
+            
+            {/* Step 1: Select Category */}
+            <div>
+              <label className="block font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider mb-2 font-bold">
+                1. Pilih Kategori Material
+              </label>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {WASTE_CATEGORIES.map((cat) => {
+                  const isSelected = selectedCategory === cat.name;
+                  return (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() => setSelectedCategory(cat.name)}
+                      className={`p-3 rounded-xl text-left font-body-sm text-xs font-semibold transition-all cursor-pointer flex flex-col justify-between h-24 ${
+                        isSelected
+                          ? 'bg-primary text-on-primary ring-2 ring-tertiary-fixed shadow-md'
+                          : 'bg-surface-container text-on-surface hover:bg-surface-container-high'
+                      }`}
+                    >
+                      <span className={`material-symbols-outlined text-2xl ${isSelected ? 'text-tertiary-fixed' : 'text-outline'}`}>
+                        {cat.icon}
+                      </span>
+                      <div>
+                        <span className="block font-bold">{cat.name}</span>
+                        <span className={`text-[10px] ${isSelected ? 'text-primary-fixed-dim' : 'text-outline'}`}>
+                          Rp {cat.pricePerKg.toLocaleString('id-ID')}/kg
+                        </span>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Step 2: Weight Stepper */}
+            <div>
+              <label className="block font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider mb-2 font-bold">
+                2. Estimasi Bobot Timbangan (kg)
+              </label>
+              <div className="flex items-center gap-4 bg-surface-container rounded-xl p-3 max-w-sm">
+                <button
+                  type="button"
+                  onClick={() => handleAdjustWeight(-0.5)}
+                  className="w-12 h-12 rounded-lg bg-surface-container-lowest text-on-surface font-extrabold text-2xl flex items-center justify-center hover:bg-surface-variant shadow-sm active:scale-95 transition-all cursor-pointer"
+                >
+                  -
+                </button>
+                <input
+                  type="number"
+                  step="0.1"
+                  min="0.1"
+                  value={weightKg}
+                  onChange={(e) => setWeightKg(parseFloat(e.target.value) || 0.1)}
+                  className="w-full text-center bg-transparent font-metric-display text-3xl font-extrabold text-on-surface outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={() => handleAdjustWeight(0.5)}
+                  className="w-12 h-12 rounded-lg bg-surface-container-lowest text-on-surface font-extrabold text-2xl flex items-center justify-center hover:bg-surface-variant shadow-sm active:scale-95 transition-all cursor-pointer"
+                >
+                  +
+                </button>
+                <span className="font-bold text-lg text-on-surface-variant pr-2">kg</span>
+              </div>
+            </div>
+
+            {/* Step 3 & 4: Date & Drop Point */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-bold text-on-surface-variant uppercase mb-1">
+                  3. Tanggal Rencana Penyerahan
+                </label>
+                <input
+                  type="date"
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  className="w-full h-11 px-3.5 rounded-lg bg-surface-container text-xs text-on-surface outline-none focus:ring-2 focus:ring-secondary border border-outline-variant/20"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-on-surface-variant uppercase mb-1">
+                  4. Titik Drop-Point Tujuan
+                </label>
+                <select
+                  value={dropPoint}
+                  onChange={(e) => setDropPoint(e.target.value)}
+                  className="w-full h-11 px-3.5 rounded-lg bg-surface-container text-xs text-on-surface outline-none focus:ring-2 focus:ring-secondary border border-outline-variant/20"
+                >
+                  {DROP_POINTS.map((dp) => (
+                    <option key={dp.id} value={dp.name}>{dp.name}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {/* Step 5: Optional Notes */}
+            <div>
+              <label className="block text-xs font-bold text-on-surface-variant uppercase mb-1">
+                5. Keterangan Wadah / Catatan Pemilahan
+              </label>
+              <input
+                type="text"
+                placeholder="Contoh: 1 karung botol bersih siap giling..."
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                className="w-full h-11 px-3.5 rounded-lg bg-surface-container text-xs text-on-surface outline-none focus:ring-2 focus:ring-secondary border border-outline-variant/20"
+              />
+            </div>
+
+            {/* Conversion Summary Banner */}
+            <div className="p-4 rounded-xl bg-surface-container-low border border-secondary/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <span className="text-[11px] text-outline uppercase font-bold block">
+                  Nilai Konversi yang Dihasilkan
+                </span>
+                <div className="flex items-baseline gap-2 mt-0.5">
+                  <span className="text-2xl font-bold font-metric-display text-secondary">
+                    +{estimatedPoints} Poin
+                  </span>
+                  <span className="text-sm font-bold text-primary">
+                    (Rp {estimatedIdr.toLocaleString('id-ID')})
+                  </span>
+                </div>
+              </div>
+              <div className="text-left sm:text-right">
+                <span className="text-[11px] text-outline uppercase font-bold block">
+                  Reduksi Emisi
+                </span>
+                <span className="text-base font-bold text-primary">
+                  ~{estimatedCo2} kg CO₂e
+                </span>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="pt-2 flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => navigate('/bank-sampah')}
+                className="h-11 px-5 rounded-lg text-xs font-bold hover:bg-surface-container transition-colors cursor-pointer"
+              >
+                Kembali ke Bank Sampah
+              </button>
+              <button
+                type="submit"
+                className="h-11 px-7 rounded-lg bg-tertiary-fixed text-on-tertiary-fixed font-title-md text-sm font-bold hover:bg-tertiary-fixed-dim transition-all shadow-md cursor-pointer flex items-center gap-2"
+              >
+                <span className="material-symbols-outlined text-[18px]">check_circle</span>
+                <span>Konfirmasi & Simpan Setoran</span>
+              </button>
+            </div>
+
+          </form>
+        )}
+
+      </div>
+    </div>
+  );
+};
