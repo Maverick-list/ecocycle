@@ -112,7 +112,9 @@ export const ProfilePage: React.FC = () => {
             <Icon name={user ? 'verified' : 'info'} size={14} />
             <span>
               {user
-                ? 'Sesi Supabase Aktif • Row Level Security (RLS) Diaktifkan'
+                ? `Sesi Supabase Aktif (${user.email || 'Autentikasi'}) • RLS Diaktifkan`
+                : isConfigured
+                ? 'Supabase Cloud Terhubung • Masuk untuk sinkronisasi akun'
                 : 'Mode Peraga Sandbox: Data tersimpan di basis data lokal peramban'}
             </span>
           </div>
