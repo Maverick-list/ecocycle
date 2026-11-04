@@ -4,6 +4,7 @@ import { useWasteBank } from '../../context/WasteBankContext';
 import { StorageService } from '../../services/storageService';
 import { Icon } from '../../components/ui/Icon';
 import { PageTransition } from '../../components/ui/PageTransition';
+import { SocialLinks } from '../../components/ui/SocialLinks';
 
 export const ContactPage: React.FC = () => {
   const { showToast } = useWasteBank();
@@ -238,6 +239,19 @@ export const ContactPage: React.FC = () => {
                   <span className="text-xs font-bold text-tertiary-fixed block">
                     HIMA TI FKOM Universitas Kuningan (Techno Versary Vol. II 2026)
                   </span>
+                </div>
+              </div>
+
+              {/* Creator & Developer Profile Attribution */}
+              <div className="p-4 rounded-xl bg-surface-container-lowest border border-outline-variant/30 space-y-3">
+                <span className="font-label-caps text-secondary font-bold uppercase tracking-wider block">
+                  Profil Pengembang & Kreator
+                </span>
+                <p className="text-xs text-on-surface-variant leading-relaxed">
+                  Platform ECOCYCLE dikembangkan oleh <strong>Firza Ilmi</strong> untuk kompetisi Web Design Techno Versary Vol. II 2026.
+                </p>
+                <div className="pt-1">
+                  <SocialLinks variant="light" showLabels={true} />
                 </div>
               </div>
 

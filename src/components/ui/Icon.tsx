@@ -53,6 +53,8 @@ import {
   Phone,
   Clock,
   Send,
+  Play,
+  Pause,
   LucideProps
 } from 'lucide-react';
 
@@ -196,7 +198,9 @@ const iconMap: Record<string, React.FC<LucideProps>> = {
   auto_graph: TrendingUp,
   expand_less: ChevronUp,
   expand_more: ChevronDown,
-  cancel: X
+  cancel: X,
+  play: Play,
+  pause: Pause
 };
 
 export const Icon: React.FC<IconProps> = ({ name, size = 18, className = '', ...props }) => {

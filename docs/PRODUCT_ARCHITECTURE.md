@@ -145,3 +145,22 @@ Platform ECOCYCLE dibangun dengan prinsip etika data yang ketat:
 1. **Pembedaan Tegas Data Simulasi vs Riil:** Setiap nilai rupiah per kg pada modul bank sampah diberi catatan jelas sebagai estimasi harga pasar lokal Kuningan yang dapat disesuaikan.
 2. **Kepatuhan Regulasi Nasional:** Mengacu pada pedoman teknis pengelolaan bank sampah berbasis SNI 19-3983-1995 tanpa mengklaim sertifikasi audit ISO 14001:2015 fiktif.
 3. **Validitas Faktor Emisi:** Perhitungan emisi gas rumah kaca menggunakan metodologi EPA WARM v15 (Waste Reduction Model) yang diadaptasi untuk karakteristik timbunan sampah Indonesia.
+
+
+---
+
+## 7. ARSITEKTUR AUTENTIKASI CLOUD & KEAMANAN BASIS DATA (SUPABASE RLS)
+
+ECOCYCLE mengimplementasikan arsitektur keamanan tingkat industri menggunakan Supabase Auth dan PostgreSQL:
+1. **Pemisahan Data Pengguna (Data Isolation):** Setiap catatan setoran sampah dihubungkan langsung ke ID unik pengguna (`auth.uid()`).
+2. **PostgreSQL Row Level Security (RLS):** Kebijakan RLS mutlak diterapkan pada seluruh tabel (`profiles`, `waste_deposits`, `user_challenges`, `user_achievements`, `user_activities`, `user_preferences`). Pengguna dari akun A tidak dapat menanyakan (*query*) maupun mengubah (*mutate*) transaksi akun B.
+3. **Pengawal Rute Terproteksi (`ProtectedRoute.tsx`):** Rute privat `/profil` secara otomatis mengecek status autentikasi aktif. Apabila belum login, pengguna dialihkan ke `/masuk` dengan mekanisme retensi rute asal.
+4. **Skema Migrasi Terkelola:** Disediakan berkas DDL PostgreSQL terpadu di [`supabase/migrations/20261104_ecocycle_schema.sql`](file:///home/firza-ilmi/.gemini/antigravity/scratch/ecocycle/supabase/migrations/20261104_ecocycle_schema.sql) lengkap dengan trigger pembuatan profil otomatis saat pendaftaran pengguna baru.
+
+---
+
+## 8. PUSAT PEMBELAJARAN (TUTORIAL CENTER) & ATRIBUSI KREATOR
+
+1. **Modul Panduan & Video Tutorial (`/panduan`):** Menyediakan pemutar video berstandar profesional lengkap dengan kontrol kecepatan putar, teks takarir (*Closed Captions*), navigasi 8 bab materi, serta mode demonstrasi terpandu.
+2. **Tur Panduan Interaktif Layar (`InteractiveGuidedTour.tsx`):** Pengguna dapat menjalankan tur langkah-demi-langkah langsung di layar untuk membimbing proses pemilahan, pencatatan setoran, dan peninjauan analitik.
+3. **Atribusi Resmi Pengembang:** Profil resmi kreator Firza Ilmi terhubung secara elegan di Beranda, Footer, dan Kontak dengan tautan resmi ke GitHub (`https://github.com/Maverick-list`), Instagram (`https://instagram.com/firzailmi_`), dan LinkedIn (`https://www.linkedin.com/in/firza-ilmi-8912b936b/`).

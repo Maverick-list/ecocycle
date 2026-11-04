@@ -142,3 +142,35 @@ Berikut adalah panduan eksplorasi fitur langkah-demi-langkah pada seluruh 10 mod
    - **Tab Garis Waktu (Timeline):** Riwayat kronologis aktivitas pemilahan sampah.
    - **Tab Pengaturan:** Toggle notifikasi email, pengingat jadwal setor, dan privasi papan peringkat.
 4. **Edit Profil Interaktif:** Klik tombol **"Edit Profil"** untuk memperbarui nama, bio singkat, peran, target reduksi karbon, atau mengatur ulang profil demo.
+
+
+---
+
+## 11. PUSAT PEMBELAJARAN & VIDEO TUTORIAL — Rute: `/panduan`
+### Skenario Pengujian:
+1. **Pemutar Video & Kontrol Playback:** 
+   - Klik tombol Putar / Jeda untuk mengontrol pemutaran.
+   - Ganti kecepatan pemutaran ($1\times$, $1.5\times$, $2\times$) pada bilah kontrol bawah.
+   - Aktifkan atau nonaktifkan teks takarir (*Closed Captions / CC*).
+2. **Navigasi 8 Bab Terstruktur:**
+   - Klik salah satu bab dari daftar di sisi kanan (contoh: *Bab 2: Menggunakan Pemilahan Pintar* atau *Bab 8: Mengeksplorasi Analitik Lanjutan*).
+   - Perhatikan pembaruan kartu transkrip narasi dan target rute.
+3. **Menjalankan Tur Panduan Interaktif:**
+   - Klik tombol **"Mulai Tur Panduan Interaktif"** di sudut kanan atas.
+   - Modal interaktif akan terbuka dengan panduan langkah-demi-langkah, checklist tindakan, kiat praktis, serta tombol lompat langsung ke halaman terkait.
+
+---
+
+## 12. SISTEM AUTENTIKASI RIIL & KEAMANAN AKUN — Rute: `/masuk` & `/daftar`
+### Skenario Pengujian:
+1. **Pendaftaran Akun Baru (`/daftar`):**
+   - Masukkan Nama Lengkap, Email, Kata Sandi, dan Konfirmasi Kata Sandi.
+   - Centang persetujuan kaidah pemilahan bersih lalu klik **"Daftar Akun Baru"**.
+   - Sistem akan memvalidasi data dan mengarahkan ke halaman instruksi verifikasi surel (`/verifikasi-email`).
+2. **Masuk ke Akun (`/masuk`):**
+   - Masukkan surel dan kata sandi untuk masuk.
+   - Tersedia tombol **"Masuk dengan Google"** untuk alur Single Sign-On OAuth.
+   - Terdapat tautan ke halaman **Pemulihan Kata Sandi** (`/lupa-password`).
+3. **Keamanan Sesi Privat (`/profil`):**
+   - Saat pengguna berhasil masuk, dasbor profil menampilkan banner status otentikasi aktif dan status keamanan Row Level Security (RLS).
+   - Buka tab "Pengaturan" untuk melihat tombol keluar akun (**Sign Out**).

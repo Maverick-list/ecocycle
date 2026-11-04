@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useWasteBank } from '../../context/WasteBankContext';
+import { useAuth } from '../../context/AuthContext';
 import { UserService } from '../../services/userService';
 import { UserProfile } from '../../types';
 import { Icon } from '../../components/ui/Icon';
@@ -18,6 +19,8 @@ export const ProfilePage: React.FC = () => {
     openDetailTrx,
     showToast 
   } = useWasteBank();
+
+  const { user, isConfigured, signOut } = useAuth();
 
   const [profile, setProfile] = useState<UserProfile>(() => UserService.getProfile());
   const [activeTab, setActiveTab] = useState<'transaksi' | 'lencana' | 'linimasa' | 'pengaturan'>('transaksi');
@@ -93,15 +96,25 @@ export const ProfilePage: React.FC = () => {
     <PageTransition className="w-full bg-surface py-space-xl">
       <div className="max-w-[1380px] mx-auto px-margin-sm lg:px-margin space-y-space-xl">
         
-        {/* Top Breadcrumb & Demo Notice */}
+        {/* Top Breadcrumb & Sesi Keamanan */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-outline-variant/30 pb-space-sm">
           <div className="flex items-center gap-2 text-xs font-semibold text-secondary">
             <span className="w-2.5 h-2.5 rounded-full bg-secondary animate-pulse" />
-            <span className="uppercase tracking-wider">Dashboard Akun Pengguna Terintegrasi</span>
+            <span className="uppercase tracking-wider">
+              {user ? `Akun Terautentikasi: ${user.email}` : 'Pusat Kendali Pengguna Terpadu'}
+            </span>
           </div>
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-secondary-fixed/30 border border-secondary/20 text-[11px] text-secondary font-medium">
-            <Icon name="info" size={14} />
-            <span>Mode Peraga Interaktif: Profil tersimpan lokal di peramban</span>
+          <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-[11px] font-medium border ${
+            user
+              ? 'bg-secondary/10 border-secondary/30 text-secondary'
+              : 'bg-secondary-fixed/30 border-secondary/20 text-secondary'
+          }`}>
+            <Icon name={user ? 'verified' : 'info'} size={14} />
+            <span>
+              {user
+                ? 'Sesi Supabase Aktif • Row Level Security (RLS) Diaktifkan'
+                : 'Mode Peraga Sandbox: Data tersimpan di basis data lokal peramban'}
+            </span>
           </div>
         </div>
 
@@ -597,6 +610,50 @@ export const ProfilePage: React.FC = () => {
                     className="w-4 h-4 accent-secondary cursor-pointer"
                   />
                 </label>
+              </div>
+
+              {/* Keamanan & Sesi Akun */}
+              <div className="p-4 rounded-xl bg-surface-container-low border border-outline-variant/20 space-y-3">
+                <span className="font-bold text-primary block text-xs uppercase tracking-wider">
+                  Keamanan & Status Autentikasi
+                </span>
+                {user ? (
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-outline">Surel Terautentikasi:</span>
+                      <span className="font-mono font-bold text-primary">{user.email}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-outline">ID Pengguna (UID):</span>
+                      <span className="font-mono text-[10px] text-outline truncate max-w-[180px]">{user.id}</span>
+                    </div>
+                    <div className="pt-2 flex justify-end">
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          await signOut();
+                          showToast('Berhasil keluar dari akun.', 'info');
+                        }}
+                        className="px-4 py-2 rounded-lg bg-error-container text-on-error-container font-bold text-xs hover:bg-error hover:text-on-error transition-colors cursor-pointer"
+                      >
+                        Keluar dari Akun (Sign Out)
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className="text-xs text-on-surface-variant block">Anda sedang dalam mode peraga.</span>
+                      <span className="text-[11px] text-outline">Masuk dengan Supabase untuk mengaktifkan RLS privat.</span>
+                    </div>
+                    <a
+                      href="/masuk"
+                      className="px-4 py-2 rounded-lg bg-primary text-on-primary font-bold text-xs hover:bg-primary-container transition-colors"
+                    >
+                      Masuk ke Akun
+                    </a>
+                  </div>
+                )}
               </div>
 
               {/* Action Buttons */}

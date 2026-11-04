@@ -15,6 +15,7 @@
     font-family: 'Manrope', system-ui, -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -33,7 +34,7 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* Material symbols outlined helper */
+/* Material symbols outlined helper (preserved as backup) */
 .material-symbols-outlined {
   font-family: 'Material Symbols Outlined';
   font-weight: normal;
@@ -52,7 +53,7 @@
 
 /* Custom smooth transitions */
 .transition-smooth {
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Skip-to-content accessibility link */
@@ -74,6 +75,118 @@
   top: 0;
 }
 
+/* Animated gradient text (White -> Fresh Lime -> Light Green -> Deep Forest Green -> White) */
+.animated-eco-gradient {
+  background: linear-gradient(135deg, #ffffff 0%, #cbf075 25%, #4ade80 50%, #123b2a 75%, #ffffff 100%);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientFlow 8s ease-in-out infinite;
+}
+
+.animated-eco-gradient-light {
+  background: linear-gradient(135deg, #002517 0%, #006c48 30%, #4d7c0f 65%, #002517 100%);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientFlow 10s ease-in-out infinite;
+}
+
+/* Apple-Inspired Glassmorphism Surfaces */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 10px 30px -5px rgba(0, 37, 23, 0.05), 0 2px 6px 0 rgba(0, 37, 23, 0.03);
+}
+
+.glass-panel-elevated {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 20px 40px -15px rgba(0, 37, 23, 0.08), 0 0 1px 1px rgba(255, 255, 255, 0.9) inset;
+}
+
+.glass-card-dark {
+  background: rgba(18, 59, 42, 0.75);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(203, 240, 117, 0.18);
+  box-shadow: 0 20px 40px -10px rgba(0, 15, 8, 0.35);
+}
+
+.glass-pill {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.glass-pill-dark {
+  background: rgba(0, 37, 23, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(203, 240, 117, 0.2);
+}
+
+/* Keyframes */
+@keyframes gradientFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes leafFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(4deg);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes spinSlow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spinSlow 20s linear infinite;
+}
+
+.animate-float-leaf {
+  animation: leafFloat 5s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 4s ease-in-out infinite;
+}
+
 /* Respect user's reduced motion preferences */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -83,5 +196,13 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  .animated-eco-gradient,
+  .animated-eco-gradient-light {
+    animation: none !important;
+    background: #002517;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 }
