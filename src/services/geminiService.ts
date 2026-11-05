@@ -95,7 +95,37 @@ export class GeminiService {
 
     const apiKey = this.getApiKey();
 
-    // 2. If Gemini API key is configured, enhance reasoning via Gemini 2.5 Flash
+    // 2. First attempt: call secure Serverless Proxy (/api/chat) on Vercel to protect API keys
+    try {
+      const toolContextSummary = agentResult.agentCalls.length > 0
+        ? `\n\n[Hasil Eksekusi Tool EcoAgent]:\n${JSON.stringify(agentResult.agentCalls.map(c => ({ tool: c.tool, out: c.output })))}`
+        : '';
+
+      const proxyRes = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt: `${prompt}${toolContextSummary}`,
+          history,
+          customApiKey: apiKey,
+        }),
+      });
+
+      if (proxyRes.ok) {
+        const proxyData = await proxyRes.json();
+        if (proxyData?.text && proxyData.text.trim().length > 0) {
+          return {
+            text: proxyData.text.trim(),
+            agentCalls: agentResult.agentCalls,
+            actionCard: agentResult.actionCard,
+          };
+        }
+      }
+    } catch {
+      // Non-blocking: will fallback to direct client call if key exists, or deterministic EcoAgent
+    }
+
+    // 3. Fallback: If client key is explicitly configured and server proxy was unreachable
     if (apiKey) {
       const modelsToTry = [PRIMARY_MODEL, ...FALLBACK_MODELS];
       for (const model of modelsToTry) {

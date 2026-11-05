@@ -14,6 +14,10 @@ export const LoadingExperience: React.FC<LoadingExperienceProps> = ({
   const [isVisible, setIsVisible] = useState<boolean>(() => {
     if (forceShow) return true;
     if (typeof window === 'undefined') return false;
+    // Only run full-screen living intro on root home page, never blank subpages
+    if (window.location.pathname !== '/' && window.location.pathname !== '') {
+      return false;
+    }
     const hasSeenIntro = sessionStorage.getItem('ecocycle_living_intro_v4');
     return !hasSeenIntro;
   });
@@ -35,25 +39,25 @@ export const LoadingExperience: React.FC<LoadingExperienceProps> = ({
     }
 
     // Sequence stages
-    const timerStage2 = setTimeout(() => setStage(2), 200);
-    const timerStage3 = setTimeout(() => setStage(3), 600);
-    const timerStage4 = setTimeout(() => setStage(4), 1000);
+    const timerStage2 = setTimeout(() => setStage(2), 150);
+    const timerStage3 = setTimeout(() => setStage(3), 400);
+    const timerStage4 = setTimeout(() => setStage(4), 700);
 
     const interval = setInterval(() => {
       setProgress((prev) => {
-        const next = prev + Math.floor(Math.random() * 6) + 4;
+        const next = prev + Math.floor(Math.random() * 8) + 8;
         if (next >= 100) {
           clearInterval(interval);
           setTimeout(() => {
             sessionStorage.setItem('ecocycle_living_intro_v4', 'true');
             setIsVisible(false);
             if (onComplete) onComplete();
-          }, 500);
+          }, 250);
           return 100;
         }
         return next;
       });
-    }, 45);
+    }, 30);
 
     return () => {
       clearInterval(interval);

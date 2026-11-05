@@ -184,7 +184,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       return () => subscription.unsubscribe();
     } else {
-      setLoading(false);
+      const timer = setTimeout(() => setLoading(false), 0);
+      return () => clearTimeout(timer);
     }
   }, [activeProvider]);
 

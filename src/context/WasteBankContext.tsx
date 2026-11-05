@@ -77,7 +77,10 @@ export const WasteBankProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         });
       }
     } else {
-      setTransactions(WasteBankService.getTransactions());
+      const timer = setTimeout(() => {
+        setTransactions(WasteBankService.getTransactions());
+      }, 0);
+      return () => clearTimeout(timer);
     }
   }, [user, isConfigured]);
 

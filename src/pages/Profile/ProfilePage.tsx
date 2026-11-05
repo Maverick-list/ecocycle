@@ -171,44 +171,45 @@ export const ProfilePage: React.FC = () => {
       />
       <div className="max-w-[1240px] mx-auto px-6 sm:px-8 lg:px-12 space-y-12">
         
-        {/* Top Breadcrumb & Status Bar with Soft Gradient Divider */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4">
-          <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-secondary">
+        {/* Top Breadcrumb & Status Bar with Apple visionOS Aesthetics */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
+          <div className="flex items-center gap-3">
             <span className="w-2.5 h-2.5 rounded-full bg-secondary animate-pulse" />
-            <span className="uppercase tracking-wider">
-              {user ? `Akun Terautentikasi: ${user.displayName || user.email || 'Warga Sirkular'}` : 'Pusat Kendali Pengguna Terpadu'}
-            </span>
+            <div>
+              <h2 className="font-display font-extrabold text-sm sm:text-base text-primary dark:text-white tracking-tight">
+                Pusat Kendali Pengguna
+              </h2>
+              <p className="text-[11px] text-on-surface-variant dark:text-emerald-300/70 font-medium">
+                {user ? `Terautentikasi sebagai ${user.displayName || user.email || user.phoneNumber}` : 'Mode Peraga Interaktif • Sesi Warga'}
+              </p>
+            </div>
+          </div>
 
-            {/* Authentication Provider Badges */}
+          <div className="flex flex-wrap items-center gap-2.5">
             {user?.authMethod === 'google' && (
-              <span className="px-2.5 py-0.5 rounded-full bg-blue-500/15 text-blue-500 border border-blue-500/30 text-[10px] font-bold flex items-center gap-1">
+              <span className="px-3 py-1 rounded-full bg-blue-500/15 text-blue-500 border border-blue-500/30 text-[11px] font-bold flex items-center gap-1.5 shadow-sm">
                 <span>🌐</span>
                 <span>Google Terverifikasi</span>
               </span>
             )}
             {user?.authMethod === 'phone' && (
-              <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-500 border border-emerald-500/30 text-[10px] font-bold flex items-center gap-1">
+              <span className="px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-500 border border-emerald-500/30 text-[11px] font-bold flex items-center gap-1.5 shadow-sm">
                 <span>📱</span>
-                <span>No. HP Terverifikasi ({user.phoneNumber})</span>
+                <span>SMS OTP Terverifikasi</span>
               </span>
             )}
             {user?.authMethod === 'email' && (
-              <span className="px-2.5 py-0.5 rounded-full bg-teal-500/15 text-teal-500 border border-teal-500/30 text-[10px] font-bold flex items-center gap-1">
+              <span className="px-3 py-1 rounded-full bg-teal-500/15 text-teal-500 border border-teal-500/30 text-[11px] font-bold flex items-center gap-1.5 shadow-sm">
                 <span>✉️</span>
                 <span>Email Terverifikasi</span>
               </span>
             )}
-          </div>
-
-          <div className="flex items-center gap-2">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-pill text-xs font-medium text-secondary">
-              <Icon name={user ? 'verified' : 'info'} size={14} />
-              <span>
-                {user
-                  ? `Sesi Aktif: ${user.displayName || user.email || user.phoneNumber}`
-                  : 'Mode Peraga Sandbox • Sesi Terbuka'}
+            {!user && (
+              <span className="px-3 py-1 rounded-full bg-secondary/15 text-secondary border border-secondary/30 text-[11px] font-bold flex items-center gap-1.5 shadow-sm">
+                <Icon name="verified" size={13} />
+                <span>Sandbox Mode</span>
               </span>
-            </div>
+            )}
             {user && (
               <button
                 type="button"
@@ -216,9 +217,10 @@ export const ProfilePage: React.FC = () => {
                   await signOut();
                   showToast('Anda telah keluar dari sesi akun.', 'info');
                 }}
-                className="h-8 px-3 rounded-full glass-pill text-[11px] font-bold text-error hover:bg-error/15 transition-colors cursor-pointer"
+                className="h-8 px-4 rounded-full bg-rose-500/15 text-rose-500 hover:bg-rose-500/25 border border-rose-500/30 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 active:scale-95"
               >
-                Keluar
+                <Icon name="logout" size={13} />
+                <span>Keluar</span>
               </button>
             )}
           </div>

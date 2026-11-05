@@ -150,9 +150,9 @@ export const HomePage: React.FC = () => {
           {/* Hero Headline & Supporting Description */}
           <ScrollReveal direction="up" delay={0.2}>
             <div className="space-y-6 max-w-5xl mx-auto">
-              <h1 className="font-display font-extrabold text-[clamp(2.75rem,7vw,5.75rem)] leading-[1.05] tracking-[-0.035em] text-white">
-                Turn Waste Into <br />
+              <h1 className="font-display font-extrabold text-[clamp(2.75rem,7vw,5.75rem)] leading-[1.05] tracking-[-0.035em]">
                 <span className="animate-hero-title-flow drop-shadow-[0_4px_30px_rgba(6,43,29,0.65)]">
+                  Turn Waste Into <br />
                   Something Worth.
                 </span>
               </h1>

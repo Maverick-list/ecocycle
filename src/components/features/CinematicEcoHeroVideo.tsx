@@ -161,7 +161,7 @@ export const CinematicEcoHeroVideo: React.FC<CinematicEcoHeroVideoProps> = ({
 
   return (
     <div className={`absolute inset-0 overflow-hidden pointer-events-none select-none z-0 ${className}`}>
-      {/* 1. Underlying Moving Videotron (User Provided Video at 30% Opacity) */}
+      {/* 1. Underlying Moving Videotron (User Provided Video at 15% Ambient Opacity) */}
       <video
         ref={videoRef}
         autoPlay
@@ -172,7 +172,7 @@ export const CinematicEcoHeroVideo: React.FC<CinematicEcoHeroVideoProps> = ({
         poster={posterSrc}
         aria-hidden="true"
         tabIndex={-1}
-        className="w-full h-full object-cover opacity-30 transition-opacity duration-700"
+        className="w-full h-full object-cover opacity-15 filter blur-[0.5px] transition-opacity duration-700"
       >
         <source src={videoSrc} type="video/mp4" />
       </video>

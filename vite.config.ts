@@ -8,6 +8,9 @@ export default defineConfig({
     port: 3000,
     host: true,
   },
+  optimizeDeps: {
+    include: ['react-is', 'recharts'],
+  },
   build: {
     rollupOptions: {
       output: {
@@ -21,6 +24,12 @@ export default defineConfig({
             }
             if (id.includes('framer-motion') || id.includes('lucide-react')) {
               return 'vendor-motion';
+            }
+            if (id.includes('firebase')) {
+              return 'vendor-firebase';
+            }
+            if (id.includes('@supabase')) {
+              return 'vendor-supabase';
             }
             return 'vendor-core';
           }

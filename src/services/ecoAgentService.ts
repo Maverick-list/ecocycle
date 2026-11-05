@@ -218,7 +218,7 @@ export class EcoAgentService {
   public static async executeAgenticWorkflow(prompt: string): Promise<AgentResult> {
     const q = prompt.toLowerCase();
     const traces: AgentToolTrace[] = [];
-    let actionCard: AgentActionCard | undefined = undefined;
+    let actionCard: AgentActionCard | undefined;
 
     // 1. Detect weight and material entity for calculation / deposit draft
     const weightMatch = prompt.match(/(\d+(?:[.,]\d+)?)\s*(?:kg|kilo|kilogram)/i);

@@ -34,7 +34,7 @@ export const EcoChatbot: React.FC = () => {
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [showSettings, setShowSettings] = useState<boolean>(false);
   const [apiKeyInput, setApiKeyInput] = useState<string>('');
-  const [hasCustomKey, setHasCustomKey] = useState<boolean>(false);
+  const [hasCustomKey, setHasCustomKey] = useState<boolean>(() => GeminiService.hasApiKey());
   const [confirmedDrafts, setConfirmedDrafts] = useState<Set<string>>(new Set());
   const [expandedTraces, setExpandedTraces] = useState<Record<string, boolean>>({});
 
@@ -45,8 +45,6 @@ export const EcoChatbot: React.FC = () => {
     const unsubscribe = SpeechService.addListener((speaking) => {
       setIsSpeaking(speaking);
     });
-
-    setHasCustomKey(GeminiService.hasApiKey());
 
     return () => {
       unsubscribe();
@@ -370,10 +368,10 @@ export const EcoChatbot: React.FC = () => {
                     initial={{ opacity: 0, y: 10, scale: 0.98 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     transition={{ duration: 0.2 }}
-                    className={`flex items-end gap-2.5 ${isUser ? 'justify-end' : 'justify-start'}`}
+                    className={`flex items-start gap-2.5 ${isUser ? 'justify-end' : 'justify-start'}`}
                   >
                     {!isUser && (
-                      <div className="w-8 h-8 rounded-full bg-emerald-500/15 dark:bg-[#062c1d] border border-emerald-500/30 flex items-center justify-center shrink-0 shadow-sm p-1">
+                      <div className="w-8 h-8 rounded-full bg-emerald-500/15 dark:bg-[#062c1d] border border-emerald-500/30 flex items-center justify-center shrink-0 shadow-sm p-1 overflow-hidden select-none mt-1">
                         <EcocycleLogo size="sm" variant="auto" iconOnly={true} showTagline={false} />
                       </div>
                     )}

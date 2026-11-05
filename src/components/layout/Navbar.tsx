@@ -146,15 +146,15 @@ export const Navbar: React.FC = () => {
         ref={navRef}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isHeroMode
-            ? 'bg-[#C8F0A5]/85 backdrop-blur-xl text-[#062B1D] shadow-sm'
+            ? 'bg-gradient-to-b from-[#C8F0A5]/90 via-[#C8F0A5]/75 to-[#C8F0A5]/40 backdrop-blur-xl text-[#062B1D]'
             : 'glass-nav-bar'
         }`}
       >
-        {/* Soft Organic Gradient Divider (no hard straight border line) */}
+        {/* Soft Organic Gradient Divider (seamless gradient transition) */}
         <div
           className={`absolute bottom-0 left-0 right-0 h-[1.5px] pointer-events-none ${
             isHeroMode
-              ? 'bg-gradient-to-r from-transparent via-[#0B482D]/25 to-transparent'
+              ? 'bg-gradient-to-r from-transparent via-[#0B482D]/15 to-transparent'
               : 'bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent'
           }`}
         />

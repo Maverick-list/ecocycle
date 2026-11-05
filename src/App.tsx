@@ -30,6 +30,7 @@ import { SignUpPage } from './pages/Auth/SignUpPage';
 import { ForgotPasswordPage } from './pages/Auth/ForgotPasswordPage';
 import { EmailVerificationPage } from './pages/Auth/EmailVerificationPage';
 import { AuthCallbackPage } from './pages/Auth/AuthCallbackPage';
+import { NotFoundPage } from './pages/NotFound/NotFoundPage';
 
 // Scroll to top helper on route navigation
 const ScrollToTop: React.FC = () => {
@@ -120,8 +121,8 @@ export const App: React.FC = () => {
                 <Route path="/akademi-dan-tantangan" element={<Navigate to="/akademi" replace />} />
                 <Route path="/tentang-dan-kontak" element={<Navigate to="/kontak" replace />} />
 
-                {/* Wildcard Fallback */}
-                <Route path="*" element={<Navigate to="/" replace />} />
+                {/* Wildcard Fallback — Dedicated 404 Experience */}
+                <Route path="*" element={<NotFoundPage />} />
               </Routes>
               </MainContainer>
 
