@@ -38,6 +38,10 @@ Berikut adalah dokumentasi visual antarmuka platform ECOCYCLE yang telah menerap
 | :---: | :---: |
 | ![Pencairan Saldo Rupiah](docs/screenshots/11-modal-tarik-saldo.png) | ![Sertifikat Resmi Karbon](docs/screenshots/12-modal-sertifikat-karbon.png) |
 
+| 11. Transisi Halaman Daun Sinematik (Luminous Organic Leaf Swirl) |
+| :---: |
+| ![Transisi Daun Organik](docs/screenshots/13-transisi-daun-heroic.png) |
+
 ---
 
 ## 🎯 Case & Solusi (Studi Kasus Lingkungan)

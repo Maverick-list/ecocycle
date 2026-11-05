@@ -181,7 +181,7 @@ export const EcoChatbot: React.FC = () => {
             <Icon name="close" size={26} className="text-white" />
           ) : (
             <div className="relative flex items-center justify-center pointer-events-none">
-              <EcocycleLogo size="sm" variant="dark" showTagline={false} />
+              <EcocycleLogo size="sm" variant="dark" iconOnly={true} showTagline={false} />
               {/* Voice active badge */}
               {isSpeaking && (
                 <span className="absolute -top-1 -right-1 flex h-3 w-3">
@@ -202,29 +202,29 @@ export const EcoChatbot: React.FC = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 25, scale: 0.95 }}
             transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed bottom-24 right-4 sm:right-6 z-50 w-[calc(100vw-2rem)] sm:w-[450px] h-[620px] max-h-[82vh] flex flex-col rounded-3xl bg-white/80 dark:bg-[#031d13]/90 backdrop-blur-3xl border border-white/60 dark:border-emerald-500/35 shadow-[0_30px_70px_-15px_rgba(0,30,15,0.5)] overflow-hidden select-none"
+            className="fixed bottom-24 right-4 sm:right-6 z-50 w-[calc(100vw-2rem)] sm:w-[450px] h-[620px] max-h-[82vh] flex flex-col rounded-3xl bg-white/85 dark:bg-[#031d13]/95 backdrop-blur-3xl border border-white/60 dark:border-emerald-500/35 shadow-[0_30px_70px_-15px_rgba(0,30,15,0.5)] overflow-hidden select-none"
           >
             {/* Header: Logo, Status, Audio Wave & Actions */}
-            <div className="relative px-5 py-4 border-b border-black/5 dark:border-emerald-500/20 flex items-center justify-between bg-white/40 dark:bg-black/20 backdrop-blur-md">
-              <div className="flex items-center gap-3">
-                <div className="p-1 rounded-xl bg-white/60 dark:bg-[#062c1d] border border-white/40 dark:border-emerald-500/30 shadow-sm">
-                  <EcocycleLogo size="sm" variant="auto" showTagline={false} />
+            <div className="relative px-4 py-3.5 border-b border-black/5 dark:border-emerald-500/20 flex items-center justify-between bg-white/60 dark:bg-black/30 backdrop-blur-md shrink-0">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <div className="w-9 h-9 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center shrink-0 shadow-sm p-1">
+                  <EcocycleLogo size="sm" variant="auto" iconOnly={true} showTagline={false} />
                 </div>
-                <div>
+                <div className="min-w-0">
                   <div className="flex items-center gap-1.5">
-                    <span className="font-display font-black text-sm text-primary dark:text-white">
+                    <span className="font-display font-black text-sm text-primary dark:text-white truncate">
                       ECOCYCLE AI
                     </span>
-                    <span className="text-[10px] px-1.5 py-0.2 rounded-md bg-secondary/15 text-secondary font-extrabold uppercase">
+                    <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-extrabold uppercase shrink-0">
                       Gemini
                     </span>
                   </div>
-                  <div className="flex items-center gap-1.5 text-[11px] text-on-surface-variant dark:text-emerald-200/70">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                    <span>{isSpeaking ? 'Sedang Berbicara...' : 'Suara Google Aktif'}</span>
+                  <div className="flex items-center gap-1.5 text-[11px] text-on-surface-variant dark:text-emerald-200/70 truncate">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+                    <span className="truncate">{isSpeaking ? 'Sedang Berbicara...' : 'Suara Google Aktif'}</span>
                     {/* Real-time audio wave equalizer */}
                     {isSpeaking && (
-                      <span className="inline-flex items-center gap-0.5 ml-1">
+                      <span className="inline-flex items-center gap-0.5 ml-1 shrink-0">
                         <span className="w-0.5 h-3 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
                         <span className="w-0.5 h-4 bg-emerald-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
                         <span className="w-0.5 h-2 bg-emerald-300 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
@@ -235,7 +235,7 @@ export const EcoChatbot: React.FC = () => {
               </div>
 
               {/* Header Action Buttons */}
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-1 shrink-0">
                 {/* Voice Mute / Unmute */}
                 <button
                   type="button"
@@ -244,7 +244,7 @@ export const EcoChatbot: React.FC = () => {
                   className={`w-8 h-8 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
                     isMuted
                       ? 'bg-black/10 dark:bg-white/10 text-outline'
-                      : 'bg-secondary/15 text-secondary hover:bg-secondary/25'
+                      : 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/25'
                   }`}
                 >
                   <Icon name={isMuted ? 'volume_off' : 'volume_up'} size={16} />
@@ -257,7 +257,7 @@ export const EcoChatbot: React.FC = () => {
                   title="Pengaturan Kunci Gemini"
                   className={`w-8 h-8 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
                     showSettings || hasCustomKey
-                      ? 'bg-secondary text-white'
+                      ? 'bg-emerald-500 text-white'
                       : 'bg-black/5 dark:bg-white/10 text-on-surface-variant hover:text-on-surface'
                   }`}
                 >
@@ -269,7 +269,7 @@ export const EcoChatbot: React.FC = () => {
                   type="button"
                   onClick={handleClearChat}
                   title="Bersihkan Percakapan"
-                  className="w-8 h-8 rounded-xl flex items-center justify-center bg-black/5 dark:bg-white/10 text-on-surface-variant hover:text-error transition-all cursor-pointer"
+                  className="w-8 h-8 rounded-xl flex items-center justify-center bg-black/5 dark:bg-white/10 text-on-surface-variant hover:text-rose-500 transition-all cursor-pointer"
                 >
                   <Icon name="refresh" size={16} />
                 </button>
@@ -334,10 +334,10 @@ export const EcoChatbot: React.FC = () => {
                     transition={{ duration: 0.2 }}
                     className={`flex items-end gap-2.5 ${isUser ? 'justify-end' : 'justify-start'}`}
                   >
-                    {/* Bot Avatar */}
+                    {/* Bot Avatar: Icon only, no overflowing text wordmark! */}
                     {!isUser && (
-                      <div className="w-7 h-7 rounded-full bg-white dark:bg-[#062c1d] border border-white/50 dark:border-emerald-500/30 flex items-center justify-center shrink-0 shadow-sm p-0.5">
-                        <EcocycleLogo size="sm" variant="auto" showTagline={false} />
+                      <div className="w-8 h-8 rounded-full bg-emerald-500/15 dark:bg-[#062c1d] border border-emerald-500/30 flex items-center justify-center shrink-0 shadow-sm p-1">
+                        <EcocycleLogo size="sm" variant="auto" iconOnly={true} showTagline={false} />
                       </div>
                     )}
 
@@ -347,29 +347,32 @@ export const EcoChatbot: React.FC = () => {
                         className={`rounded-2xl px-4 py-3 leading-relaxed text-xs sm:text-sm ${
                           isUser
                             ? 'bg-gradient-to-r from-emerald-500 to-[#059669] text-white rounded-tr-xs shadow-md font-medium'
-                            : 'bg-white/85 dark:bg-[#072a1c]/85 backdrop-blur-xl border border-white/60 dark:border-emerald-500/20 text-on-surface dark:text-emerald-50 rounded-tl-xs shadow-sm font-normal'
+                            : 'bg-white/90 dark:bg-[#072a1c]/90 backdrop-blur-xl border border-white/60 dark:border-emerald-500/25 text-slate-800 dark:text-emerald-50 rounded-tl-xs shadow-sm font-normal'
                         }`}
                       >
                         <p className="whitespace-pre-line">{msg.text}</p>
                       </div>
 
-                      {/* Bubble Footer: Timestamp & Re-play Voice Button */}
+                      {/* Bubble Footer: Timestamp & Re-play Voice Button with clean layout */}
                       <div
-                        className={`flex items-center gap-2 text-[10px] text-outline px-1 ${
+                        className={`flex items-center gap-2 text-[11px] text-slate-400 dark:text-emerald-400/70 px-1 pt-0.5 ${
                           isUser ? 'justify-end' : 'justify-start'
                         }`}
                       >
                         <span>{msg.timestamp}</span>
                         {!isUser && (
-                          <button
-                            type="button"
-                            onClick={() => handleReplaySpeech(msg.text)}
-                            title="Dengarkan Suara"
-                            className="hover:text-secondary flex items-center gap-0.5 cursor-pointer transition-colors"
-                          >
-                            <Icon name="volume_up" size={12} />
-                            <span>Dengarkan</span>
-                          </button>
+                          <>
+                            <span className="opacity-40">•</span>
+                            <button
+                              type="button"
+                              onClick={() => handleReplaySpeech(msg.text)}
+                              title="Dengarkan Suara"
+                              className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 flex items-center gap-1 cursor-pointer transition-colors font-medium"
+                            >
+                              <Icon name="volume_up" size={13} />
+                              <span>Dengarkan</span>
+                            </button>
+                          </>
                         )}
                       </div>
                     </div>
@@ -380,8 +383,8 @@ export const EcoChatbot: React.FC = () => {
               {/* Bot Loading Dots */}
               {isLoading && (
                 <div className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-full bg-white dark:bg-[#062c1d] border border-white/50 dark:border-emerald-500/30 flex items-center justify-center shrink-0 shadow-sm p-0.5">
-                    <EcocycleLogo size="sm" variant="auto" showTagline={false} />
+                  <div className="w-8 h-8 rounded-full bg-emerald-500/15 dark:bg-[#062c1d] border border-emerald-500/30 flex items-center justify-center shrink-0 shadow-sm p-1">
+                    <EcocycleLogo size="sm" variant="auto" iconOnly={true} showTagline={false} />
                   </div>
                   <div className="px-4 py-3 rounded-2xl bg-white/80 dark:bg-[#072a1c]/80 backdrop-blur-md border border-white/40 dark:border-emerald-500/20 rounded-tl-xs shadow-sm flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '0ms' }} />

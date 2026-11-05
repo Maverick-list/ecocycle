@@ -4,6 +4,7 @@ interface EcocycleLogoProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';
   variant?: 'light' | 'dark' | 'auto';
   showTagline?: boolean;
+  iconOnly?: boolean;
   className?: string;
 }
 
@@ -11,6 +12,7 @@ export const EcocycleLogo: React.FC<EcocycleLogoProps> = ({
   size = 'md',
   variant = 'auto',
   showTagline = false,
+  iconOnly = false,
   className = '',
 }) => {
   const iconDimensions = {
@@ -100,17 +102,19 @@ export const EcocycleLogo: React.FC<EcocycleLogoProps> = ({
         </svg>
       </div>
 
-      {/* Wordmark */}
-      <div className="flex flex-col leading-none">
-        <span className={`font-display font-extrabold ${textSizeClass} ${textColor} tracking-tight`}>
-          ECO<span className="text-secondary font-black">CYCLE</span>
-        </span>
-        {showTagline && (
-          <span className={`font-sans font-bold uppercase tracking-wider ${taglineSizeClass} ${tagColor} mt-0.5`}>
-            Turning Waste Into Worth
+      {/* Wordmark (hidden if iconOnly is true) */}
+      {!iconOnly && (
+        <div className="flex flex-col leading-none">
+          <span className={`font-display font-extrabold ${textSizeClass} ${textColor} tracking-tight`}>
+            ECO<span className="text-secondary font-black">CYCLE</span>
           </span>
-        )}
-      </div>
+          {showTagline && (
+            <span className={`font-sans font-bold uppercase tracking-wider ${taglineSizeClass} ${tagColor} mt-0.5`}>
+              Turning Waste Into Worth
+            </span>
+          )}
+        </div>
+      )}
     </div>
   );
 };
