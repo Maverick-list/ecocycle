@@ -198,8 +198,8 @@ export const SignInPage: React.FC = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="p-4.5 rounded-2xl glass-panel border border-secondary/20 hover:border-secondary/40 transition-all space-y-1.5 group">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-xl bg-secondary/20 text-secondary flex items-center justify-center font-bold text-sm">
-                    🎁
+                  <div className="w-8 h-8 rounded-xl bg-secondary/15 text-secondary flex items-center justify-center font-bold text-sm">
+                    <Icon name="card_giftcard" size={17} />
                   </div>
                   <h3 className="font-display font-extrabold text-sm sm:text-base text-primary dark:text-white">
                     Bonus +50 EcoPoints
@@ -212,8 +212,8 @@ export const SignInPage: React.FC = () => {
 
               <div className="p-4.5 rounded-2xl glass-panel border border-secondary/20 hover:border-secondary/40 transition-all space-y-1.5 group">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-xl bg-secondary/20 text-secondary flex items-center justify-center font-bold text-sm">
-                    ⚡
+                  <div className="w-8 h-8 rounded-xl bg-secondary/15 text-secondary flex items-center justify-center font-bold text-sm">
+                    <Icon name="bolt" size={17} />
                   </div>
                   <h3 className="font-display font-extrabold text-sm sm:text-base text-primary dark:text-white">
                     Pencairan 0% Biaya
@@ -226,8 +226,8 @@ export const SignInPage: React.FC = () => {
 
               <div className="p-4.5 rounded-2xl glass-panel border border-secondary/20 hover:border-secondary/40 transition-all space-y-1.5 group">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-xl bg-secondary/20 text-secondary flex items-center justify-center font-bold text-sm">
-                    📜
+                  <div className="w-8 h-8 rounded-xl bg-secondary/15 text-secondary flex items-center justify-center font-bold text-sm">
+                    <Icon name="verified" size={17} />
                   </div>
                   <h3 className="font-display font-extrabold text-sm sm:text-base text-primary dark:text-white">
                     Audit Karbon Resmi
@@ -240,8 +240,8 @@ export const SignInPage: React.FC = () => {
 
               <div className="p-4.5 rounded-2xl glass-panel border border-secondary/20 hover:border-secondary/40 transition-all space-y-1.5 group">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-xl bg-secondary/20 text-secondary flex items-center justify-center font-bold text-sm">
-                    🛡️
+                  <div className="w-8 h-8 rounded-xl bg-secondary/15 text-secondary flex items-center justify-center font-bold text-sm">
+                    <Icon name="security" size={17} />
                   </div>
                   <h3 className="font-display font-extrabold text-sm sm:text-base text-primary dark:text-white">
                     Keamanan Row-Level (RLS)
@@ -268,9 +268,9 @@ export const SignInPage: React.FC = () => {
                 </p>
               </div>
 
-              <div className="flex items-center gap-1.5 text-xs text-secondary font-bold shrink-0">
-                <span>⭐⭐⭐⭐⭐</span>
-                <span className="text-on-surface-variant dark:text-emerald-300/80 text-[11px]">(4.9/5 dari warga)</span>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary/15 text-secondary text-xs font-bold shrink-0">
+                <Icon name="check_circle" size={14} />
+                <span>Terverifikasi SNI & EPA WARM</span>
               </div>
             </div>
 
@@ -590,7 +590,8 @@ export const SignInPage: React.FC = () => {
                           }}
                           className="px-3 py-1 rounded-full bg-secondary text-white font-extrabold text-[10px] hover:bg-secondary/90 transition-all shadow-sm active:scale-95 cursor-pointer inline-flex items-center gap-1.5"
                         >
-                          <span>⚡ Isi Otomatis & Masuk ({simulatedOtpNotice})</span>
+                          <Icon name="bolt" size={12} />
+                          <span>Isi Otomatis & Masuk ({simulatedOtpNotice})</span>
                         </button>
                       </div>
                     )}

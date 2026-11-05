@@ -96,7 +96,10 @@
     padding: 0;
     background-color: var(--bg-surface);
     color: var(--text-primary);
-    font-family: 'Manrope', system-ui, -apple-system, sans-serif;
+    font-family: 'Outfit', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    letter-spacing: -0.015em;
+    font-feature-settings: 'cv02' 1, 'cv03' 1, 'cv04' 1, 'cv11' 1;
+    text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
@@ -139,9 +142,10 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    font-family: 'Outfit', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
     color: var(--text-primary);
-    letter-spacing: -0.02em;
+    letter-spacing: -0.028em;
+    font-weight: 700;
   }
 
   :focus-visible {

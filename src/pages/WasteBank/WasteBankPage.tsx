@@ -339,7 +339,7 @@ export const WasteBankPage: React.FC = () => {
               <Icon name="receipt" size={44} className="text-outline mx-auto" />
               <h4 className="font-title-md font-bold text-primary">Belum Ada Transaksi Ditemukan</h4>
               <p className="font-body-sm text-xs text-on-surface-variant max-w-sm mx-auto">
-                Mulai catat setoran sampah pertama Anda atau muat data simulasi kompetisi.
+                Mulai catat setoran sampah pertama Anda atau muat contoh data demonstrasi.
               </p>
               <div className="pt-2 flex justify-center gap-3">
                 <button

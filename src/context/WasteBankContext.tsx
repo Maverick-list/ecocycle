@@ -173,7 +173,7 @@ export const WasteBankProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const seedSampleData = () => {
     const seeded = WasteBankService.seedDemoData();
     setTransactions(seeded);
-    showToast('Data simulasi kompetisi berhasil dimuat!', 'success');
+    showToast('Data demonstrasi interaktif berhasil dimuat!', 'success');
   };
 
   const signEcoPledge = () => {

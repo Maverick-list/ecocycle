@@ -1,4 +1,4 @@
-// ECOCYCLE Speech Service — Google Indonesian Voice AI Text-To-Speech (TTS)
+// ECOCYCLE Audio Service — Natural Indonesian Speech Synthesis Engine
 
 export type SpeechStateListener = (isSpeaking: boolean) => void;
 

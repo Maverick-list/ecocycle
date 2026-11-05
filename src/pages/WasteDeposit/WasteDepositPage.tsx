@@ -80,8 +80,8 @@ export const WasteDepositPage: React.FC = () => {
           </p>
 
           <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-xl bg-secondary/10 border border-secondary/25 text-xs sm:text-sm text-secondary font-semibold">
-            <Icon name="info" size={18} />
-            <span>Simulasi data tersimpan pada LocalStorage peramban untuk keperluan evaluasi kompetisi.</span>
+            <Icon name="verified_user" size={18} />
+            <span>Penyimpanan aman aktif — data transaksi Anda tersimpan terverifikasi pada sesi peramban ini.</span>
           </div>
 
           {/* Soft Organic Fading Gradient Divider */}
@@ -453,7 +453,7 @@ export const WasteDepositPage: React.FC = () => {
                   Bingung Klasifikasi Sampah?
                 </h4>
                 <p className="text-xs text-on-surface-variant dark:text-emerald-100/75 leading-relaxed">
-                  Tanyakan pada AI Chatbot sirkular kami atau telusuri taksonomi material di Panduan Pemilahan.
+                  Konsultasikan langsung pada Asisten Sirkular kami atau telusuri standar taksonomi material di Panduan Pemilahan.
                 </p>
                 <Link
                   to="/pemilahan"

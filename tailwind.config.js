@@ -40,8 +40,9 @@ export default {
         'on-error-container': '#93000a',
       },
       fontFamily: {
-        'sans': ['Manrope', 'system-ui', '-apple-system', 'sans-serif'],
-        'display': ['Plus Jakarta Sans', 'system-ui', '-apple-system', 'sans-serif'],
+        'sans': ['Outfit', 'Plus Jakarta Sans', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+        'display': ['Outfit', 'Plus Jakarta Sans', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+        'mono': ['Space Grotesk', 'ui-monospace', 'monospace'],
       },
       fontSize: {
         'hero': ['clamp(3.5rem, 7vw + 1rem, 6.25rem)', { lineHeight: '1.05', letterSpacing: '-0.035em', fontWeight: '800' }],

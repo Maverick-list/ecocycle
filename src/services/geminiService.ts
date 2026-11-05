@@ -1,4 +1,4 @@
-// ECOCYCLE AI Assistant — Powered by Google Gemini API & Environmental Knowledge Base
+// ECOCYCLE Intelligence Service — Circular Knowledge & Decision Advisory Engine
 
 export interface ChatMessage {
   id: string;
@@ -9,8 +9,8 @@ export interface ChatMessage {
 }
 
 const SYSTEM_INSTRUCTION = `
-Anda adalah ECOCYCLE AI (Asisten Sirkular Cerdas), agen AI ramah lingkungan resmi platform teknologi ECOCYCLE.
-Misi utama ECOCYCLE: "Turning Waste Into Worth" — Mengubah aliran material terbuang menjadi neraca sumber daya terverifikasi dan bernilai ekonomi nyata.
+Anda adalah ECOCYCLE Intelligence, spesialis konsultan tata kelola material sirkular dan kalkulator reduksi karbon resmi platform ECOCYCLE.
+Misi utama ECOCYCLE: "Turning Waste Into Worth" — Mengubah aliran material terbuang menjadi neraca sumber daya terverifikasi dan bernilai ekonomi nyata. Berbicaralah dengan nada profesional, ramah, berbasis data ilmiah presisi, dan solutif.
 
 Pengetahuan Lengkap Domain Platform ECOCYCLE:
 1. Kategori Sampah & Tarif Komoditas Terverifikasi (per kilogram):
@@ -115,15 +115,15 @@ Semua hub dilengkapi timbangan terkalibrasi berstandar SNI 19-3983-1995.`,
   },
   {
     keywords: ['halo', 'hai', 'siapa', 'kamu', 'perkenalan', 'bantuan'],
-    answer: `Halo! Saya ECOCYCLE AI, asisten cerdas resmi platform ECOCYCLE. 
+    answer: `Halo! Saya ECOCYCLE Intelligence, spesialis konsultan sirkular terpadu platform ECOCYCLE. 
 Saya siap membantu Anda seputar:
-• Informasi jenis & tarif 6 kategori sampah bernilai ekonomi
-• Panduan pemilahan higienis dari rumah
+• Informasi jenis & tarif 8 kategori material bernilai ekonomi
+• Panduan pemilahan higienis standar industri
 • Tata cara pencatatan setoran & konversi EcoPoints
 • Sains reduksi emisi karbon (model EPA WARM v15)
 • Lokasi Drop-Point hub terdekat
 
-Apa yang ingin Anda tanyakan hari ini?`,
+Apa yang ingin Anda konsultasikan hari ini?`,
   },
 ];
 

@@ -94,18 +94,24 @@ export const ContactPage: React.FC = () => {
               Mengubah Pola Pikir: Dari Pembuangan Menjadi Nilai Sirkular
             </h2>
             <p className="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
-              ECOCYCLE hadir untuk mentransformasi paradigma pengelolaan limbah perkotaan dari model linear <em>take-make-dispose</em> menjadi sirkular tertutup. Dengan mendesentralisasi penimbangan, mengintegrasikan verifikasi metrologis legal, dan memberikan insentif ekonomi transparan, kami memberdayakan warga untuk menjadi garda terdepan aksi iklim nyata.
+              ECOCYCLE hadir untuk menghentikan pembuangan limbah sekali pakai ke TPA dan menggantinya dengan rantai daur ulang tertutup bernilai ekonomi. Melalui penimbangan transparan, verifikasi standar SNI, dan insentif langsung bagi warga, kami mewujudkan aksi nyata pengurangan sampah lingkungan.
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
               <div className="p-6 rounded-2xl glass-panel border border-outline-variant/20 space-y-2">
-                <span className="font-display font-bold text-sm text-primary block">🎯 Visi Strategis</span>
+                <span className="font-display font-bold text-sm text-primary flex items-center gap-2">
+                  <Icon name="flag" size={16} className="text-secondary" />
+                  <span>Visi Strategis</span>
+                </span>
                 <p className="text-xs text-on-surface-variant leading-relaxed">
-                  Menciptakan ekosistem perkotaan zero-waste terintegrasi melalui audit material terverifikasi dan bank sampah digital.
+                  Menciptakan ekosistem permukiman zero-waste terintegrasi melalui audit material terverifikasi dan bank sampah digital.
                 </p>
               </div>
               <div className="p-6 rounded-2xl glass-panel border border-outline-variant/20 space-y-2">
-                <span className="font-display font-bold text-sm text-primary block">🌱 Misi Berkelanjutan</span>
+                <span className="font-display font-bold text-sm text-primary flex items-center gap-2">
+                  <Icon name="eco" size={16} className="text-secondary" />
+                  <span>Misi Berkelanjutan</span>
+                </span>
                 <p className="text-xs text-on-surface-variant leading-relaxed">
                   Menyediakan data saintifik terukur mengenai reduksi emisi karbon berbasis standar internasional yang dapat dipertanggungjawabkan.
                 </p>

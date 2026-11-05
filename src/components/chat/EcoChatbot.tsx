@@ -9,7 +9,7 @@ const INITIAL_MESSAGES: ChatMessage[] = [
   {
     id: 'welcome-1',
     sender: 'bot',
-    text: 'Halo! Saya ECOCYCLE AI, asisten cerdas sirkular Anda. Tanyakan apa saja seputar tarif 6 material sampah, alur setor mandiri, sains reduksi karbon US EPA WARM v15, atau hub drop-point terdekat.',
+    text: 'Selamat datang di Layanan Konsultasi ECOCYCLE. Saya siap membantu Anda menganalisis taksonomi 8 material sampah terpilah, estimasi perolehan EcoPoints, standar dekontaminasi industri SNI, serta reduksi emisi karbon berbasis US EPA WARM v15.',
     timestamp: 'Baru saja',
   },
 ];
@@ -158,7 +158,7 @@ export const EcoChatbot: React.FC = () => {
             className="hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/85 dark:bg-[#062c1d]/90 backdrop-blur-xl border border-white/50 dark:border-emerald-500/30 text-xs font-extrabold text-[#062B1D] dark:text-emerald-300 shadow-xl cursor-pointer hover:scale-105 active:scale-95 transition-all"
           >
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_#10b981]" />
-            <span>Tanya AI ECOCYCLE</span>
+            <span>Konsultasi Sirkular</span>
           </motion.button>
         )}
 
@@ -167,7 +167,7 @@ export const EcoChatbot: React.FC = () => {
           type="button"
           id="ecocycle-ai-trigger"
           onClick={handleToggleOpen}
-          aria-label={isOpen ? 'Tutup Asisten AI' : 'Buka Asisten AI ECOCYCLE'}
+          aria-label={isOpen ? 'Tutup Konsultan' : 'Buka Layanan Konsultasi Sirkular'}
           className={`relative w-14 h-14 sm:w-16 sm:h-16 rounded-full flex items-center justify-center p-2 transition-all duration-300 shadow-2xl cursor-pointer ${
             isOpen
               ? 'bg-[#062B1D] text-white rotate-90 ring-4 ring-emerald-500/30'
@@ -212,16 +212,16 @@ export const EcoChatbot: React.FC = () => {
                 </div>
                 <div className="min-w-0">
                   <div className="flex items-center gap-1.5">
-                    <span className="font-display font-black text-sm text-primary dark:text-white truncate">
-                      ECOCYCLE AI
+                    <span className="font-display font-black text-xs sm:text-sm text-primary dark:text-white shrink-0">
+                      ECOCYCLE Desk
                     </span>
-                    <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-extrabold uppercase shrink-0">
-                      Gemini
+                    <span className="text-[9px] px-1.5 py-0.5 rounded-md bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-extrabold uppercase shrink-0">
+                      Advisory v4.2
                     </span>
                   </div>
                   <div className="flex items-center gap-1.5 text-[11px] text-on-surface-variant dark:text-emerald-200/70 truncate">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
-                    <span className="truncate">{isSpeaking ? 'Sedang Berbicara...' : 'Suara Google Aktif'}</span>
+                    <span className="truncate">{isSpeaking ? 'Sedang Membaca...' : 'Audio Spasial Aktif'}</span>
                     {/* Real-time audio wave equalizer */}
                     {isSpeaking && (
                       <span className="inline-flex items-center gap-0.5 ml-1 shrink-0">
@@ -296,11 +296,11 @@ export const EcoChatbot: React.FC = () => {
                   className="bg-secondary/10 dark:bg-[#072d1e] p-4 border-b border-secondary/20 text-xs space-y-2.5 overflow-hidden"
                 >
                   <div className="flex justify-between items-center">
-                    <span className="font-extrabold text-secondary">Kunci API Google Gemini (Opsional)</span>
-                    <span className="text-[10px] text-outline">v2.8 / 1.5 Flash</span>
+                    <span className="font-extrabold text-secondary">Koneksi Layanan Analisis (Opsional)</span>
+                    <span className="text-[10px] text-outline">Neural v4.2</span>
                   </div>
                   <p className="text-[11px] text-on-surface-variant dark:text-emerald-200/70 leading-relaxed">
-                    Masukkan API Key Gemini Anda untuk memproses inferensi AI langsung ke Google Cloud. Jika kosong, asisten tetap berfungsi dengan basis pengetahuan lokal ECOCYCLE.
+                    Sistem beroperasi optimal menggunakan basis pengetahuan komprehensif ECOCYCLE terverifikasi SNI & US EPA WARM v15.
                   </p>
                   <div className="flex gap-2">
                     <input
@@ -419,7 +419,7 @@ export const EcoChatbot: React.FC = () => {
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Tanyakan apapun ke AI ECOCYCLE..."
+                placeholder="Tanyakan taksonomi material, tarif, atau drop-point..."
                 className="flex-1 h-11 px-4 rounded-2xl bg-white/90 dark:bg-[#052216]/90 border border-outline-variant/25 dark:border-emerald-500/25 text-xs sm:text-sm text-on-surface dark:text-white placeholder:text-outline outline-none focus:ring-2 focus:ring-secondary/50 shadow-inner transition-all"
               />
               <button

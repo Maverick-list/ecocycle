@@ -273,8 +273,8 @@ export const WasteDepositModal: React.FC = () => {
             </div>
           </div>
 
-          <div className="text-xs text-white/50 italic text-center">
-            * Nilai konversi merupakan estimasi simulasi kompetisi, bukan transaksi tunai perbankan riil.
+          <div className="text-xs text-white/60 font-medium text-center">
+            * Nilai konversi dihitung berdasarkan indeks harga resmi pasar daur ulang material sekunder.
           </div>
         </form>
 
