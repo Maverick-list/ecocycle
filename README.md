@@ -6,7 +6,8 @@
 [![Agentic Tools Engine](https://img.shields.io/badge/AI%20Engine-Autonomous%20EcoAgent%20ReAct-8b5cf6?style=for-the-badge&logo=openai)](https://github.com/Maverick-list/ecocycle)
 [![EPA WARM v15 & SNI 19-3983-1995](https://img.shields.io/badge/Standard-US%20EPA%20WARM%20v15%20%2B%20SNI-059669?style=for-the-badge&logo=leaf)](https://www.epa.gov/warm)
 [![Multi-Provider Auth](https://img.shields.io/badge/Auth-Google%20%7C%20Facebook%20%7C%20Phone%20OTP%20%7C%20Email-2563eb?style=for-the-badge&logo=firebase)](https://firebase.google.com)
-[![Deployment: Vercel](https://img.shields.io/badge/Deploy-EcoCycle.vercel.app-000000?style=for-the-badge&logo=vercel)](https://ecocycle.vercel.app)
+[![Deployment: Vercel](https://img.shields.io/badge/Deploy-ecocycle--id.vercel.app-000000?style=for-the-badge&logo=vercel)](https://ecocycle-id.vercel.app)
+[![Live Mirror](https://img.shields.io/badge/Mirror-ecocycle--official.vercel.app-10b981?style=for-the-badge&logo=vercel)](https://ecocycle-official.vercel.app)
 
 > **ECOCYCLE** adalah platform ekonomi sirkular digital tingkat industri yang mengubah alur material terbuang (*waste stream*) menjadi neraca sumber daya terverifikasi (*verified resource ledger*) dan bernilai ekonomi riil. 
 > Menggabungkan arsitektur kecerdasan buatan otonom **Gemini 2.5 Flash (standar Maven JARVIS)** dengan mesin eksekusi alat mandiri (**EcoAgent ReAct Engine**), standar penimbangan nasional **SNI 19-3983-1995**, audit gas rumah kaca saintifik **US EPA WARM v15**, serta autentikasi empat saluran (*Google, Facebook, SMS Telepon OTP, dan Email*).
@@ -183,23 +184,16 @@ Aplikasi akan aktif dan dapat diakses pada: `http://localhost:3000/`.
 
 ---
 
-## ☁️ Konfigurasi & Panduan Deployment Vercel
+## ☁️ Status Deployment Vercel (Live Production)
 
-Platform ECOCYCLE telah dikonfigurasi secara optimal untuk deployment ke Vercel dengan berkas [`vercel.json`](file:///home/firza-ilmi/.gemini/antigravity/scratch/ecocycle/vercel.json):
-- Target domain: **`ecocycle.vercel.app`**
-- Single Page Application (SPA) Routing & Fallback Rewrite ke `index.html`.
+Platform ECOCYCLE telah berhasil dideploy secara langsung ke platform Vercel dengan status **READY (Production)**:
+- **Domain Utama:** [ecocycle-id.vercel.app](https://ecocycle-id.vercel.app)
+- **Domain Mirror:** [ecocycle-official.vercel.app](https://ecocycle-official.vercel.app)
+- **Deployment URL:** [ecocycle-firza-miftahul-ilmis-projects.vercel.app](https://ecocycle-firza-miftahul-ilmis-projects.vercel.app)
+- **Vercel Project:** `ecocycle` (`prj_WTGceaCQhsukYt3OeEjwh9EE9Bh3`)
+- Single Page Application (SPA) Routing & Fallback Rewrite ke `/index.html`.
 - Cache-Control header presisi untuk aset statis (`max-age=31536000, immutable`).
-
-### Langkah Deploy ke Vercel:
-1. Hubungkan repository GitHub [`Maverick-list/ecocycle`](https://github.com/Maverick-list/ecocycle) ke akun Vercel Anda di [vercel.com/new](https://vercel.com/new).
-2. Set **Project Name** menjadi `ecocycle` (akan mengalokasikan URL `ecocycle.vercel.app`).
-3. Konfigurasi build otomatis:
-   - **Framework Preset:** Vite
-   - **Build Command:** `npm run build`
-   - **Output Directory:** `dist`
-4. Masukkan *Environment Variables* (opsional, sistem memiliki *fallback intelligence* mandiri):
-   - `VITE_GEMINI_API_KEY`: Kunci Google Gemini API Anda.
-5. Klik **Deploy**. Setiap *commit push* ke branch `main` akan dideploy secara otomatis oleh Vercel CI/CD!
+- Terhubung otomatis dengan Git CI/CD: Setiap *commit push* ke branch `main` pada repositori `Maverick-list/ecocycle` akan memicu *build* dan *redeploy* otomatis!
 
 ---
 
