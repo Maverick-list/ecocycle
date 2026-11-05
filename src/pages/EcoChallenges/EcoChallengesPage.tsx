@@ -54,8 +54,8 @@ export const EcoChallengesPage: React.FC = () => {
               <Icon name="award" size={14} />
               <span>Gamifikasi Kebiasaan Sirkular</span>
             </div>
-            <h1 className="font-display font-extrabold text-page-title text-primary tracking-tight leading-tight">
-              Tantangan Komunitas & Lencana Prestasi
+            <h1 className="font-display font-extrabold text-page-title tracking-tight leading-tight">
+              <span className="animate-title-flow">Tantangan Komunitas</span> & Lencana Prestasi
             </h1>
             <p className="font-sans text-subheading text-on-surface-variant font-normal leading-relaxed">
               Bangun kebiasaan ramah lingkungan secara konsisten lewat misi berkala, kumpulkan lencana digital sirkular, dan bersaing sehat di papan peringkat komunitas.

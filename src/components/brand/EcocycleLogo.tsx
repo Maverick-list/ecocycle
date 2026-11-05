@@ -39,12 +39,6 @@ export const EcocycleLogo: React.FC<EcocycleLogoProps> = ({
   const isDark = variant === 'dark';
   const isLight = variant === 'light';
 
-  const textColor = isDark
-    ? 'text-white'
-    : isLight
-    ? 'text-[#062B1D]'
-    : 'text-primary dark:text-white';
-
   const tagColor = isDark
     ? 'text-[#A7F3D0]'
     : isLight
@@ -105,8 +99,8 @@ export const EcocycleLogo: React.FC<EcocycleLogoProps> = ({
       {/* Wordmark (hidden if iconOnly is true) */}
       {!iconOnly && (
         <div className="flex flex-col leading-none">
-          <span className={`font-display font-extrabold ${textSizeClass} ${textColor} tracking-tight`}>
-            ECO<span className="text-secondary font-black">CYCLE</span>
+          <span className={`font-display font-black ${textSizeClass} animate-logo-flow tracking-tight`}>
+            ECOCYCLE
           </span>
           {showTagline && (
             <span className={`font-sans font-bold uppercase tracking-wider ${taglineSizeClass} ${tagColor} mt-0.5`}>

@@ -200,8 +200,8 @@ export const FAQPage: React.FC = () => {
             <span>Pusat Bantuan & Tanya Jawab</span>
           </div>
 
-          <h1 className="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl text-primary dark:text-white tracking-tight leading-tight">
-            Pertanyaan yang Sering Diajukan
+          <h1 className="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl tracking-tight leading-tight">
+            <span className="animate-title-flow">Pertanyaan yang Sering Diajukan</span>
           </h1>
 
           <p className="font-sans text-sm sm:text-base text-on-surface-variant dark:text-emerald-100/75 font-normal leading-relaxed">

@@ -219,6 +219,117 @@
   background-clip: text;
 }
 
+/* Animated Flowing Green Gradient (Light Green to Dark Green from Left to Right and Back) */
+@keyframes flowGradientX {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-title-flow {
+  background: linear-gradient(
+    90deg,
+    #15803D 0%,
+    #22C55E 22%,
+    #0F5132 48%,
+    #052E1C 70%,
+    #10B981 88%,
+    #15803D 100%
+  );
+  background-size: 260% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  animation: flowGradientX 6s ease-in-out infinite;
+  display: inline-block;
+}
+
+.dark .animate-title-flow,
+[data-theme='dark'] .animate-title-flow {
+  background: linear-gradient(
+    90deg,
+    #C8F0A5 0%,
+    #86EFAC 22%,
+    #34D399 45%,
+    #10B981 68%,
+    #059669 85%,
+    #86EFAC 95%,
+    #C8F0A5 100%
+  );
+  background-size: 260% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  animation: flowGradientX 6s ease-in-out infinite;
+  display: inline-block;
+}
+
+.animate-hero-title-flow {
+  background: linear-gradient(
+    90deg,
+    #C8F0A5 0%,
+    #86EFAC 20%,
+    #4ADE80 40%,
+    #062B1D 65%,
+    #0B482D 80%,
+    #C8F0A5 100%
+  );
+  background-size: 260% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  animation: flowGradientX 5s ease-in-out infinite;
+  display: inline-block;
+}
+
+.animate-logo-flow {
+  background: linear-gradient(
+    90deg,
+    #16A34A 0%,
+    #22C55E 25%,
+    #0B482D 50%,
+    #064E3B 75%,
+    #10B981 90%,
+    #16A34A 100%
+  );
+  background-size: 260% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  animation: flowGradientX 5s ease-in-out infinite;
+  display: inline-block;
+}
+
+.dark .animate-logo-flow,
+[data-theme='dark'] .animate-logo-flow {
+  background: linear-gradient(
+    90deg,
+    #C8F0A5 0%,
+    #86EFAC 25%,
+    #34D399 50%,
+    #10B981 75%,
+    #6EE7B7 90%,
+    #C8F0A5 100%
+  );
+  background-size: 260% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  animation: flowGradientX 5s ease-in-out infinite;
+  display: inline-block;
+}
+
 /* Apple-Inspired Interactive Touch & Press Physics */
 .interactive-card {
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),

@@ -65,8 +65,8 @@ export const ContactPage: React.FC = () => {
               <Icon name="mail" size={14} />
               <span>Narahubung & Manifesto Layanan</span>
             </div>
-            <h1 className="font-display font-extrabold text-page-title text-primary tracking-tight leading-tight">
-              Pusat Komunikasi & Hub Kolaborasi
+            <h1 className="font-display font-extrabold text-page-title tracking-tight leading-tight">
+              <span className="animate-title-flow">Pusat Komunikasi</span> & Hub Kolaborasi
             </h1>
             <p className="font-sans text-subheading text-on-surface-variant font-normal leading-relaxed">
               Hubungi tim pengembang operasional platform ECOCYCLE untuk kemitraan bank sampah baru, integrasi korporasi rantai pasok daur ulang, atau pertanyaan umum.

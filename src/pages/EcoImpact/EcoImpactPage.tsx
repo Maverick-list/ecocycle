@@ -59,8 +59,8 @@ export const EcoImpactPage: React.FC = () => {
               <Icon name="auto_graph" size={14} />
               <span>Metodologi Ilmiah Terbuka</span>
             </div>
-            <h1 className="font-display font-extrabold text-page-title text-primary tracking-tight leading-tight">
-              Neraca Dampak Ekologis & Audit Material
+            <h1 className="font-display font-extrabold text-page-title tracking-tight leading-tight">
+              <span className="animate-title-flow">Neraca Dampak Ekologis</span> & Audit Material
             </h1>
             <p className="font-sans text-subheading text-on-surface-variant font-normal leading-relaxed">
               Kalkulasi saintifik berbasis EPA WARM dan SNI 19-3983 yang mengukur reduksi gas rumah kaca, konservasi air tawar, dan pengalihan sampah dari timbunan Tempat Pemrosesan Akhir (TPA).

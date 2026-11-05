@@ -39,8 +39,8 @@ export const SmartSortingPage: React.FC = () => {
               <Icon name="search" size={14} />
               <span>Standar Dekontaminasi Industri</span>
             </div>
-            <h1 className="font-display font-extrabold text-page-title text-primary tracking-tight leading-tight">
-              Panduan Pemilahan Presisi & Taksonomi Material
+            <h1 className="font-display font-extrabold text-page-title tracking-tight leading-tight">
+              <span className="animate-title-flow">Panduan Pemilahan Presisi</span> & Taksonomi Material
             </h1>
             <p className="font-sans text-subheading text-on-surface-variant font-normal leading-relaxed">
               Memilah bukan sekadar melempar ke wadah berbeda. Pelajari kaidah higienitas, kompresi volume, dan standardisasi pemilahan agar material memiliki nilai daur ulang industri optimal.

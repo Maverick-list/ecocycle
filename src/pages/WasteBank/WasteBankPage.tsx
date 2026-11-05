@@ -111,8 +111,8 @@ export const WasteBankPage: React.FC = () => {
               <Icon name="account_balance" size={14} />
               <span>Buku Tabungan Sirkular</span>
             </div>
-            <h1 className="font-display font-extrabold text-page-title text-primary tracking-tight leading-tight">
-              Bank Sampah Digital & Konversi Nilai
+            <h1 className="font-display font-extrabold text-page-title tracking-tight leading-tight">
+              <span className="animate-title-flow">Bank Sampah Digital</span> & Konversi Nilai
             </h1>
             <p className="font-sans text-subheading text-on-surface-variant font-normal leading-relaxed">
               Pantau akumulasi material terpilah, mutasi saldo rupiah terverifikasi, dan perolehan EcoPoints untuk ditukarkan dengan beragam imbalan ekologis.

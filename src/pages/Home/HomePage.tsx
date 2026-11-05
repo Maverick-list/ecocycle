@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useWasteBank } from '../../context/WasteBankContext';
 import { WASTE_CATEGORIES } from '../../data/wasteData';
@@ -12,8 +12,8 @@ import { ScrollReveal } from '../../components/ui/ScrollReveal';
 import { SEOHead } from '../../components/seo/SEOHead';
 
 export const HomePage: React.FC = () => {
+  const navigate = useNavigate();
   const { 
-    openDepositModal, 
     totalWeightKg, 
     totalCo2AvoidedKg, 
     ecoPledgesCount, 
@@ -152,7 +152,7 @@ export const HomePage: React.FC = () => {
             <div className="space-y-6 max-w-5xl mx-auto">
               <h1 className="font-display font-extrabold text-[clamp(2.75rem,7vw,5.75rem)] leading-[1.05] tracking-[-0.035em] text-white">
                 Turn Waste Into <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#F4FDF0] to-[#C8F0A5] drop-shadow-[0_4px_30px_rgba(6,43,29,0.65)]">
+                <span className="animate-hero-title-flow drop-shadow-[0_4px_30px_rgba(6,43,29,0.65)]">
                   Something Worth.
                 </span>
               </h1>
@@ -168,13 +168,13 @@ export const HomePage: React.FC = () => {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
               <motion.button
                 type="button"
-                onClick={openDepositModal}
+                onClick={() => navigate('/masuk')}
                 whileHover={{ scale: 1.03, y: -2 }}
                 whileTap={{ scale: 0.96 }}
                 transition={{ duration: 0.2 }}
                 className="w-full sm:w-auto h-15 px-10 rounded-2xl bg-[#C8F0A5] text-[#062B1D] font-display font-extrabold text-lg hover:bg-[#D6F5B8] transition-all shadow-[0_12px_36px_rgba(200,240,165,0.4)] flex items-center justify-center gap-3 cursor-pointer"
               >
-                <Icon name="add_circle" size={22} />
+                <Icon name="login" size={22} />
                 <span>Explore ECOCYCLE</span>
               </motion.button>
 

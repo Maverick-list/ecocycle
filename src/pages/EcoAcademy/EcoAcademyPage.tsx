@@ -54,8 +54,8 @@ export const EcoAcademyPage: React.FC = () => {
               <Icon name="menu_book" size={14} />
               <span>Pusat Literasi Sirkular</span>
             </div>
-            <h1 className="font-display font-extrabold text-page-title text-primary tracking-tight leading-tight">
-              Akademi Ekologi & Wawasan Daur Ulang
+            <h1 className="font-display font-extrabold text-page-title tracking-tight leading-tight">
+              <span className="animate-title-flow">Akademi Ekologi</span> & Wawasan Daur Ulang
             </h1>
             <p className="font-sans text-subheading text-on-surface-variant font-normal leading-relaxed">
               Kumpulan artikel riset mendalam, penelusuran mitos vs fakta sains lingkungan, dan panduan praktis pengelolaan limbah untuk membangun gaya hidup sirkular berkelanjutan.

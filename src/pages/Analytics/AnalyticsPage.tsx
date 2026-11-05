@@ -96,8 +96,8 @@ export const AnalyticsPage: React.FC = () => {
               <Icon name="analytics" size={14} />
               <span>Infrastruktur Riset & Analitik Presisi</span>
             </div>
-            <h1 className="font-display font-extrabold text-page-title text-primary tracking-tight leading-tight">
-              Pusat Analitik & Neraca Sumber Daya
+            <h1 className="font-display font-extrabold text-page-title tracking-tight leading-tight">
+              <span className="animate-title-flow">Pusat Analitik</span> & Neraca Sumber Daya
             </h1>
             <p className="font-sans text-subheading text-on-surface-variant font-normal leading-relaxed">
               Eksplorasi data kuantitatif komprehensif atas alur material terpilah, koefisien emisi gas rumah kaca, dan efisiensi pengalihan TPA di seluruh ekosistem sirkular.
