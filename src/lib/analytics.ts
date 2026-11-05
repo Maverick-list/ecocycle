@@ -7,6 +7,7 @@ export type AnalyticsEvent =
   | 'login'
   | 'logout'
   | 'google_sign_in'
+  | 'facebook_sign_in'
   | 'phone_otp_requested'
   | 'phone_otp_verified'
   | 'withdraw_balance'

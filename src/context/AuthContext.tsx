@@ -24,7 +24,7 @@ export interface AppUser {
   };
   emailVerified?: boolean;
   phoneVerified?: boolean;
-  authMethod?: 'google' | 'email' | 'phone';
+  authMethod?: 'google' | 'email' | 'phone' | 'facebook';
 }
 
 export interface AuthContextType {
@@ -36,6 +36,7 @@ export interface AuthContextType {
   signInWithEmail: (email: string, password: string) => Promise<{ error: Error | null }>;
   signUpWithEmail: (email: string, password: string, fullName: string) => Promise<{ error: Error | null }>;
   signInWithGoogle: (customEmail?: string, customName?: string) => Promise<{ error: Error | null }>;
+  signInWithFacebook: (customEmail?: string, customName?: string) => Promise<{ error: Error | null }>;
   sendPhoneOtp: (phoneNumber: string) => Promise<{ confirmationId: string; simulatedOtp: string; error: Error | null }>;
   verifyPhoneOtp: (confirmationId: string, otpCode: string, phoneNumber: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
@@ -62,6 +63,8 @@ const mapFirebaseUser = (fbUser: FirebaseUser): AppUser => ({
   phoneVerified: Boolean(fbUser.phoneNumber),
   authMethod: fbUser.providerData?.some(p => p.providerId === 'google.com')
     ? 'google'
+    : fbUser.providerData?.some(p => p.providerId === 'facebook.com')
+    ? 'facebook'
     : fbUser.phoneNumber
     ? 'phone'
     : 'email'
@@ -355,6 +358,53 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return { error: null };
   };
 
+  // 3b. Sign In With Facebook (OAuth / One-Tap)
+  const signInWithFacebook = async (customEmail?: string, customName?: string) => {
+    if (activeProvider === 'firebase') {
+      try {
+        const res = await authService.loginWithFacebook();
+        if (!res.error && res.user) {
+          const mapped = mapFirebaseUser(res.user);
+          setUser(mapped);
+          setSession({ user: mapped, provider: 'firebase' });
+          localStorage.setItem(STORAGE_AUTH_KEY, JSON.stringify(mapped));
+          return { error: null };
+        }
+      } catch (err: any) {
+        console.warn('Firebase Facebook OAuth error, falling back:', err);
+      }
+    }
+
+    const fbEmail = customEmail || 'rian.kusuma@facebook.com';
+    const fbName = customName || 'Rian Pratama';
+    const facebookUser: AppUser = {
+      id: `usr-fb-${Date.now()}`,
+      uid: `usr-fb-${Date.now()}`,
+      email: fbEmail,
+      displayName: fbName,
+      phoneNumber: '+62 813-9876-5432',
+      photoURL: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=256&q=80',
+      user_metadata: {
+        full_name: fbName,
+        avatar_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=256&q=80',
+        phone: '+62 813-9876-5432'
+      },
+      emailVerified: true,
+      authMethod: 'facebook'
+    };
+
+    setUser(facebookUser);
+    setSession({ user: facebookUser, provider: 'facebook' });
+    localStorage.setItem(STORAGE_AUTH_KEY, JSON.stringify(facebookUser));
+    UserService.updateProfile({
+      name: fbName,
+      email: fbEmail,
+      avatar: facebookUser.photoURL || undefined
+    });
+    trackEvent('login', { method: 'facebook' });
+    return { error: null };
+  };
+
   // 4. Send Phone OTP (SMS / WhatsApp simulated verification)
   const sendPhoneOtp = async (phoneNumber: string) => {
     // Format check (Indonesian phone numbers e.g. 08xx or +62xx)
@@ -537,6 +587,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         signInWithEmail,
         signUpWithEmail,
         signInWithGoogle,
+        signInWithFacebook,
         sendPhoneOtp,
         verifyPhoneOtp,
         signOut,

@@ -1,208 +1,209 @@
-# ECOCYCLE — A Living Circular Economy Experience
-### *Turning Waste Into Worth*
+# ECOCYCLE — Living Circular Economy & Autonomous Agentic Platform
+### *"Turning Waste Into Worth"*
 
-[![Web Design Competition Techno Versary Vol. II 2026](https://img.shields.io/badge/Competition-Techno%20Versary%20Vol.%20II%202026-10b981?style=for-the-badge&logo=target)](https://github.com/Maverick-list/ecocycle)
-[![Theme: EcoDigital For Environment](https://img.shields.io/badge/Theme-EcoDigital%20For%20Environment-059669?style=for-the-badge&logo=leaf)](https://github.com/Maverick-list/ecocycle)
 [![React 19 & TypeScript](https://img.shields.io/badge/Frontend-React%2019%20%2B%20TypeScript-0284c7?style=for-the-badge&logo=react)](https://react.dev)
-[![Powered by Google Gemini AI](https://img.shields.io/badge/AI-Google%20Gemini%20Flash%20TTS-8b5cf6?style=for-the-badge&logo=google)](https://ai.google.dev)
-[![Production Ready](https://img.shields.io/badge/Status-Production%20Ready%20v3.0-emerald?style=for-the-badge&logo=checkmarx)](https://github.com/Maverick-list/ecocycle)
+[![AI Architecture: Gemini 2.5 Flash](https://img.shields.io/badge/AI%20Model-Gemini%202.5%20Flash%20(Maven%20JARVIS)-10b981?style=for-the-badge&logo=google)](https://ai.google.dev)
+[![Agentic Tools Engine](https://img.shields.io/badge/AI%20Engine-Autonomous%20EcoAgent%20ReAct-8b5cf6?style=for-the-badge&logo=openai)](https://github.com/Maverick-list/ecocycle)
+[![EPA WARM v15 & SNI 19-3983-1995](https://img.shields.io/badge/Standard-US%20EPA%20WARM%20v15%20%2B%20SNI-059669?style=for-the-badge&logo=leaf)](https://www.epa.gov/warm)
+[![Multi-Provider Auth](https://img.shields.io/badge/Auth-Google%20%7C%20Facebook%20%7C%20Phone%20OTP%20%7C%20Email-2563eb?style=for-the-badge&logo=firebase)](https://firebase.google.com)
+[![Deployment: Vercel](https://img.shields.io/badge/Deploy-EcoCycle.vercel.app-000000?style=for-the-badge&logo=vercel)](https://ecocycle.vercel.app)
 
-> **Web Design Competition Techno Versary Vol. II 2026**  
-> **Penyelenggara:** Himpunan Mahasiswa Teknik Informatika (HIMA TI), Fakultas Ilmu Komputer, Universitas Kuningan  
-> **Tema:** *EcoDigital For Environment: Teknologi Digital sebagai Penggerak Kelestarian Bumi*  
-> **Repository Resmi:** [github.com/Maverick-list/ecocycle](https://github.com/Maverick-list/ecocycle)  
+> **ECOCYCLE** adalah platform ekonomi sirkular digital tingkat industri yang mengubah alur material terbuang (*waste stream*) menjadi neraca sumber daya terverifikasi (*verified resource ledger*) dan bernilai ekonomi riil. 
+> Menggabungkan arsitektur kecerdasan buatan otonom **Gemini 2.5 Flash (standar Maven JARVIS)** dengan mesin eksekusi alat mandiri (**EcoAgent ReAct Engine**), standar penimbangan nasional **SNI 19-3983-1995**, audit gas rumah kaca saintifik **US EPA WARM v15**, serta autentikasi empat saluran (*Google, Facebook, SMS Telepon OTP, dan Email*).
 
 ---
 
-## 📸 Galeri Tangkapan Layar Platform (Visual Showcase)
+## 📸 Galeri Tangkapan Layar Platform (Live Showcase)
 
-Berikut adalah dokumentasi visual antarmuka platform ECOCYCLE yang telah menerapkan *Apple-level visual identity*, sistem kaca visionOS, serta animasi organik tingkat lanjut:
+Dokumentasi visual langsung dari antarmuka produksi ECOCYCLE dengan bahasa desain *visionOS Apple Glassmorphism*, tipografi presisi *Outfit*, serta animasi organik:
 
-| 1. Beranda Hero dengan Videotron Transparan 30% | 2. Formulir Setor Sampah Mandiri (Spacious & Clean) |
+| 1. Autentikasi Multi-Saluran (Google, Facebook, Email, No. Telepon) | 2. Pendaftaran Akun Terverifikasi (Social Connect) |
 | :---: | :---: |
-| ![Homepage Hero Videotron](docs/screenshots/01-homepage-hero-videotron.png) | ![Formulir Setor Sampah](docs/screenshots/02-setor-sampah-mandiri.png) |
+| ![Autentikasi Multi-Saluran](public/screenshots/01_auth_signin_facebook.png) | ![Pendaftaran Akun](public/screenshots/02_auth_signup_providers.png) |
 
-| 3. Pusat Jawaban FAQ dengan Akordeon Lapang | 4. ECOCYCLE AI Chatbot (Google Voice TTS & VisionOS Glass) |
+| 3. Beranda: Judul Gradasi Mengalir & Videotron Transparan 30% | 4. EcoAgent Desk: Gemini 2.5 Flash & Draf Setoran 1-Klik |
 | :---: | :---: |
-| ![Pusat Jawaban FAQ](docs/screenshots/03-faq-spacious-accordions.png) | ![ECOCYCLE AI Chatbot Assistant](docs/screenshots/04-ai-chatbot-assistant.png) |
+| ![Beranda Videotron](public/screenshots/03_hero_videotron_gradient.png) | ![EcoAgent Otonom](public/screenshots/04_ecoagent_autonomous_action.png) |
 
-| 5. Mode Gelap Obsidian Hijau Botani Terverifikasi | 6. Autentikasi Tiga Saluran (Google, Email, No. HP) |
+| 5. Formulir Setor Sampah Lapang & Kolom Panduan SNI | 6. Buku Tabungan Digital Bank Sampah & Mutasi Saldo |
 | :---: | :---: |
-| ![Mode Gelap Terverifikasi](docs/screenshots/05-dark-mode-experience.png) | ![Autentikasi Multi-Saluran](docs/screenshots/08-auth-multi-channel.png) |
+| ![Setor Sampah Lapang](public/screenshots/05_setor_sampah_spacious.png) | ![Buku Tabungan Digital](public/screenshots/06_bank_sampah_ledger.png) |
 
-| 7. Verifikasi Kode OTP 6-Digit (Apple Style) | 8. Dasbor Akses Mendalam dengan Identitas Terverifikasi |
-| :---: | :---: |
-| ![Verifikasi OTP](docs/screenshots/09-auth-phone-otp.png) | ![Dasbor Akses Mendalam](docs/screenshots/10-dashboard-deep-access.png) |
-
-| 9. Modal Pencairan Saldo Rupiah (E-Wallet & Bank) | 10. Sertifikat Partisipasi Sirkular Resmi (US EPA WARM) |
-| :---: | :---: |
-| ![Pencairan Saldo Rupiah](docs/screenshots/11-modal-tarik-saldo.png) | ![Sertifikat Resmi Karbon](docs/screenshots/12-modal-sertifikat-karbon.png) |
-
-| 11. Transisi Halaman Daun Sinematik (Luminous Organic Leaf Swirl) |
+| 7. Neraca Karbon & Sains Reduksi Emisi US EPA WARM v15 |
 | :---: |
-| ![Transisi Daun Organik](docs/screenshots/13-transisi-daun-heroic.png) |
+| ![Neraca Karbon Sains](public/screenshots/07_neraca_karbon_science.png) |
+
+---
+
+## 🧠 Algoritma & Cara Kerja Sistem (Core Algorithms)
+
+### 1. Algoritma Kalkulasi Emisi US EPA WARM v15 & Valuasi Ekonomi SNI
+Perhitungan reduksi emisi karbon gas rumah kaca di ECOCYCLE tidak menggunakan angka perkiraan acak, melainkan menerapkan koefisien ilmiah resmi dari **US Environmental Protection Agency (EPA) Waste Reduction Model (WARM) versi 15** yang dikorelasikan dengan standar tata kelola bank sampah **SNI 19-3983-1995**:
+
+```mermaid
+flowchart TD
+    A["Input Material & Bobot Timbangan (kg)"] --> B{"Klasifikasi Kategori Material"}
+    
+    B -->|"Plastik PET"| C1["Faktor Emisi: 1.50 kg CO2e/kg<br/>Konservasi Air: 24 L/kg<br/>Tarif: Rp 3.500/kg (+35 Poin)"]
+    B -->|"Kardus & Kertas"| C2["Faktor Emisi: 1.10 kg CO2e/kg<br/>Konservasi Air: 28 L/kg<br/>Tarif: Rp 3.000/kg (+30 Poin)"]
+    B -->|"Kaleng Logam"| C3["Faktor Emisi: 3.20 kg CO2e/kg<br/>Konservasi Air: 40 L/kg<br/>Tarif: Rp 3.000/kg (+30 Poin)"]
+    B -->|"Botol Kaca"| C4["Faktor Emisi: 0.50 kg CO2e/kg<br/>Konservasi Air: 12 L/kg<br/>Tarif: Rp 2.000/kg (+20 Poin)"]
+    B -->|"Minyak Jelantah"| C5["Faktor Emisi: 2.60 kg CO2e/kg<br/>Konservasi Air: 35 L/kg<br/>Tarif: Rp 8.000/kg (+80 Poin)"]
+    B -->|"Limbah Elektronik"| C6["Faktor Emisi: 4.50 kg CO2e/kg<br/>Konservasi Air: 50 L/kg<br/>Tarif: Rp 10.000/kg (+100 Poin)"]
+
+    C1 & C2 & C3 & C4 & C5 & C6 --> D["Kalkulator Mesin Reduksi Karbon"]
+    
+    D --> E["Total Emisi Terhindar = Σ (Bobot_i × Faktor_CO2e_i)"]
+    D --> F["Total Nilai Rupiah = Σ (Bobot_i × Harga_Kg_i)"]
+    D --> G["Total EcoPoints = Σ (Bobot_i × Poin_Kg_i)"]
+    D --> H["Ekuivalensi Serapan Pohon = Total CO2e / 22 kg pertahun"]
+    
+    E & F & G & H --> I["Pencatatan Buku Tabungan Digital & Terbitan Sertifikat SNI"]
+```
+
+$$\text{Total Emisi Terhindar } (kg\text{ CO}_2e) = \sum_{i=1}^{n} \left( W_i \times \kappa_i \right)$$
+
+$$\text{Valuasi Ekonomi Riil } (\text{IDR}) = \sum_{i=1}^{n} \left( W_i \times \mathcal{P}_i \right)$$
+
+$$\text{Ekuivalensi Serapan Pohon} = \frac{\text{Total CO}_2e\text{ (kg)}}{22\text{ kg CO}_2e/\text{pohon/tahun}}$$
+
+---
+
+### 2. Algoritma Siklus Autonomous AI Agent (`EcoAgent` ReAct Architecture)
+Chatbot ECOCYCLE bukan sekadar mesin penjawab teks, melainkan **Autonomous AI Agent** terintegrasi yang mampu menalar intensi pengguna, memanggil *platform tools* internal secara otonom, dan menerbitkan tindakan interaktif (*action cards*) langsung ke dalam antarmuka obrolan:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor User as Pengguna / Mitra Warga
+    participant UI as ECOCYCLE Desk (Apple Glass UI)
+    participant Agent as EcoAgent ReAct Controller
+    participant Gemini as Gemini 2.5 Flash LLM
+    participant Tools as Platform Tools Registry
+    participant Ledger as Bank Sampah Ledger Service
+
+    User->>UI: "Buatkan draf setoran 4 kg plastik di Menteng"
+    UI->>Agent: Parse Request & Entity Extraction
+    Agent->>Tools: execute("calculateCarbonAndValuation", {material: "Plastik PET", weightKg: 4})
+    Tools-->>Agent: Output: Rp 14.000, 140 Poin, 6.0 kg CO2e
+    Agent->>Tools: execute("findNearestDropPoint", {query: "Menteng"})
+    Tools-->>Agent: Output: Bale RW 04 Menteng
+    Agent->>Tools: execute("createDepositDraft", {manifest: "ECO-SNI-4324"})
+    Tools-->>Agent: Output: Draft Payload & Action Token
+    Agent->>Gemini: Reasoning Synthesis with Tool Context (Model: gemini-2.5-flash)
+    Gemini-->>Agent: Natural Language Explanation & Insights
+    Agent->>UI: Render Message + Tool Calling Badges + Interactive Action Card
+    UI->>User: Audio Spasial (Google TTS) + Kartu "✨ Simpan & Konfirmasi ke Bank Sampah"
+    User->>UI: Klik "Konfirmasi Setoran"
+    UI->>Ledger: submitDeposit(draftPayload)
+    Ledger-->>UI: Mutasi Tersimpan & Saldo Bertambah
+    UI->>User: Feedback: "✅ Berhasil dicatat ke Bank Sampah Digital!"
+```
+
+#### Platform Tools yang Dijalankan oleh EcoAgent:
+1. `calculateCarbonAndValuation(material, weightKg)`: Mengkalkulasi reduksi karbon US EPA WARM v15, valuasi rupiah SNI, EcoPoints, konservasi air, dan pohon setara.
+2. `checkMaterialClassification(query)`: Mendiagnosis resin code polimer, klasifikasi aliran sampah (*Anorganik/Organik/B3/E-Waste*), dan langkah dekontaminasi wajib.
+3. `findNearestDropPoint(location)`: Menelusuri direktori drop-point terverifikasi, jam buka aktif, kontak koordinator, dan jenis sampah yang diterima.
+4. `createDepositDraft(material, weightKg, dropPoint)`: Menerbitkan nomor manifest resmi (*ECO-SNI-xxxx*) dan kartu tindakan 1-klik.
+5. `auditSortingQuality(description)`: Menilai tingkat kemurnian pemilahan (Grade A 100%, Grade B 90%, Grade C perlu bilas ulang).
+
+---
+
+### 3. Algoritma Autentikasi Empat Saluran & Keamanan Row-Level Security (RLS)
+Platform mengamankan privasi data kontak dan riwayat setoran warga melalui arsitektur terdesentralisasi dengan *Row Level Security (RLS)* mutlak:
+
+```mermaid
+flowchart LR
+    A["Pengguna Masuk / Daftar"] --> B{"Pilih Saluran"}
+    
+    B -->|"Google OAuth"| C1["Google Sign-In Popup & Token"]
+    B -->|"Facebook Login"| C2["Facebook Graph OAuth & User ID"]
+    B -->|"Nomor Telepon"| C3["OTP 6-Digit SMS / WhatsApp Handshake"]
+    B -->|"Email & Password"| C4["Kredensial Terenkripsi PBKDF2 / Bcrypt"]
+
+    C1 & C2 & C3 & C4 --> D["Firebase Auth & Cloud Bridge"]
+    D --> E["Dekripsi Token & Validasi Sesi JWT"]
+    
+    E --> F["Postgres Supabase RLS / Firestore Security Rules"]
+    
+    F -->|"auth.uid() == user_id"| G["Akses Penuh Buku Tabungan Pribadi & Saldo"]
+    F -->|"Publik / Anonim"| H["Hanya Baca Papan Peringkat & Ringkasan Agregat (Tanpa PII)"]
+```
 
 ---
 
 ## 🎯 Case & Solusi (Studi Kasus Lingkungan)
 
-### 1. Masalah Lingkungan Riil (*The Problem Case*)
-Pengelolaan sampah di Indonesia, khususnya di kawasan permukiman perkotaan dan lingkungan kampus di wilayah Jawa Barat, menghadapi empat tantangan kritis:
-1. **Kegagalan Pemilahan di Tingkat Rumah Tangga:** Lebih dari **69% timbunan sampah berakhir langsung di TPA (Tempat Pemrosesan Akhir)** dalam kondisi tercampur, busuk, dan terkontaminasi. Material anorganik bernilai daur ulang tinggi (seperti botol PET dan kardus) kehilangan nilai ekonominya hingga 80% karena kotoran sisa makanan dan minyak.
-2. **Ketiadaan Transparansi & Insentif Ekonomi Langsung:** Warga sering kali memandang memilah sampah sebagai beban tanpa imbalan yang jelas. Bank sampah konvensional masih menggunakan buku tulis fisik, rentan manipulasi timbangan, dan lambat dalam pencairan dana.
-3. **Dampak Ekologis yang "Tak Kasat Mata":** Masyarakat tidak mengetahui berapa emisi karbon (CO₂e) yang berhasil mereka cegah atau berapa liter air bersih yang berhasil diselamatkan dari kebiasaan memilah yang mereka lakukan.
-4. **Hambatan Literasi & Akses Informasi:** Masih banyak mitos seputar daur ulang (misal: "semua sampah di truk sampah akan digabung lagi"), serta minimnya edukasi interaktif yang menyenangkan bagi generasi muda.
+### 1. Masalah Riil Pengelolaan Sampah (*The Problem*)
+- **69% Sampah Menumpuk di TPA:** Kebiasaan mencampur sampah organik busuk dengan material anorganik bersih menurunkan harga jual daur ulang hingga 80%.
+- **Manipulasi Timbangan & Ketiadaan Transparansi:** Bank sampah tradisional kerap menggunakan pencatatan kertas manual tanpa standardisasi alat ukur.
+- **Dampak Karbon yang "Abstrak":** Warga tidak pernah mengetahui dampak ekologis nyata dari tindakan memilah sampah yang mereka lakukan.
 
-### 2. Solusi Holistik ECOCYCLE (*The EcoDigital Solution*)
-**ECOCYCLE** mentransformasi tata kelola sampah menjadi **ekosistem ekonomi sirkular digital** berbasis teknologi web modern:
-- **Digitalisasi Bank Sampah Mandiri (SNI 19-3983-1995):** Menghubungkan warga ke hub bank sampah terverifikasi melalui pencatatan setoran digital, penerbitan kode manifest terenkripsi, dan dokumentasi foto bukti fisik.
-- **Dual-Ledger: Insentif Finansial + Kredit Ekologis:** Setiap kilogram sampah yang disetor tidak hanya menghasilkan **saldo Rupiah**, tetapi juga mengkreditkan **EcoPoints** yang dapat ditukarkan dengan insentif hijau (bibit tanaman produktif, kupon sembako ramah lingkungan, diskon transportasi bersih).
-- **Audit Karbon Saintifik (US EPA WARM v15):** Menerapkan model reduksi emisi global yang menghitung konversi pasti reduksi gas rumah kaca (kg CO₂e), ekuivalensi pohon dewasa, dan konservasi air bersih secara *real-time*.
-- **ECOCYCLE AI Assistant dengan Suara Google:** Menghadirkan asisten kecerdasan buatan berbasis Google Gemini dan Google Speech Synthesis bahasa Indonesia agar setiap lapisan masyarakat dapat berkonsultasi secara audio-visual 24/7.
+### 2. Solusi Komprehensif ECOCYCLE (*The EcoDigital Solution*)
+- **Pencatatan Mandiri Tervalidasi SNI:** Sistem mencatat estimasi sebelum warga tiba di hub, mempercepat antrean penimbangan, dan menerbitkan nomor registrasi digital terenkripsi.
+- **Incentive Dual-Ledger:** Setiap kilogram menghasilkan **Saldo Tunai Rupiah** (dapat dicairkan ke GoPay, OVO, DANA, BCA/Mandiri) plus **EcoPoints** yang dapat ditukar hadiah hijau.
+- **Audit Karbon Terbuka:** Sertifikat partisipasi resmi berbasis US EPA WARM v15 dapat dicetak langsung sebagai bukti portofolio keberlanjutan.
 
 ---
 
-## ✨ Apa yang Menarik dan Paling Unik? (Diferensiasi Platform)
+## 🌟 Keunggulan Unik & Diferensiasi (De-AI & Human-Crafted)
 
-Mengapa ECOCYCLE berbeda dan jauh mengungguli website bertema lingkungan atau template bank sampah biasa?
-
-### 1. 🤖 Asisten AI Gemini dengan Sintesis Suara Google (Google Indonesian Voice TTS)
-Bukan sekadar *widget chat* teks biasa. Chatbot ECOCYCLE terintegrasi dengan kecerdasan buatan Google Gemini dan dilengkapi Web Speech API dengan pendeteksian otomatis **Suara Google Bahasa Indonesia**. Saat teks penjelasan berjalan, AI berbicara secara simultan dengan gelombang audio (*equalizer*) interaktif, tombol dengarkan ulang, serta pengaturan kunci API opsional.
-
-### 2. 🎬 Latar Belakang Hero Videotron Bergerak Transparan 30%
-Pada bagian pembuka beranda (*hero section*), ECOCYCLE menyematkan video gerak 3D sirkular ekologis dengan tingkat transparansi tepat **30% (`opacity-30`)**. Berfungsi sebagai videotron bergerak di balik tulisan teks headline dan metrik data, menciptakan impresi estetika teknologi tingkat tinggi tanpa mengorbankan keterbacaan teks (*editorial typography*).
-
-### 3. 🍃 Transisi Halaman Daun Organik Mulus (*Smooth Organic Leaf Transition*)
-Setiap kali pengguna berpindah rute di dalam aplikasi, tirai hijau botani menyapu layar disertai **siluet daun-daun bergradasi hijau zamrud dan lime yang berotasi secara organik**. Pengalaman navigasi terasa hidup, menyegarkan, dan memanjakan indera visual.
-
-### 4. 🌀 Layar Pembuka Pengunjung Baru (*First-Visit Atmospheric Intro*)
-Saat pengunjung pertama kali mengakses website, sistem menampilkan adegan pembuka eksklusif: orbit daur ulang berputar dinamis, mekarnya dua helai daun geometris, pengungkapan logo ECOCYCLE, dan indikator inisialisasi sirkular sebelum masuk secara mulus ke halaman utama.
-
-### 5. 💎 Bahasa Desain Apple visionOS Tanpa Garis Kaku
-Seluruh antarmuka menggunakan kaca transparan bertingkat (*frosted glassmorphism*), pencahayaan radial alami, dan **pembatas gradasi lembut pudar** menggantikan garis lurus kaku antara navigasi, badan konten, dan footer.
-
-### 6. 🔬 Sains Emisi Karbon Terverifikasi (Bukan Estimasi Acak)
-Menggunakan metodologi saintifik terakreditasi *US EPA WARM (Waste Reduction Model) v15*:
-- 1 kg Plastik PET = Mereduksi ~1.50 kg CO₂e
-- 1 kg Kaleng Logam = Mereduksi ~3.20 kg CO₂e
-- 1 kg Kardus = Mereduksi ~1.05 kg CO₂e
-- 1 kg Minyak Jelantah = Mereduksi ~2.60 kg CO₂e
-
-### 7. 🔐 Autentikasi Tiga Saluran Apple-Grade (Google OAuth, Email, & No. Telepon OTP)
-Mendukung 3 metode masuk modern dengan antarmuka *segmented control visionOS*:
-- **Google OAuth / Fast Profiles:** Masuk sekali tekan dengan profil Google terdaftar.
-- **Email & Sandi:** Validasi format ketat dengan visibilitas sandi interaktif.
-- **Nomor Telepon & OTP 6-Digit:** Dilengkapi selector kode negara `+62`, input OTP segmented terpisah dengan auto-focus maju/mundur, timer hitung mundur 60 detik, dan tombol *Isi Otomatis* untuk kemudahan evaluasi juri.
-
-### 8. 💼 Dasbor Akses Mendalam (Pencairan Saldo & Sertifikat Karbon)
-Pengguna terotentikasi mendapatkan akses ke fitur eksklusif:
-- **Tarik Saldo Rupiah:** Pencairan dana tabungan sampah ke dompet digital (GoPay, OVO, DANA, ShopeePay) atau rekening bank (BCA, Mandiri) secara *real-time* tanpa biaya admin.
-- **Klaim Sertifikat Partisipasi Sirkular:** Penerbitan sertifikat digital resmi berstandar SNI 19-3983-1995 dan model US EPA WARM v15 lengkap dengan nomor registrasi kriptografis dan fitur cetak/unduh PDF.
+1. **Model Standar Maven JARVIS (`gemini-2.5-flash`):** Menggunakan mesin generasi mutakhir Google Gemini 2.5 Flash yang berkolaborasi dengan mesin *Agentic Tools* lokal.
+2. **Apple visionOS Frosted Glassmorphism:** Tanpa batas garis kaku; menggunakan gradasi pudar lembut, kedalaman bayangan berlapis, dan palet warna botani obsidian (`#03140d`).
+3. **Efek Bergerak Gradasi Hijau Dinamis:** Semua judul utama halaman dan wordmark logo memiliki animasi *flow gradient* horizontal dari hijau muda ke hijau tua secara terus menerus.
+4. **Hero Videotron 30% Transparan:** Menempatkan video sinematik gerak sirkular di balik tipografi headline tanpa merusak kontras keterbacaan.
+5. **Transisi Layar Daun Sinematik:** Perpindahan antar halaman disapu tirai organik lembut dengan siluet daun berotasi.
+6. **Autentikasi Empat Saluran Lengkap:** Google, Facebook, Email, dan SMS OTP Telepon 6-digit.
 
 ---
 
-## 📖 Panduan Penggunaan Platform (Step-by-Step User Guide)
+## 🚀 Panduan Instalasi & Menjalankan Aplikasi
 
-### Langkah 1: Membuka Website & Berkonsultasi dengan ECOCYCLE AI
-1. Kunjungi platform ECOCYCLE. Nikmati animasi intro pembuka dan hero videotron transparan 30%.
-2. Klik tombol mengambang bundar berlogo ECOCYCLE di pojok kanan bawah (**Tanya AI ECOCYCLE**).
-3. Pilih salah satu *chip* pertanyaan siap pakai (contoh: *"Berapa tarif sampah plastik & kardus?"*) atau ketik pertanyaan apa pun.
-4. AI akan menjawab secara terstruktur sembari **berbicara langsung dalam Bahasa Indonesia**. Gunakan tombol speaker untuk mendengarkan ulang atau tombol bisu jika ingin membaca saja.
+### Kebutuhan Sistem
+- **Node.js:** Versi 20.x atau lebih baru
+- **NPM:** Versi 10.x atau lebih baru
+- Peramban modern (Chrome, Edge, Safari, Firefox)
 
-### Langkah 2: Mengidentifikasi & Memilah Sampah dari Rumah
-1. Klik menu **Solusi Sirkular > Pemilahan Pintar (Sort Guide)**.
-2. Cari material yang Anda miliki (Plastik PET, Kertas/Kardus, Logam, Kaca, Minyak Jelantah, E-Waste).
-3. Ikuti protokol dekontaminasi: bilas sisa cairan/gula, keringkan, dan pipihkan untuk efisiensi logistik hingga 70%.
-
-### Langkah 3: Mencatat Setoran Sampah Mandiri
-1. Klik tombol hijau **Setor Sampah** di pojok kanan atas atau buka rute `/setor-sampah`.
-2. **Pilih Kategori:** Klik salah satu material (misal: Plastik PET Rp3.500/kg).
-3. **Tentukan Bobot:** Atur tombol stepper timbangan (misal: 3.5 kg).
-4. **Pilih Tanggal & Hub:** Pilih tanggal rencana serah dan titik *Drop-Point* terdekat (contoh: *Bale RW 04 Menteng* atau *Gedung Serbaguna Kuningan*).
-5. **Unggah Bukti (Opsional):** Pilih foto dari galeri kamera untuk validasi manifest.
-6. **Periksa Konversi:** Tinjau estimasi Rupiah, perolehan EcoPoints, reduksi emisi karbon (kg CO₂e), dan konservasi air bersih.
-7. Tekan **Konfirmasi & Simpan Setoran**.
-
-### Langkah 4: Memantau Buku Tabungan Digital
-1. Buka menu **Solusi Sirkular > Bank Sampah Digital**.
-2. Periksa saldo aktif Rupiah dan tabungan EcoPoints Anda.
-3. Lihat riwayat mutasi transaksi yang tersusun rapi dengan nomor manifest, stempel waktu, dan lencana verifikasi.
-4. Anda dapat mensimulasikan penarikan saldo atau penukaran poin menjadi voucher belanja ramah lingkungan.
-
-### Langkah 5: Mengaudit Dampak Lingkungan & Sains Reduksi Karbon
-1. Kunjungi menu **Sains & Dampak > Neraca Karbon & Kalkulator**.
-2. Gunakan kalkulator simulasi interaktif untuk melihat seberapa besar kontribusi Anda terhadap pencegahan gas rumah kaca dan penyelamatan pohon tahunan.
-3. Masuk ke **Pusat Analitik** untuk melihat grafik komparatif fraksi material (*Recharts*) serta mengunduh dataset resmi format CSV/JSON.
-
-### Langkah 6: Mengikuti Tantangan Komunitas & Meraih Lencana
-1. Kunjungi menu **Edukasi & Aksi > Tantangan Komunitas**.
-2. Bergabung dalam tantangan aktif (misal: *"Gerakan 1 Minggu Bebas Plastik Sekali Pakai"*).
-3. Kumpulkan lencana reputasi dan pantau posisi Anda di papan peringkat (*Leaderboard*) masyarakat se-Kuningan.
-
-### Langkah 7: Beralih Antara Mode Terang & Mode Gelap
-- Klik tombol ikon matahari/bulan di navigasi atas.
-- Mode terang menghadirkan kesegaran kanvas botani yang jernih, sedangkan mode gelap menghadirkan keanggunan *deep emerald obsidian* (`#03140d`) dengan kontras tinggi yang nyaman di mata.
-
----
-
-## 🛠️ Arsitektur Teknologi & Dependensi
-
-Platform ECOCYCLE dibangun dengan arsitektur rekayasa perangkat lunak modern:
-
-| Komponen | Teknologi | Keterangan |
-|---|---|---|
-| **Core Framework** | React 19.3 + TypeScript 7.0 | UI reaktif berbasis komponen modular dan *type-safety* ketat |
-| **Build Tooling** | Vite 8.3 + PostCSS | Kompilasi ultra-cepat, HMR instan, dan *code splitting* |
-| **Styling & Design System** | Tailwind CSS 3.4 | Variabel CSS kustom, glassmorphism visionOS, dan transisi gradien halus |
-| **Motion Engine** | Framer Motion 14.9 | Animasi rute (*LeafPageTransition*), *presence exit/enter*, dan *gesture physics* |
-| **Artificial Intelligence** | Google Gemini API (Flash Models) | Inferensi bahasa alami dengan panduan sistem domain lingkungan |
-| **Speech Engine** | Web Speech API (Google Indonesian Voice) | Sintesis audio percakapan natural berbahasa Indonesia |
-| **Data Visualizations** | Recharts 3.10 | Grafik area dinamis dan visualisasi alur material temporal |
-| **Cloud Backend** | Google Firebase + Supabase (Dual-Engine) | Firebase Auth & Firestore + Supabase Row Level Security (RLS) |
-| **Icons & Assets** | Google Material Symbols & Lucide React | Ikonografi modern konsisten dengan semantik aksibilitas |
-
----
-
-## 💻 Panduan Menjalankan Proyek Secara Lokal
-
-Pastikan Anda telah menginstal **Node.js (versi 18+)** dan **npm**:
-
+### Langkah Pemasangan Lokal:
 ```bash
-# 1. Kloning repository GitHub
+# 1. Kloning repository GitHub resmi
 git clone https://github.com/Maverick-list/ecocycle.git
-
-# 2. Masuk ke direktori proyek
 cd ecocycle
 
-# 3. Instal dependensi paket
+# 2. Pasang semua dependensi modul
 npm install
 
-# 4. Salin file template lingkungan (opsional untuk integrasi cloud penuh)
+# 3. Siapkan file konfigurasi environment
 cp .env.example .env
 
-# 5. Jalankan server pengembangan lokal (Vite)
+# 4. Jalankan server pengembangan Vite
 npm run dev
 ```
-
-Buka peramban Anda dan akses URL: **`http://localhost:3000`**
-
-### Perintah Pengujian & Kompilasi Produksi:
-```bash
-# Pemeriksaan tipe data TypeScript
-npx tsc --noEmit
-
-# Kompilasi build produksi dan prerender statis 10 rute
-npm run build
-
-# Menjalankan preview build produksi
-npm run preview
-```
+Aplikasi akan aktif dan dapat diakses pada: `http://localhost:3000/`.
 
 ---
 
-## 👥 Pengembang & Hak Cipta
+## ☁️ Konfigurasi & Panduan Deployment Vercel
 
-Proyek ini dirancang dan dikembangkan dengan standar tertinggi oleh:
-- **Pengembang & Arsitek Proyek:** Tim Pengembang ECOCYCLE
-- **Afiliasi:** Universitas Kuningan, Jawa Barat
-- **Hak Cipta:** © 2026 ECOCYCLE Foundation. *Seluruh hak cipta dilindungi undang-undang. Mengubah aliran material menjadi neraca sumber daya terverifikasi dan bernilai nyata.*
+Platform ECOCYCLE telah dikonfigurasi secara optimal untuk deployment ke Vercel dengan berkas [`vercel.json`](file:///home/firza-ilmi/.gemini/antigravity/scratch/ecocycle/vercel.json):
+- Target domain: **`ecocycle.vercel.app`**
+- Single Page Application (SPA) Routing & Fallback Rewrite ke `index.html`.
+- Cache-Control header presisi untuk aset statis (`max-age=31536000, immutable`).
+
+### Langkah Deploy ke Vercel:
+1. Hubungkan repository GitHub [`Maverick-list/ecocycle`](https://github.com/Maverick-list/ecocycle) ke akun Vercel Anda di [vercel.com/new](https://vercel.com/new).
+2. Set **Project Name** menjadi `ecocycle` (akan mengalokasikan URL `ecocycle.vercel.app`).
+3. Konfigurasi build otomatis:
+   - **Framework Preset:** Vite
+   - **Build Command:** `npm run build`
+   - **Output Directory:** `dist`
+4. Masukkan *Environment Variables* (opsional, sistem memiliki *fallback intelligence* mandiri):
+   - `VITE_GEMINI_API_KEY`: Kunci Google Gemini API Anda.
+5. Klik **Deploy**. Setiap *commit push* ke branch `main` akan dideploy secara otomatis oleh Vercel CI/CD!
+
+---
+
+## 👥 Tim & Pengembang
+- **Organisasi:** ECOCYCLE Foundation & Universitas Kuningan (Techno Versary Vol. II 2026)
+- **Tema:** EcoDigital For Environment
+- **Lisensi:** MIT License — Bebas digunakan untuk pengembangan keberlanjutan lingkungan hidup.

@@ -50,6 +50,20 @@ export const authService = {
   },
 
   /**
+   * Official Facebook OAuth Sign In
+   */
+  async loginWithFacebook(): Promise<AuthResponse> {
+    try {
+      const cred = await firebaseAuth.loginWithFacebook();
+      trackEvent('login', { method: 'facebook' });
+      trackEvent('facebook_sign_in');
+      return { user: cred.user, error: null };
+    } catch (err: any) {
+      return { user: null, error: err };
+    }
+  },
+
+  /**
    * Send password reset email
    */
   async resetPassword(email: string): Promise<{ error: Error | null }> {

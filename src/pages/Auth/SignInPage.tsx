@@ -6,10 +6,10 @@ import { Icon } from '../../components/ui/Icon';
 import { EcocycleLogo } from '../../components/brand/EcocycleLogo';
 import { SEOHead } from '../../components/seo/SEOHead';
 
-type AuthTab = 'google' | 'email' | 'phone';
+type AuthTab = 'google' | 'facebook' | 'email' | 'phone';
 
 export const SignInPage: React.FC = () => {
-  const { signInWithEmail, signInWithGoogle, sendPhoneOtp, verifyPhoneOtp } = useAuth();
+  const { signInWithEmail, signInWithGoogle, signInWithFacebook, sendPhoneOtp, verifyPhoneOtp } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -79,6 +79,24 @@ export const SignInPage: React.FC = () => {
       }
     } catch (err: any) {
       setErrorMessage(err.message || 'Gagal memulai login Google.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Handle Facebook Submit
+  const handleFacebookSubmit = async (customEmail?: string, customName?: string) => {
+    setErrorMessage(null);
+    setIsLoading(true);
+    try {
+      const { error } = await signInWithFacebook(customEmail, customName);
+      if (error) {
+        setErrorMessage(error.message);
+      } else {
+        navigate(from, { replace: true });
+      }
+    } catch (err: any) {
+      setErrorMessage(err.message || 'Gagal memulai login Facebook.');
     } finally {
       setIsLoading(false);
     }
@@ -297,7 +315,7 @@ export const SignInPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => { setActiveTab('google'); setErrorMessage(null); }}
-                  className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                  className={`flex-1 py-2 rounded-xl text-[11px] sm:text-xs font-bold transition-all flex items-center justify-center gap-1 cursor-pointer ${
                     activeTab === 'google'
                       ? 'bg-surface dark:bg-[#0b3323] text-primary dark:text-white shadow-sm font-extrabold ring-1 ring-emerald-500/30'
                       : 'text-on-surface-variant hover:text-on-surface'
@@ -308,8 +326,20 @@ export const SignInPage: React.FC = () => {
 
                 <button
                   type="button"
+                  onClick={() => { setActiveTab('facebook'); setErrorMessage(null); }}
+                  className={`flex-1 py-2 rounded-xl text-[11px] sm:text-xs font-bold transition-all flex items-center justify-center gap-1 cursor-pointer ${
+                    activeTab === 'facebook'
+                      ? 'bg-surface dark:bg-[#0b3323] text-[#1877F2] dark:text-[#4294ff] shadow-sm font-extrabold ring-1 ring-[#1877F2]/40'
+                      : 'text-on-surface-variant hover:text-on-surface'
+                  }`}
+                >
+                  <span>Facebook</span>
+                </button>
+
+                <button
+                  type="button"
                   onClick={() => { setActiveTab('email'); setErrorMessage(null); }}
-                  className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                  className={`flex-1 py-2 rounded-xl text-[11px] sm:text-xs font-bold transition-all flex items-center justify-center gap-1 cursor-pointer ${
                     activeTab === 'email'
                       ? 'bg-surface dark:bg-[#0b3323] text-primary dark:text-white shadow-sm font-extrabold ring-1 ring-emerald-500/30'
                       : 'text-on-surface-variant hover:text-on-surface'
@@ -321,13 +351,13 @@ export const SignInPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => { setActiveTab('phone'); setErrorMessage(null); }}
-                  className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                  className={`flex-1 py-2 rounded-xl text-[11px] sm:text-xs font-bold transition-all flex items-center justify-center gap-1 cursor-pointer ${
                     activeTab === 'phone'
                       ? 'bg-surface dark:bg-[#0b3323] text-primary dark:text-white shadow-sm font-extrabold ring-1 ring-emerald-500/30'
                       : 'text-on-surface-variant hover:text-on-surface'
                   }`}
                 >
-                  <span>No. Telepon</span>
+                  <span>Telepon</span>
                 </button>
               </div>
 
@@ -425,6 +455,59 @@ export const SignInPage: React.FC = () => {
                         </div>
                       </div>
                       <span className="text-[10px] font-bold text-secondary shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                        Pilih →
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* TAB: FACEBOOK AUTH */}
+            {activeTab === 'facebook' && (
+              <div className="space-y-4 pt-1 animate-fadeIn">
+                <p className="text-xs text-on-surface-variant text-center leading-relaxed">
+                  Masuk aman & terhubung instan melalui akun Facebook Anda.
+                </p>
+
+                <button
+                  type="button"
+                  onClick={() => handleFacebookSubmit()}
+                  disabled={isLoading}
+                  className="w-full h-12 rounded-2xl bg-[#1877F2] hover:bg-[#166fe5] text-white text-xs font-extrabold flex items-center justify-center gap-3 cursor-pointer transition-all shadow-md hover:scale-[1.01] active:scale-[0.98]"
+                >
+                  <svg className="w-5 h-5 fill-current shrink-0" viewBox="0 0 24 24">
+                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                  </svg>
+                  <span>Lanjutkan dengan Facebook</span>
+                </button>
+
+                {/* Soft Gradient Separator */}
+                <div className="w-full flex items-center justify-center my-3 pointer-events-none">
+                  <div className="w-full h-px bg-gradient-to-r from-transparent via-outline-variant/30 to-transparent" />
+                </div>
+
+                {/* Quick Profile Selectors for Instant Evaluation */}
+                <div className="space-y-2">
+                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-outline block text-center">
+                    Pilih Profil Facebook Terdaftar
+                  </span>
+                  <div className="grid grid-cols-1 gap-2">
+                    <button
+                      type="button"
+                      onClick={() => handleFacebookSubmit('rian.kusuma@facebook.com', 'Rian Pratama')}
+                      className="p-2.5 rounded-xl glass-panel hover:bg-[#1877F2]/10 border border-outline-variant/15 flex items-center justify-between text-left text-xs transition-colors cursor-pointer group"
+                    >
+                      <div className="flex items-center gap-2.5 truncate">
+                        <div className="w-7 h-7 rounded-full bg-[#1877F2]/20 flex items-center justify-center text-[#1877F2] font-bold text-xs shrink-0">
+                          R
+                        </div>
+                        <div className="truncate">
+                          <p className="font-bold text-primary truncate">Rian Pratama (Facebook Connect)</p>
+                          <p className="text-[10px] text-on-surface-variant truncate">rian.kusuma@facebook.com</p>
+                        </div>
+                      </div>
+                      <span className="text-[10px] font-bold text-[#1877F2] shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
                         Pilih →
                       </span>
                     </button>

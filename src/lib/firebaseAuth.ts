@@ -3,6 +3,7 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
+  FacebookAuthProvider,
   signOut as firebaseSignOut,
   sendPasswordResetEmail,
   sendEmailVerification,
@@ -15,6 +16,9 @@ import { auth, isFirebaseConfigured } from './firebase';
 
 const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({ prompt: 'select_account' });
+
+const facebookProvider = new FacebookAuthProvider();
+facebookProvider.setCustomParameters({ display: 'popup' });
 
 export const firebaseAuth = {
   isConfigured: isFirebaseConfigured,
@@ -62,6 +66,14 @@ export const firebaseAuth = {
   async loginWithGoogle() {
     if (!auth) throw new Error('Firebase Auth belum dikonfigurasi. Aktifkan Google Provider di konsol Firebase.');
     return await signInWithPopup(auth, googleProvider);
+  },
+
+  /**
+   * Sign in with official Facebook OAuth provider
+   */
+  async loginWithFacebook() {
+    if (!auth) throw new Error('Firebase Auth belum dikonfigurasi. Aktifkan Facebook Provider di konsol Firebase.');
+    return await signInWithPopup(auth, facebookProvider);
   },
 
   /**
