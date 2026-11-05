@@ -26,9 +26,17 @@ Berikut adalah dokumentasi visual antarmuka platform ECOCYCLE yang telah menerap
 | :---: | :---: |
 | ![Pusat Jawaban FAQ](docs/screenshots/03-faq-spacious-accordions.png) | ![ECOCYCLE AI Chatbot Assistant](docs/screenshots/04-ai-chatbot-assistant.png) |
 
-| 5. Mode Gelap Obsidian Hijau Botani Terverifikasi |
-| :---: |
-| ![Mode Gelap Terverifikasi](docs/screenshots/05-dark-mode-experience.png) |
+| 5. Mode Gelap Obsidian Hijau Botani Terverifikasi | 6. Autentikasi Tiga Saluran (Google, Email, No. HP) |
+| :---: | :---: |
+| ![Mode Gelap Terverifikasi](docs/screenshots/05-dark-mode-experience.png) | ![Autentikasi Multi-Saluran](docs/screenshots/08-auth-multi-channel.png) |
+
+| 7. Verifikasi Kode OTP 6-Digit (Apple Style) | 8. Dasbor Akses Mendalam dengan Identitas Terverifikasi |
+| :---: | :---: |
+| ![Verifikasi OTP](docs/screenshots/09-auth-phone-otp.png) | ![Dasbor Akses Mendalam](docs/screenshots/10-dashboard-deep-access.png) |
+
+| 9. Modal Pencairan Saldo Rupiah (E-Wallet & Bank) | 10. Sertifikat Partisipasi Sirkular Resmi (US EPA WARM) |
+| :---: | :---: |
+| ![Pencairan Saldo Rupiah](docs/screenshots/11-modal-tarik-saldo.png) | ![Sertifikat Resmi Karbon](docs/screenshots/12-modal-sertifikat-karbon.png) |
 
 ---
 
@@ -75,6 +83,17 @@ Menggunakan metodologi saintifik terakreditasi *US EPA WARM (Waste Reduction Mod
 - 1 kg Kaleng Logam = Mereduksi ~3.20 kg CO₂e
 - 1 kg Kardus = Mereduksi ~1.05 kg CO₂e
 - 1 kg Minyak Jelantah = Mereduksi ~2.60 kg CO₂e
+
+### 7. 🔐 Autentikasi Tiga Saluran Apple-Grade (Google OAuth, Email, & No. Telepon OTP)
+Mendukung 3 metode masuk modern dengan antarmuka *segmented control visionOS*:
+- **Google OAuth / Fast Profiles:** Masuk sekali tekan dengan profil Google terdaftar.
+- **Email & Sandi:** Validasi format ketat dengan visibilitas sandi interaktif.
+- **Nomor Telepon & OTP 6-Digit:** Dilengkapi selector kode negara `+62`, input OTP segmented terpisah dengan auto-focus maju/mundur, timer hitung mundur 60 detik, dan tombol *Isi Otomatis* untuk kemudahan evaluasi juri.
+
+### 8. 💼 Dasbor Akses Mendalam (Pencairan Saldo & Sertifikat Karbon)
+Pengguna terotentikasi mendapatkan akses ke fitur eksklusif:
+- **Tarik Saldo Rupiah:** Pencairan dana tabungan sampah ke dompet digital (GoPay, OVO, DANA, ShopeePay) atau rekening bank (BCA, Mandiri) secara *real-time* tanpa biaya admin.
+- **Klaim Sertifikat Partisipasi Sirkular:** Penerbitan sertifikat digital resmi berstandar SNI 19-3983-1995 dan model US EPA WARM v15 lengkap dengan nomor registrasi kriptografis dan fitur cetak/unduh PDF.
 
 ---
 

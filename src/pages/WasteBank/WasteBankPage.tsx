@@ -105,7 +105,7 @@ export const WasteBankPage: React.FC = () => {
       <div className="max-w-[1240px] mx-auto px-6 sm:px-8 lg:px-12 space-y-12">
         
         {/* Editorial Page Header */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-8 border-b border-outline-variant/20">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-6">
           <div className="space-y-4 max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-pill text-xs font-semibold uppercase tracking-wider text-secondary">
               <Icon name="account_balance" size={14} />
@@ -146,6 +146,9 @@ export const WasteBankPage: React.FC = () => {
             </button>
           </div>
         </div>
+
+        {/* Apple-style Soft Gradient Header Divider */}
+        <div className="w-full h-px bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent pointer-events-none" />
 
         {/* Top Wallet & Metric Bento Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6">

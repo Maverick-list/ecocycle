@@ -244,7 +244,7 @@ export const HomePage: React.FC = () => {
       </section>
 
       {/* 2. INTERACTIVE LIVING CIRCULAR ECONOMY LIFECYCLE */}
-      <section id="circular-lifecycle" className="w-full py-28 sm:py-36 border-b border-outline-variant/15 transition-colors duration-300">
+      <section id="circular-lifecycle" className="w-full py-28 sm:py-36 transition-colors duration-300 relative">
         <div className="max-w-[1280px] mx-auto px-6 sm:px-8 lg:px-12 space-y-16">
           
           <ScrollReveal direction="up">
@@ -355,6 +355,9 @@ export const HomePage: React.FC = () => {
           </div>
 
         </div>
+
+        {/* Apple-style Soft Gradient Section Divider */}
+        <div className="w-full h-px bg-gradient-to-r from-transparent via-emerald-500/25 dark:via-emerald-400/20 to-transparent pointer-events-none mt-28" />
       </section>
 
       {/* 3. CORE PLATFORM PORTALS SHOWCASE (BENTO HEROES) */}
@@ -593,7 +596,7 @@ export const HomePage: React.FC = () => {
       </section>
 
       {/* 4. COMMUNITY COMMITMENT & ECO PLEDGE */}
-      <section className="w-full py-28 sm:py-36 border-b border-outline-variant/15 transition-colors duration-300">
+      <section className="w-full py-28 sm:py-36 transition-colors duration-300 relative">
         <div className="max-w-[1080px] mx-auto px-6 sm:px-8 text-center space-y-10">
           
           <motion.div 
@@ -636,13 +639,16 @@ export const HomePage: React.FC = () => {
           </p>
 
         </div>
+
+        {/* Apple-style Soft Gradient Section Divider */}
+        <div className="w-full h-px bg-gradient-to-r from-transparent via-emerald-500/25 dark:via-emerald-400/20 to-transparent pointer-events-none mt-28" />
       </section>
 
       {/* 5. FAQ CURATED PREVIEW — INTERACTIVE ACCORDION & HIGH CONTRAST */}
       <section className="w-full py-28 sm:py-36 bg-surface-container-low/40 transition-colors duration-300">
         <div className="max-w-[1080px] mx-auto px-6 sm:px-8 space-y-12">
           
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-outline-variant/25 pb-6">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 relative">
             <div>
               <span className="text-sm font-extrabold uppercase tracking-widest text-secondary dark:text-emerald-400 block">
                 Pusat Jawaban
@@ -662,6 +668,9 @@ export const HomePage: React.FC = () => {
               </Link>
             </motion.div>
           </div>
+
+          {/* Apple-style Soft Gradient Section Divider */}
+          <div className="w-full h-px bg-gradient-to-r from-transparent via-emerald-500/25 dark:via-emerald-400/20 to-transparent pointer-events-none" />
 
           {/* 3 Interactive Accordion FAQs with High Contrast */}
           <div className="space-y-5">

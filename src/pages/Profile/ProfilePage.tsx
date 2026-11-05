@@ -11,6 +11,8 @@ import { PageTransition } from '../../components/ui/PageTransition';
 import { SEOHead } from '../../components/seo/SEOHead';
 import { DROP_POINTS } from '../../data/locationsData';
 import { COMMUNITY_CHALLENGES } from '../../data/challengesData';
+import { WithdrawModal } from '../../components/features/WithdrawModal';
+import { CertificateModal } from '../../components/features/CertificateModal';
 
 export const ProfilePage: React.FC = () => {
   const { 
@@ -28,6 +30,9 @@ export const ProfilePage: React.FC = () => {
   const [profile, setProfile] = useState<UserProfile>(() => UserService.getProfile());
   const [activeTab, setActiveTab] = useState<'transaksi' | 'lencana' | 'linimasa' | 'pengaturan'>('transaksi');
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
+  const [isCertificateModalOpen, setIsCertificateModalOpen] = useState(false);
+  const [withdrawnAmount, setWithdrawnAmount] = useState<number>(0);
 
   // Edit form state
   const [editName, setEditName] = useState(profile.name);
@@ -166,25 +171,61 @@ export const ProfilePage: React.FC = () => {
       />
       <div className="max-w-[1240px] mx-auto px-6 sm:px-8 lg:px-12 space-y-12">
         
-        {/* Top Breadcrumb & Status Bar */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-outline-variant/20">
-          <div className="flex items-center gap-2 text-xs font-semibold text-secondary">
+        {/* Top Breadcrumb & Status Bar with Soft Gradient Divider */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4">
+          <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-secondary">
             <span className="w-2.5 h-2.5 rounded-full bg-secondary animate-pulse" />
             <span className="uppercase tracking-wider">
-              {user ? `Akun Terautentikasi: ${user.email}` : 'Pusat Kendali Pengguna Terpadu'}
+              {user ? `Akun Terautentikasi: ${user.displayName || user.email || 'Warga Sirkular'}` : 'Pusat Kendali Pengguna Terpadu'}
             </span>
+
+            {/* Authentication Provider Badges */}
+            {user?.authMethod === 'google' && (
+              <span className="px-2.5 py-0.5 rounded-full bg-blue-500/15 text-blue-500 border border-blue-500/30 text-[10px] font-bold flex items-center gap-1">
+                <span>🌐</span>
+                <span>Google Terverifikasi</span>
+              </span>
+            )}
+            {user?.authMethod === 'phone' && (
+              <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-500 border border-emerald-500/30 text-[10px] font-bold flex items-center gap-1">
+                <span>📱</span>
+                <span>No. HP Terverifikasi ({user.phoneNumber})</span>
+              </span>
+            )}
+            {user?.authMethod === 'email' && (
+              <span className="px-2.5 py-0.5 rounded-full bg-teal-500/15 text-teal-500 border border-teal-500/30 text-[10px] font-bold flex items-center gap-1">
+                <span>✉️</span>
+                <span>Email Terverifikasi</span>
+              </span>
+            )}
           </div>
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-pill text-xs font-medium text-secondary">
-            <Icon name={user ? 'verified' : 'info'} size={14} />
-            <span>
-              {user
-                ? `Sesi Cloud Aktif (${user.email || 'Autentikasi'})`
-                : isConfigured
-                ? 'Cloud Terhubung • Masuk untuk sinkronisasi'
-                : 'Mode Peraga Sandbox • Tersimpan di Penyimpanan Lokal'}
-            </span>
+
+          <div className="flex items-center gap-2">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-pill text-xs font-medium text-secondary">
+              <Icon name={user ? 'verified' : 'info'} size={14} />
+              <span>
+                {user
+                  ? `Sesi Aktif: ${user.displayName || user.email || user.phoneNumber}`
+                  : 'Mode Peraga Sandbox • Sesi Terbuka'}
+              </span>
+            </div>
+            {user && (
+              <button
+                type="button"
+                onClick={async () => {
+                  await signOut();
+                  showToast('Anda telah keluar dari sesi akun.', 'info');
+                }}
+                className="h-8 px-3 rounded-full glass-pill text-[11px] font-bold text-error hover:bg-error/15 transition-colors cursor-pointer"
+              >
+                Keluar
+              </button>
+            )}
           </div>
         </div>
+
+        {/* Apple-style Soft Gradient Section Divider */}
+        <div className="w-full h-px bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent pointer-events-none" />
 
         {/* 1. HERO PROFILE CARD */}
         <div className="rounded-3xl glass-panel-elevated border border-outline-variant/25 p-8 sm:p-12 shadow-xl overflow-hidden relative">
@@ -329,7 +370,7 @@ export const ProfilePage: React.FC = () => {
               </div>
               <div className="my-2">
                 <span className="font-display font-extrabold text-3xl sm:text-4xl text-primary">
-                  Rp{totalBalanceIdr.toLocaleString('id-ID')}
+                  Rp{Math.max(0, totalBalanceIdr - withdrawnAmount).toLocaleString('id-ID')}
                 </span>
               </div>
               <p className="text-xs text-on-surface-variant">
@@ -337,9 +378,19 @@ export const ProfilePage: React.FC = () => {
               </p>
             </div>
 
-            <div className="pt-3 border-t border-outline-variant/15 flex items-center justify-between text-xs text-outline">
-              <span>Frekuensi Transaksi:</span>
-              <strong className="text-on-surface">{transactions.length} Kali Setor</strong>
+            <div className="space-y-3 pt-3 border-t border-outline-variant/15">
+              <div className="flex items-center justify-between text-xs text-outline">
+                <span>Frekuensi Transaksi:</span>
+                <strong className="text-on-surface">{transactions.length} Kali Setor</strong>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsWithdrawModalOpen(true)}
+                className="w-full h-10 rounded-xl bg-secondary text-white font-extrabold text-xs hover:bg-secondary/90 transition-all flex items-center justify-center gap-1.5 shadow-sm active:scale-95 cursor-pointer hover:scale-[1.01]"
+              >
+                <Icon name="payments" size={15} />
+                <span>Tarik Saldo Rupiah</span>
+              </button>
             </div>
           </div>
 
@@ -359,41 +410,52 @@ export const ProfilePage: React.FC = () => {
               </p>
             </div>
 
-            <div className="pt-3 border-t border-outline-variant/15 text-xs text-outline flex items-center gap-1.5">
-              <Icon name="leaf" size={13} className="text-secondary" />
-              <span>Standar US EPA WARM</span>
+            <div className="space-y-3 pt-3 border-t border-outline-variant/15">
+              <div className="text-xs text-outline flex items-center gap-1.5">
+                <Icon name="leaf" size={13} className="text-secondary" />
+                <span>Standar US EPA WARM v15</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsCertificateModalOpen(true)}
+                className="w-full h-10 rounded-xl glass-pill border border-secondary/35 text-secondary hover:bg-secondary/15 font-extrabold text-xs transition-all flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer hover:scale-[1.01]"
+              >
+                <Icon name="award" size={15} />
+                <span>Klaim Sertifikat Resmi</span>
+              </button>
             </div>
           </div>
 
         </div>
 
-        {/* 3. TABBED DASHBOARD CONTROLS */}
-        <div className="flex flex-wrap items-center gap-2 border-b border-outline-variant/20 pb-3">
-          <button
-            type="button"
-            onClick={() => setActiveTab('transaksi')}
-            className={`px-5 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-2 ${
-              activeTab === 'transaksi'
-                ? 'bg-secondary text-white shadow-sm'
-                : 'glass-pill hover:bg-surface-container text-on-surface'
-            }`}
-          >
-            <Icon name="receipt" size={16} />
-            <span>Riwayat Transaksi Saya ({transactions.length})</span>
-          </button>
+        {/* 3. TABBED DASHBOARD CONTROLS WITH SOFT GRADIENT DIVIDER */}
+        <div className="space-y-3">
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setActiveTab('transaksi')}
+              className={`px-5 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-2 ${
+                activeTab === 'transaksi'
+                  ? 'bg-secondary text-white shadow-sm font-extrabold'
+                  : 'glass-pill hover:bg-surface-container text-on-surface'
+              }`}
+            >
+              <Icon name="receipt" size={16} />
+              <span>Riwayat Transaksi Saya ({transactions.length})</span>
+            </button>
 
-          <button
-            type="button"
-            onClick={() => setActiveTab('lencana')}
-            className={`px-5 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-2 ${
-              activeTab === 'lencana'
-                ? 'bg-secondary text-white shadow-sm'
-                : 'glass-pill hover:bg-surface-container text-on-surface'
-            }`}
-          >
-            <Icon name="award" size={16} />
-            <span>Lencana & Prestasi ({completedBadges.length})</span>
-          </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('lencana')}
+              className={`px-5 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-2 ${
+                activeTab === 'lencana'
+                  ? 'bg-secondary text-white shadow-sm font-extrabold'
+                  : 'glass-pill hover:bg-surface-container text-on-surface'
+              }`}
+            >
+              <Icon name="award" size={16} />
+              <span>Lencana & Prestasi ({completedBadges.length})</span>
+            </button>
 
           <button
             type="button"
@@ -421,6 +483,10 @@ export const ProfilePage: React.FC = () => {
             <span>Pengaturan & Target Ekologis</span>
           </button>
         </div>
+
+        {/* Soft Gradient Tab Divider */}
+        <div className="w-full h-px bg-gradient-to-r from-transparent via-emerald-500/25 to-transparent pointer-events-none" />
+      </div>
 
         {/* 4. TAB CONTENTS */}
         
@@ -859,6 +925,30 @@ export const ProfilePage: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Interactive Withdraw Modal (Pencairan Saldo Rupiah) */}
+      <WithdrawModal
+        isOpen={isWithdrawModalOpen}
+        onClose={() => setIsWithdrawModalOpen(false)}
+        availableBalance={Math.max(0, totalBalanceIdr - withdrawnAmount)}
+        onSuccess={(amount, dest, acc) => {
+          setWithdrawnAmount((prev) => prev + amount);
+          showToast(
+            `Penarikan dana sebesar Rp ${amount.toLocaleString('id-ID')} ke ${dest} (${acc}) berhasil diproses tanpa biaya admin!`,
+            'success'
+          );
+        }}
+      />
+
+      {/* Official Ecological Carbon Certificate Modal */}
+      <CertificateModal
+        isOpen={isCertificateModalOpen}
+        onClose={() => setIsCertificateModalOpen(false)}
+        userName={profile.name}
+        totalCo2Avoided={totalCo2AvoidedKg}
+        totalWeightKg={totalWeightKg}
+        joinedDate={profile.joinedDate}
+      />
 
     </PageTransition>
   );
