@@ -133,7 +133,7 @@ export const WithdrawModal: React.FC<WithdrawModalProps> = ({
               <label className="block text-xs font-bold text-outline uppercase tracking-wider mb-2">
                 Pilih Tujuan Pencairan
               </label>
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
                 {EWALLET_OPTIONS.map((method) => {
                   const isSelected = selectedMethod.id === method.id;
                   return (
@@ -141,7 +141,7 @@ export const WithdrawModal: React.FC<WithdrawModalProps> = ({
                       key={method.id}
                       type="button"
                       onClick={() => setSelectedMethod(method)}
-                      className={`p-2.5 rounded-2xl border text-center transition-all cursor-pointer flex flex-col items-center gap-1 ${
+                      className={`p-3 rounded-2xl border text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-1 min-h-[58px] ${
                         isSelected
                           ? 'border-secondary bg-secondary/15 ring-2 ring-secondary/40 shadow-sm'
                           : 'border-outline-variant/20 glass-panel hover:bg-surface-container/60'

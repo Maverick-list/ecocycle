@@ -85,13 +85,13 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
             </div>
 
             {/* Impact Metric Matrix */}
-            <div className="grid grid-cols-3 gap-3 p-4 rounded-2xl bg-secondary/10 border border-secondary/25">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 rounded-2xl bg-secondary/10 border border-secondary/25">
               <div className="text-center space-y-1">
                 <span className="text-[10px] uppercase font-bold text-outline block">Total Sampah Terpilah</span>
                 <span className="font-display font-black text-lg sm:text-xl text-primary">{totalWeightKg.toFixed(1)} kg</span>
               </div>
 
-              <div className="text-center space-y-1 border-x border-secondary/20 px-2">
+              <div className="text-center space-y-1 sm:border-x border-secondary/20 py-2 sm:py-0 border-y sm:border-y-0 px-2">
                 <span className="text-[10px] uppercase font-bold text-outline block">Reduksi Emisi Karbon</span>
                 <span className="font-display font-black text-lg sm:text-xl text-secondary">{totalCo2Avoided.toFixed(2)} kg CO₂e</span>
               </div>
